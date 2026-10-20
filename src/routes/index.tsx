@@ -1,4 +1,4 @@
-import { createBrowserRouter, Navigate } from "react-router";
+﻿import { createBrowserRouter, Navigate } from "react-router";
 import { Suspense, type ComponentType, type LazyExoticComponent, } from "react";
 import Loading from "../pages/Loading";
 import ProtectedLayout from "../layouts/ProtectedLayout";
@@ -24,7 +24,7 @@ const Loadable = ({ Component }: LoadableProps) => {
 
 const router = createBrowserRouter([
   { path: "/masuk-admin", element: <Loadable Component={Pages.Login} /> },
-  { path: "/masuk", element: <Loadable Component={Pages.LoginResident} /> },
+  { path: "/masuk", element: <Loadable Component={Pages.LoginStudent} /> },
   { path: "/daftar", element: <Loadable Component={Pages.Register} /> },
   {
     path: "/unauthorized",
@@ -38,15 +38,11 @@ const router = createBrowserRouter([
     children: [
       {
         element: (
-          <RoleGuard allowedRoleIds={[ROLE_ID.WARGA, ROLE_ID.KADER, ROLE_ID.KEPALA_KELUARGA]}>
+          <RoleGuard allowedRoleIds={[ROLE_ID.SISWA]}>
             <ResidentLayout />
           </RoleGuard>
         ),
         children: [
-          {
-            path: "pilih-peran",
-            element: <Loadable Component={Pages.RoleSelection} />,
-          },
           {
             index: true, element: (
               <>
@@ -55,24 +51,6 @@ const router = createBrowserRouter([
               </>
             )
           },
-          {
-            path: "kader",
-            element: (
-              <RoleGuard allowedRoleIds={[ROLE_ID.KADER]}>
-                <Loadable Component={Pages.HomeKader} />
-              </RoleGuard>
-            ),
-          },
-          {
-            path: "keluarga",
-            element: (
-              <RoleGuard allowedRoleIds={[ROLE_ID.KEPALA_KELUARGA]}>
-                <Loadable Component={Pages.HomeKepalaKeluarga} />
-              </RoleGuard>
-            ),
-          },
-          { path: "summary-rw/:questionnaireId/:rwId", element: <Loadable Component={Pages.SummaryRWDashboard} /> },
-          { path: "summary-rt/:questionnaireId/:rwId/:rtId", element: <Loadable Component={Pages.SummaryRTDashboard} /> },
           { path: "profile", element: <Loadable Component={Pages.Profile} /> },
           { path: "quiz/:id", element: <Loadable Component={Pages.Quiz} /> },
           {
@@ -85,7 +63,7 @@ const router = createBrowserRouter([
       {
         path: "admin",
         element: (
-          <RoleGuard allowedRoleIds={[ROLE_ID.ADMIN_DESA]} loginPath="/masuk-admin">
+          <RoleGuard allowedRoleIds={[ROLE_ID.WALI_KELAS]} loginPath="/masuk-admin">
             <AdminDesaLayout />
           </RoleGuard>
         ),
@@ -152,7 +130,7 @@ const router = createBrowserRouter([
       {
         path: "/admin-medis",
         element: (
-          <RoleGuard allowedRoleIds={[ROLE_ID.ADMIN_MEDIS]}>
+          <RoleGuard allowedRoleIds={[ROLE_ID.GURU_BK]}>
             <AdminMediLayout />
           </RoleGuard>
         ),
@@ -219,3 +197,4 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
+

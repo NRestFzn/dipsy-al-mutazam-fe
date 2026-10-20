@@ -1,43 +1,29 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { Link, useNavigate } from "react-router";
 import { Form, Input, Button, Alert, Typography } from "antd";
 import { Lock, SquareUserRound, ChevronRight } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import { getErrorMessage } from "../../../utils/getErrorMessage";
-import type { LoginResidentPayload } from "../../../types/AuthTypes/authTypes";
-import { ROLE_ID } from "../../../constants";
+import type { LoginStudentPayload } from "../../../types/AuthTypes/authTypes";
 
 const { Title, Text } = Typography;
 
-export default function LoginResident() {
+export default function LoginStudent() {
   const navigate = useNavigate();
-  const { loginResident, isLoading, error } = useAuth();
+  const { loginStudent, isLoading, error } = useAuth();
   const [formError, setFormError] = useState<string | null>(null);
 
-  const onFinish = async (values: LoginResidentPayload) => {
+  const onFinish = async (values: LoginStudentPayload) => {
     setFormError(null);
     try {
-      const response = await loginResident({
-        nik: values.nik,
+      await loginStudent({
+        nisn: values.nisn,
         password: values.password,
       });
 
-      const userData = response?.data;
-      const roles = userData?.roles || [];
-      const hasMultipleRoles = roles.length > 1;
-      const hasKaderRole = roles.some((role: any) => role.id === ROLE_ID.KADER);
-      const hasKepalaKeluargaRole = roles.some((role: any) => role.id === ROLE_ID.KEPALA_KELUARGA);
-
-      if (hasMultipleRoles || hasKaderRole) {
-        navigate("/pilih-peran", { replace: true });
-      } else if (hasKepalaKeluargaRole) {
-        navigate("/keluarga", { replace: true });
-      } else {
-        navigate("/", { replace: true });
-      }
-      
+      navigate("/", { replace: true });
     } catch (err) {
-      console.error("Resident Login error:", err);
+      console.error("Student Login error:", err);
       setFormError(getErrorMessage(err));
     }
   };
@@ -56,8 +42,8 @@ export default function LoginResident() {
           <div className="text-center mb-8">
             <div className="inline-flex justify-center items-center bg-green-50 p-4 rounded-2xl mb-6 shadow-sm border border-green-100">
               <img
-                src="/icon.png"
-                alt="Logo Desa"
+                src="/logo-al-multazam.png"
+                alt="Logo Al-Multazam"
                 className="w-12 h-12 object-contain drop-shadow-sm"
               />
             </div>
@@ -70,7 +56,7 @@ export default function LoginResident() {
                 Selamat Datang
               </Title>
               <Text className="!text-gray-500 text-base font-medium block">
-                Portal Kesehatan Warga Desa Cibiru Wetan
+                Kuesioner Kesehatan Mental Siswa Al-Multazam
               </Text>
             </div>
           </div>
@@ -86,7 +72,7 @@ export default function LoginResident() {
           )}
 
           <Form
-            name="login_resident"
+            name="login_student"
             layout="vertical"
             onFinish={onFinish}
             requiredMark={false}
@@ -94,20 +80,20 @@ export default function LoginResident() {
             className="!space-y-5"
           >
             <Form.Item
-              name="nik"
-              label={<span className="font-semibold !text-gray-600 !ml-1">NIK (Nomor Induk Kependudukan)</span>}
+              name="nisn"
+              label={<span className="font-semibold !text-gray-600 !ml-1">NISN</span>}
               rules={[
-                { required: true, message: "Mohon masukkan NIK Anda" },
-                { len: 16, message: "NIK harus 16 digit angka" },
-                { pattern: /^[0-9]+$/, message: "NIK harus berupa angka" },
+                { required: true, message: "Masukkan NISN Anda" },
+                { len: 10, message: "NISN harus 10 digit angka" },
+                { pattern: /^[0-9]+$/, message: "NISN harus berupa angka" },
               ]}
               className="mb-0"
             >
               <Input
                 prefix={<SquareUserRound className="!text-gray-400 !mr-2 transition-colors !group-focus-within:text-[#70B748]" size={20} />}
-                placeholder="Masukkan 16 digit NIK"
+                placeholder="Masukkan NISN Anda"
                 className="!bg-gray-50 !border-gray-200 hover:!border-green-300 focus:!border-[#70B748] focus:!shadow-[0_0_0_4px_rgba(112,183,72,0.1)] !rounded-xl !py-3 !text-gray-700 !text-base !font-medium transition-all duration-300"
-                maxLength={16}
+                maxLength={10}
                 inputMode="numeric"
               />
             </Form.Item>
@@ -145,7 +131,7 @@ export default function LoginResident() {
 
           <div className="mt-10 pt-6 border-t border-gray-100 flex flex-col items-center gap-4 text-center">
             <div className="space-y-1">
-              <Text className="text-gray-500 text-sm">Belum terdaftar sebagai warga?</Text>
+              <Text className="text-gray-500 text-sm">Belum terdaftar sebagai siswa?</Text>
               <div>
                 <Link
                   to="/daftar"
@@ -159,12 +145,12 @@ export default function LoginResident() {
             <div className="w-full max-w-[200px] h-px bg-gray-100 my-1" />
 
             <div className="flex items-center justify-center gap-2">
-              <Text className="text-gray-400 text-xs">Anda Petugas Desa?</Text>
+              <Text className="text-gray-400 text-xs">Anda Guru BK / Wali Kelas?</Text>
               <Link
                 to="/masuk-admin"
                 className="!text-gray-500 font-semibold text-xs !hover:text-[#70B748] !hover:underline transition-colors"
               >
-                Masuk Petugas
+                Masuk Guru
               </Link>
             </div>
           </div>
@@ -174,10 +160,11 @@ export default function LoginResident() {
         {/* Copyright Footer */}
         <div className="mt-8 text-center">
           <p className="text-xs text-gray-400 font-medium">
-            © {new Date().getFullYear()} Pemerintah Desa Cibiru Wetan
+            © {new Date().getFullYear()} Al-Multazam
           </p>
         </div>
       </div>
     </div>
   );
 }
+

@@ -1,4 +1,4 @@
-import { useState } from "react";
+﻿import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Form, Input, Button, Alert, Typography } from "antd";
 import { Mail, Lock, ShieldCheck } from "lucide-react";
@@ -28,8 +28,8 @@ export default function Login() {
       const roles = userData.roles || [];
 
       const getRedirectPath = (userRoles: Role[]) => {
-        if (userRoles.some(r => r.id === ROLE_ID.ADMIN_DESA)) return "/admin/responden";
-        if (userRoles.some(r => r.id === ROLE_ID.ADMIN_MEDIS)) return "/admin-medis/responden";
+        if (userRoles.some(r => r.id === ROLE_ID.WALI_KELAS)) return "/admin/responden";
+        if (userRoles.some(r => r.id === ROLE_ID.GURU_BK)) return "/admin-medis/responden";
 
         return "/";
       };
@@ -57,26 +57,26 @@ export default function Login() {
           <div className="flex items-center gap-4 mb-6">
             <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md border border-white/20 shadow-lg">
               <img
-                src="/icon.png"
-                alt="Logo Desa"
+                src="/logo-al-multazam.png"
+                alt="Logo Al-Multazam"
                 className="w-10 h-10 object-contain drop-shadow-md"
               />
             </div>
             <div className="flex flex-col">
               <span className="text-white font-bold tracking-wide uppercase text-xs opacity-90">
-                Pemerintah Desa
+                Sekolah
               </span>
               <span className="text-white font-bold text-lg leading-none">
-                Cibiru Wetan
+                Al-Multazam
               </span>
             </div>
           </div>
 
           <Title level={1} className="!text-white !font-bold !text-5xl leading-tight mb-4">
-            Kelola Data Desa <br /> & Kesehatan Warga
+            Portal Masuk Guru BK <br /> & Wali Kelas Al-Multazam
           </Title>
           <Paragraph className="!text-white/90 text-base max-w-md leading-relaxed mb-0">
-            Platform terintegrasi untuk pemantauan, validasi, dan pengelolaan data kesehatan mental demi mewujudkan desa yang sejahtera.
+            Platform terintegrasi untuk pemantauan dan pengelolaan data kesehatan mental siswa.
           </Paragraph>
         </div>
 
@@ -99,7 +99,7 @@ export default function Login() {
           <div className="flex flex-col items-center text-center mb-8 lg:hidden mt-8 pt-4">
             <div className="mb-4 p-3 bg-white rounded-full shadow-sm border border-gray-100">
               <img
-                src="/icon.png"
+                src="/logo-al-multazam.png"
                 alt="Logo"
                 className="w-16 h-16 object-contain"
               />
@@ -111,10 +111,10 @@ export default function Login() {
             </div>
 
             <Title level={3} className="!mb-1 !font-bold text-gray-800">
-              Portal Pengelola
+              Portal Masuk Guru BK & Wali Kelas Al-Multazam
             </Title>
             <Text className="text-gray-500 text-sm">
-              Masuk untuk mengelola data desa
+              Masuk untuk memantau kesehatan mental siswa
             </Text>
           </div>
 
@@ -152,7 +152,7 @@ export default function Login() {
           >
             <Form.Item
               name="email"
-              label={<span className="font-semibold text-gray-700 ml-1">Email Kedinasan</span>}
+              label={<span className="font-semibold text-gray-700 ml-1">Email</span>}
               rules={[
                 { required: true, message: "Email wajib diisi" },
                 { type: "email", message: "Format email tidak valid" },
@@ -160,7 +160,7 @@ export default function Login() {
             >
               <Input
                 prefix={<Mail className="text-gray-400 mr-2" size={20} />}
-                placeholder="admin@cibiruwetan.desa.id"
+                placeholder="guru@almultazam.sch.id"
                 className="rounded-xl py-2.5 border-gray-300 hover:border-[#70B748] focus:border-[#70B748] transition-colors"
               />
             </Form.Item>
@@ -207,7 +207,7 @@ export default function Login() {
               <div className="flex flex-col">
                 <span className="font-bold text-red-700 text-xs uppercase mb-1">Area Terbatas</span>
                 <Text className="text-xs text-gray-600 leading-relaxed">
-                  Akses ini dikhususkan untuk <strong>Admin Desa</strong> dan <strong>Tenaga Medis</strong>. Aktivitas login Anda tercatat demi keamanan data warga.
+                  Akses ini dikhususkan untuk <strong>Guru BK</strong> dan <strong>Wali Kelas</strong>. Aktivitas login Anda tercatat demi keamanan data siswa.
                 </Text>
               </div>
             </div>
