@@ -4,27 +4,23 @@ import {
   Input,
   Select,
   Button,
-  Card,
   Modal,
   DatePicker,
   Radio,
   Alert,
-  message,
   Spin,
 } from 'antd';
 import {
   UserOutlined,
   LockOutlined,
-  HomeOutlined,
   IdcardOutlined,
+  InfoCircleOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../../context/AuthContext';
 import { useMasterData } from '../../../hooks/useMasterData';
-import { useNavigate } from 'react-router';
+import { useNavigate, Link } from 'react-router';
 import type { RegisterPayload } from '../../../types/AuthTypes/authTypes';
 import { useInfiniteSelectOptions } from '../../../hooks/Common/useInfiniteSelectOptions';
-
-const { Option } = Select;
 
 export default function Register() {
   const navigate = useNavigate();
@@ -52,7 +48,7 @@ export default function Register() {
     isFetchingNextPage: fetchingNextRW
   } = useInfiniteSelectOptions({
     queryResult: rwQuery,
-    labelKey: (item: any) => `RW ${item.name}`,
+    labelKey: (item: any) => `Tingkat ${item.name}`,
     valueKey: 'id'
   });
 
@@ -64,7 +60,7 @@ export default function Register() {
     isFetchingNextPage: fetchingNextRT
   } = useInfiniteSelectOptions({
     queryResult: rtQuery,
-    labelKey: (item: any) => `RT ${item.name}`,
+    labelKey: (item: any) => `Kelas ${item.name}`,
     valueKey: 'id'
   });
 
@@ -76,7 +72,7 @@ export default function Register() {
 
   const handleRWChange = (val: string) => {
     setSelectedRW(val);
-    accountForm.setFieldValue('rt', undefined); // Reset RT saat RW berubah
+    accountForm.setFieldValue('rt', undefined);
   };
 
   const onAccountFinish = () => {
@@ -86,70 +82,58 @@ export default function Register() {
   const onProfileFinish = async (profileValues: any) => {
     try {
       const accountValues = accountForm.getFieldsValue();
-
-      const birthDateISO = profileValues.tanggalLahir
-        ? profileValues.tanggalLahir.format('YYYY-MM-DD')
-        : '';
-
       const payload: RegisterPayload = {
+        fullname: profileValues.namaLengkap,
         email: accountValues.email || null,
         password: accountValues.password,
         confirmPassword: accountValues.confirmPassword,
-        nik: accountValues.nik,
-        fullname: profileValues.namaLengkap,
         gender: profileValues.gender,
-        profession: profileValues.pekerjaan,
-        birthDate: birthDateISO,
-        MarriageStatusId: profileValues.statusPernikahan,
+        profession: profileValues.pekerjaan || "Siswa",
+        birthDate: profileValues.tanggalLahir.format('YYYY-MM-DD'),
+        MarriageStatusId: profileValues.statusPernikahan || (marriageList?.[0]?.id ?? ""),
         RukunWargaId: accountValues.rw,
         RukunTetanggaId: accountValues.rt,
-        EducationId: profileValues.pendidikan,
-        SalaryRangeId: profileValues.gaji,
+        EducationId: profileValues.pendidikan || (educationList?.[0]?.id ?? ""),
+        SalaryRangeId: profileValues.gaji || (salaryList?.[0]?.id ?? ""),
+        nik: accountValues.nik,
         phoneNumber: profileValues.noHp || null,
       };
 
       await register(payload);
-
-      message.success('Registrasi berhasil!');
-      accountForm.resetFields();
-      profileForm.resetFields();
       setShowModal(false);
-
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (err) {
-      console.error('Registration error:', err);
+      console.error('Registration failed:', err);
     }
   };
 
-  const renderErrorContent = (err: any) => {
-    if (!err) return null;
-
-    if (
-      err.errors &&
-      typeof err.errors === 'object' &&
-      Object.keys(err.errors).length > 0
-    ) {
+  const renderErrorContent = (error: any) => {
+    if (!error) return null;
+    if (typeof error === 'string') return error;
+    if (error.response?.data?.errors) {
+      const errors = error.response.data.errors;
       return (
-        <ul className="list-disc pl-4 m-0 text-sm">
-          {Object.entries(err.errors).map(([key, msg]) => (
-            <li key={key}>
-              <span className="font-semibold capitalize">{key}:</span>{' '}
-              {String(msg)}
+        <ul className="list-disc pl-4 text-xs">
+          {Object.entries(errors).map(([field, messages]: [string, any]) => (
+            <li key={field}>
+              <strong>{field}:</strong> {Array.isArray(messages) ? messages.join(', ') : messages}
             </li>
           ))}
         </ul>
       );
     }
-
-    if (err.message) return err.message;
-
-    return String(err);
+    if (error.response?.data?.message) return error.response.data.message;
+    if (error.message) return error.message;
+    return 'Terjadi kesalahan saat pendaftaran. Silakan coba lagi.';
   };
 
   if (isMasterDataLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-100">
-        <Spin size="large" tip="Memuat data..." />
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 font-sans">
+        <div className="flex flex-col items-center gap-2">
+          <Spin size="default" />
+          <span className="text-xs text-slate-500 font-medium">Memuat data akademik...</span>
+        </div>
       </div>
     );
   }
@@ -160,305 +144,339 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md shadow-lg rounded-xl">
-        <h1 className="text-2xl font-bold text-center !text-[#70B748] mb-6">
-          Daftarkan Diri Kamu!
-        </h1>
-
-        {error && (
-          <Alert
-            title="Gagal Mendaftar"
-            description={renderErrorContent(error)}
-            type="error"
-            showIcon
-            className="!mb-4"
-          />
-        )}
-
-        <Form
-          form={accountForm}
-          layout="vertical"
-          onFinish={onAccountFinish}
-          className="mt-4"
-          autoComplete="off"
-        >
-          <Form.Item
-            label="NIK"
-            name="nik"
-            rules={[
-              { required: true, message: 'NIK wajib diisi' },
-              { len: 16, message: 'NIK harus 16 digit' },
-              { pattern: /^[0-9]+$/, message: 'NIK harus berupa angka' },
-            ]}
-          >
-            <Input
-              prefix={<IdcardOutlined className="pr-1" />}
-              placeholder="Masukkan 16 digit NIK"
-              maxLength={16}
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Email (Optional)"
-            name="email"
-            rules={[
-              { type: 'email', message: 'Format email tidak valid' },
-            ]}
-          >
-            <Input
-              prefix={<UserOutlined className="pr-1" />}
-              placeholder="Masukkan email"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Password"
-            name="password"
-            validateTrigger={['onChange', 'onBlur']}
-            rules={[
-              { required: true, message: 'Password wajib diisi' },
-              { min: 8, message: 'Password minimal berisi 8 karakter' },
-            ]}
-          >
-            <Input.Password
-              prefix={<LockOutlined className="pr-1" />}
-              placeholder="Masukkan password"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Konfirmasi Password"
-            name="confirmPassword"
-            dependencies={['password']}
-            hasFeedback
-            rules={[
-              { required: true, message: 'Konfirmasi password wajib diisi' },
-              ({ getFieldValue }) => ({
-                validator(_, value) {
-                  if (!value || getFieldValue('password') === value) {
-                    return Promise.resolve();
-                  }
-                  return Promise.reject(
-                    new Error('Password yang Anda masukkan tidak sama!')
-                  );
-                },
-              }),
-            ]}
-          >
-            <Input.Password
-              prefix={<LockOutlined className="pr-1" />}
-              placeholder="Ulangi password"
-            />
-          </Form.Item>
-
-          <Form.Item
-            label="Alamat"
-            name="alamat"
-            rules={[{ required: true, message: 'Alamat wajib diisi' }]}
-          >
-            <Input
-              prefix={<HomeOutlined className="pr-1" />}
-              placeholder="Masukkan alamat domisili"
-            />
-          </Form.Item>
-
-          <div className="grid grid-cols-2 gap-4">
-            <Form.Item
-              label="RW"
-              name="rw"
-              rules={[{ required: true, message: 'Pilih RW' }]}
-            >
-              <Select
-                placeholder="Pilih RW"
-                onChange={handleRWChange}
-                options={rwOptions}
-                loading={loadingRW}
-                onPopupScroll={onRWScroll}
-                notFoundContent={fetchingNextRW ? <Spin size="small" /> : null}
-                showSearch={{ filterOption }}
-              />
-            </Form.Item>
-
-            <Form.Item
-              label="RT"
-              name="rt"
-              rules={[{ required: true, message: 'Pilih RT' }]}
-            >
-              <Select
-                placeholder="Pilih RW Dulu"
-                disabled={!selectedRW}
-                options={rtOptions}
-                loading={loadingRT}
-                onPopupScroll={onRTScroll}
-                notFoundContent={fetchingNextRT ? <Spin size="small" /> : null}
-                showSearch={{ filterOption }}
-              />
-            </Form.Item>
+    <div className="min-h-screen bg-slate-50 flex flex-col justify-between p-4 sm:p-6 font-sans text-slate-800">
+      <div className="flex-1 flex items-center justify-center py-6">
+        <div className="w-full max-w-[460px]">
+          {/* Institutional Teacher Notice */}
+          <div className="mb-4 bg-emerald-50/80 border border-emerald-200/80 rounded-xl p-3.5 flex items-start gap-3">
+            <InfoCircleOutlined className="text-emerald-700 text-base mt-0.5 shrink-0" />
+            <div className="text-xs text-emerald-950 leading-relaxed">
+              <span className="font-semibold block text-emerald-900 mb-0.5">Informasi Akses Guru & Pembimbing</span>
+              Pendaftaran mandiri ini hanya untuk <strong>Siswa</strong>. Akun Guru BK & Wali Kelas telah disiapkan oleh sekolah. Silakan langsung masuk melalui{' '}
+              <Link to="/masuk-admin" className="font-semibold text-emerald-800 underline hover:text-emerald-950">
+                Portal Pengajar & Guru
+              </Link>.
+            </div>
           </div>
 
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              block
-              loading={isLoading}
-              className="!bg-[#70B748] !hover:bg-green-600 h-10 font-medium"
-            >
-              Selanjutnya
-            </Button>
-          </Form.Item>
-        </Form>
+          <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm">
+            {/* Header Brand */}
+            <div className="flex items-center gap-3.5 pb-5 mb-5 border-b border-slate-100">
+              <div className="w-11 h-11 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
+                <img
+                  src="/logo-al-multazam.png"
+                  alt="Logo SMAIT Al-Multazam"
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
+              <div>
+                <h1 className="text-base font-bold text-slate-900 leading-tight">
+                  SMAIT Al-Multazam
+                </h1>
+                <p className="text-xs text-slate-500 font-medium">
+                  Registrasi Akun Siswa Baru
+                </p>
+              </div>
+            </div>
 
-        <div className="text-center mt-4">
-          <span className="text-gray-600">Sudah punya akun? </span>
-          <a
-            href="/masuk"
-            className="!text-[#70B748] font-medium hover:underline"
-          >
-            Masuk
-          </a>
+            <div className="mb-5">
+              <h2 className="text-lg font-bold text-slate-900 tracking-tight">
+                Pendaftaran Akun Siswa
+              </h2>
+              <p className="text-xs text-slate-500 mt-1">
+                Lengkapi identitas NISN, kata sandi, dan kelas Anda
+              </p>
+            </div>
+
+            {error && (
+              <Alert
+                message="Gagal Mendaftar"
+                description={renderErrorContent(error)}
+                type="error"
+                showIcon
+                className="!mb-4 !rounded-lg !border-rose-200 !bg-rose-50/70 text-xs"
+              />
+            )}
+
+            <Form
+              form={accountForm}
+              layout="vertical"
+              onFinish={onAccountFinish}
+              size="middle"
+              autoComplete="off"
+              className="space-y-3.5"
+            >
+              <Form.Item
+                label={
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                    NISN (Nomor Induk Siswa Nasional)
+                  </span>
+                }
+                name="nik"
+                rules={[
+                  { required: true, message: 'NISN wajib diisi' },
+                  { len: 10, message: 'NISN harus tepat 10 digit angka' },
+                  { pattern: /^[0-9]+$/, message: 'NISN harus berupa angka' },
+                ]}
+                className="!mb-0"
+              >
+                <Input
+                  prefix={<IdcardOutlined className="text-slate-400 mr-2 text-sm" />}
+                  placeholder="Contoh: 0081234567 (10 digit)"
+                  className="!rounded-lg text-sm py-2 !border-slate-300 hover:!border-emerald-600 focus:!border-emerald-600"
+                  maxLength={10}
+                  inputMode="numeric"
+                />
+              </Form.Item>
+
+              <Form.Item
+                label={
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                    Email Siswa (Opsional)
+                  </span>
+                }
+                name="email"
+                rules={[{ type: 'email', message: 'Format email tidak valid' }]}
+                className="!mb-0"
+              >
+                <Input
+                  prefix={<UserOutlined className="text-slate-400 mr-2 text-sm" />}
+                  placeholder="nama@siswa.almultazam.sch.id"
+                  className="!rounded-lg text-sm py-2 !border-slate-300 hover:!border-emerald-600 focus:!border-emerald-600"
+                />
+              </Form.Item>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Form.Item
+                  label={
+                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                      Kata Sandi
+                    </span>
+                  }
+                  name="password"
+                  validateTrigger={['onChange', 'onBlur']}
+                  rules={[
+                    { required: true, message: 'Kata sandi wajib diisi' },
+                    { min: 8, message: 'Minimal 8 karakter' },
+                  ]}
+                  className="!mb-0"
+                >
+                  <Input.Password
+                    prefix={<LockOutlined className="text-slate-400 mr-2 text-sm" />}
+                    placeholder="Minimal 8 karakter"
+                    className="!rounded-lg text-sm py-2 !border-slate-300 hover:!border-emerald-600 focus:!border-emerald-600"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label={
+                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                      Konfirmasi Sandi
+                    </span>
+                  }
+                  name="confirmPassword"
+                  dependencies={['password']}
+                  rules={[
+                    { required: true, message: 'Konfirmasi sandi wajib diisi' },
+                    ({ getFieldValue }) => ({
+                      validator(_, value) {
+                        if (!value || getFieldValue('password') === value) {
+                          return Promise.resolve();
+                        }
+                        return Promise.reject(new Error('Sandi tidak cocok!'));
+                      },
+                    }),
+                  ]}
+                  className="!mb-0"
+                >
+                  <Input.Password
+                    prefix={<LockOutlined className="text-slate-400 mr-2 text-sm" />}
+                    placeholder="Ulangi sandi"
+                    className="!rounded-lg text-sm py-2 !border-slate-300 hover:!border-emerald-600 focus:!border-emerald-600"
+                  />
+                </Form.Item>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <Form.Item
+                  label={
+                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                      Tingkat / Jenjang
+                    </span>
+                  }
+                  name="rw"
+                  rules={[{ required: true, message: 'Pilih tingkat' }]}
+                  className="!mb-0"
+                >
+                  <Select
+                    placeholder="Pilih Tingkat"
+                    onChange={handleRWChange}
+                    options={rwOptions}
+                    loading={loadingRW}
+                    onPopupScroll={onRWScroll}
+                    notFoundContent={fetchingNextRW ? <Spin size="small" /> : null}
+                    showSearch={{ filterOption }}
+                    className="text-sm h-10"
+                  />
+                </Form.Item>
+
+                <Form.Item
+                  label={
+                    <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                      Kelas
+                    </span>
+                  }
+                  name="rt"
+                  rules={[{ required: true, message: 'Pilih kelas' }]}
+                  className="!mb-0"
+                >
+                  <Select
+                    placeholder="Pilih Kelas"
+                    disabled={!selectedRW}
+                    options={rtOptions}
+                    loading={loadingRT}
+                    onPopupScroll={onRTScroll}
+                    notFoundContent={fetchingNextRT ? <Spin size="small" /> : null}
+                    showSearch={{ filterOption }}
+                    className="text-sm h-10"
+                  />
+                </Form.Item>
+              </div>
+
+              <Form.Item className="!mb-0 !pt-3">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  loading={isLoading}
+                  className="!bg-[#70B748] hover:!bg-[#5e9e3b] !border-none !h-10 !rounded-lg text-sm font-semibold text-white"
+                >
+                  Lanjut: Lengkapi Data Diri
+                </Button>
+              </Form.Item>
+            </Form>
+
+            <div className="text-center mt-5 pt-4 border-t border-slate-100 text-xs text-slate-500">
+              Sudah memiliki akun siswa?{' '}
+              <Link to="/masuk" className="text-emerald-700 font-semibold hover:underline">
+                Masuk di sini
+              </Link>
+            </div>
+          </div>
         </div>
-      </Card>
+      </div>
 
       <Modal
         title={
-          <div className="text-center !text-[#70B748] font-bold text-xl">
-            Lengkapi Data Diri
+          <div className="pb-3 border-b border-slate-100 text-sm font-bold text-slate-900">
+            Lengkapi Identitas Pribadi Siswa
           </div>
         }
         open={showModal}
         onCancel={() => setShowModal(false)}
         footer={null}
         centered
-        width={600}
+        width={480}
       >
         <Form
           form={profileForm}
           layout="vertical"
           onFinish={onProfileFinish}
           initialValues={{ gender: 'm' }}
+          size="middle"
+          className="pt-4 space-y-3.5"
         >
           {error && (
             <Alert
               message="Gagal Mendaftar"
               description={renderErrorContent(error)}
               type="error"
-              className="!mb-4"
+              className="!mb-3 !rounded-lg text-xs"
             />
           )}
 
           <Form.Item
-            label="Nama Lengkap"
+            label={
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                Nama Lengkap Siswa
+              </span>
+            }
             name="namaLengkap"
             rules={[{ required: true, message: 'Nama lengkap wajib diisi' }]}
+            className="!mb-0"
           >
-            <Input placeholder="Masukkan nama lengkap" />
+            <Input placeholder="Contoh: Muhammad Fatih" className="!rounded-lg text-sm py-2" />
           </Form.Item>
 
           <Form.Item
-            label="Nomor Handphone"
+            label={
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                Nomor Telepon / WhatsApp
+              </span>
+            }
             name="noHp"
             rules={[
-              { pattern: /^[0-9]+$/, message: 'Hanya boleh angka' },
+              { pattern: /^[0-9]+$/, message: 'Hanya boleh berisi angka' },
               { min: 10, message: 'Minimal 10 digit' },
               { max: 15, message: 'Maksimal 15 digit' },
             ]}
+            className="!mb-0"
           >
-            <Input placeholder="Contoh: 081234567890" maxLength={15} />
+            <Input placeholder="Contoh: 081234567890" maxLength={15} className="!rounded-lg text-sm py-2" />
           </Form.Item>
 
           <Form.Item
-            label="Tanggal Lahir"
+            label={
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                Tanggal Lahir
+              </span>
+            }
             name="tanggalLahir"
             rules={[{ required: true, message: 'Tanggal lahir wajib diisi' }]}
+            className="!mb-0"
           >
             <DatePicker
-              className="w-full"
+              className="w-full !rounded-lg text-sm py-2"
               placeholder="Pilih tanggal lahir"
               format="DD MMMM YYYY"
             />
           </Form.Item>
 
           <Form.Item
-            label="Jenis Kelamin"
+            label={
+              <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                Jenis Kelamin
+              </span>
+            }
             name="gender"
             rules={[{ required: true }]}
+            className="!mb-0"
           >
-            <Radio.Group>
+            <Radio.Group className="text-sm">
               <Radio value="m">Laki-laki</Radio>
               <Radio value="f">Perempuan</Radio>
             </Radio.Group>
           </Form.Item>
 
-          <Form.Item
-            label="Status Pernikahan"
-            name="statusPernikahan"
-            rules={[{ required: true, message: 'Pilih status pernikahan' }]}
-          >
-            <Radio.Group>
-              {marriageList?.map((status: any) => (
-                <Radio key={status.id} value={status.id}>
-                  {status.name}
-                </Radio>
-              ))}
-            </Radio.Group>
-          </Form.Item>
-
-          <Form.Item label="Jumlah Anak" name="jumlahAnak">
-            <Input type="number" min={0} placeholder="0" />
-          </Form.Item>
-
-          <Form.Item
-            label="Pendidikan Terakhir"
-            name="pendidikan"
-            rules={[{ required: true, message: 'Pilih pendidikan' }]}
-          >
-            <Select placeholder="Pilih Pendidikan">
-              {educationList?.map((edu) => (
-                <Option key={edu.id} value={edu.id}>
-                  {edu.name}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <Form.Item
-            label="Pekerjaan"
-            name="pekerjaan"
-            rules={[{ required: true, message: 'Pekerjaan wajib diisi' }]}
-          >
-            <Input placeholder="Masukkan pekerjaan" />
-          </Form.Item>
-
-          <Form.Item
-            label="Rentang Gaji"
-            name="gaji"
-            rules={[{ required: true, message: 'Pilih rentang gaji' }]}
-          >
-            <Select placeholder="Pilih Rentang Gaji">
-              {salaryList?.map((salary) => (
-                <Option key={salary.id} value={salary.id}>
-                  Rp {parseInt(salary.minRange).toLocaleString()} - Rp{' '}
-                  {parseInt(salary.maxRange).toLocaleString()}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-
-          <div className="flex justify-end gap-3 mt-6">
-            <Button onClick={() => setShowModal(false)}>Kembali</Button>
+          <div className="flex justify-end gap-2 pt-4 border-t border-slate-100">
+            <Button onClick={() => setShowModal(false)} className="!rounded-lg text-xs">
+              Kembali
+            </Button>
             <Button
               type="primary"
               htmlType="submit"
               loading={isLoading}
-              className="!bg-[#70B748] !hover:bg-green-600"
+              className="!bg-[#70B748] hover:!bg-[#5e9e3b] !rounded-lg text-xs font-semibold !border-none text-white"
             >
-              Simpan & Daftar
+              Simpan & Selesaikan Pendaftaran
             </Button>
           </div>
         </Form>
       </Modal>
+
+      <footer className="text-center py-4 text-xs text-slate-400 font-normal">
+        © {new Date().getFullYear()} SMAIT Al-Multazam. Sistem Informasi Konseling Siswa.
+      </footer>
     </div>
   );
 }

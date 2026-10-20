@@ -1,9 +1,9 @@
-import { Button, Card, Modal, Tooltip } from "antd";
-import { AlertCircle, Clock, Coffee, FileText, Heart, Info, PlayCircle } from "lucide-react";
+import { Button, Modal, Tooltip } from "antd";
+import { AlertCircle, Clock, Coffee, FileText, Heart, Info, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration";
-import { PiFolderStarLight } from "react-icons/pi";
+import { BookOpen } from "lucide-react";
 
 dayjs.extend(duration);
 
@@ -21,27 +21,23 @@ export const WelcomeHeader = ({ fullname }: WelcomeHeaderProps) => {
   const firstName = fullname?.split(" ")[0] || "Siswa";
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#70B748] to-[#5a9e36] text-white shadow-lg mb-10 transition-all hover:shadow-xl">
-      <div className="absolute -top-10 -right-10 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl pointer-events-none"></div>
-      <div className="absolute top-20 left-10 w-32 h-32 bg-yellow-300 opacity-20 rounded-full blur-2xl pointer-events-none"></div>
-
-      <div className="relative z-10 px-6 py-8 sm:px-10 sm:py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div className="flex-1">
-          <div className="flex items-center gap-2 mb-3 opacity-90">
-            <span className="bg-white/20 px-3 py-1 rounded-full text-xs font-medium backdrop-blur-sm border border-white/10 shadow-sm">
-              {dayjs().locale("id").format("dddd, D MMMM YYYY")}
-            </span>
-          </div>
-
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-3 text-white">
-            {greeting}, {firstName}! 👋
+    <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 mb-8 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 mb-4 border-b border-slate-100">
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-wider text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-100 inline-block mb-2">
+            Portal Bimbingan Konseling
+          </span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            {greeting}, {firstName}
           </h1>
-
-          <p className="text-green-50 max-w-2xl text-sm sm:text-base leading-relaxed opacity-95 font-medium">
-            Luangkan waktu sejenak untuk mengisi kuesioner skrining kesehatan mental. Hasilnya digunakan Guru BK untuk membantu pendampingan belajar dan keseharianmu di sekolah.
-          </p>
+        </div>
+        <div className="text-xs text-slate-400 font-medium md:text-right">
+          {dayjs().locale("id").format("dddd, D MMMM YYYY")}
         </div>
       </div>
+      <p className="text-sm text-slate-600 max-w-3xl leading-relaxed">
+        Kuesioner ini dirancang untuk memantau kesehatan mental dan kesejahteraan emosional siswa. Hasil pengisian akan digunakan oleh Guru BK dan Wali Kelas untuk memberikan pendampingan akademik maupun personal yang tepat.
+      </p>
     </div>
   );
 };
@@ -53,75 +49,74 @@ interface AttentionModalProps {
 }
 
 const AttentionModal = (props: AttentionModalProps) => {
-  const { open, onClose, onConfirm } = props
+  const { open, onClose, onConfirm } = props;
 
   return (
     <Modal
       title={
-        <div className="flex items-center gap-2 text-[#70B748]">
-          <Info size={24} />
-          <span className="text-xl font-bold">Sebelum Memulai...</span>
+        <div className="flex items-center gap-2 text-slate-900 pb-2 border-b border-slate-100">
+          <Info size={18} className="text-emerald-600" />
+          <span className="text-base font-bold">Petunjuk Pengisian Kuesioner</span>
         </div>
       }
       open={open}
       onCancel={onClose}
       footer={[
-        <Button key="back" onClick={onClose}>
+        <Button key="back" onClick={onClose} className="!rounded-lg text-sm">
           Nanti Saja
         </Button>,
         <Button
           key="submit"
           type="primary"
-          className="!bg-[#70B748] !hover:bg-[#5a9639]"
-          size="large"
+          className="!bg-[#70B748] hover:!bg-[#5e9e3b] !rounded-lg text-sm font-semibold !border-none"
           onClick={onConfirm}
         >
-          Lanjutkan
+          Mulai Mengerjakan
         </Button>,
       ]}
       centered
-      width={500}
+      width={480}
     >
-      <div className="py-4">
-        <p className="text-gray-600 mb-4 text-base">
-          Agar hasil skrining bermanfaat secara optimal, mohon perhatikan petunjuk berikut:
+      <div className="py-4 space-y-4 text-slate-700 text-sm">
+        <p className="text-slate-600 text-xs">
+          Sebelum mulai mengisi, mohon perhatikan hal-hal berikut agar hasil skrining akurat dan bermanfaat:
         </p>
 
-        <div className="space-y-4">
-          <div className="flex gap-3">
-            <div className="bg-blue-50 p-2 rounded-full h-fit text-blue-500">
-              <Coffee size={20} />
-            </div>
+        <div className="space-y-3">
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-200/80 flex items-start gap-3">
+            <Coffee size={18} className="text-slate-500 mt-0.5 shrink-0" />
             <div>
-              <h4 className="font-semibold text-gray-800">Kondisi Tenang</h4>
-              <p className="text-sm text-gray-500">Isi kuesioner saat kamu memiliki waktu luang dan tidak terburu-buru.</p>
+              <h4 className="text-xs font-bold text-slate-800">Kondisi Tenang</h4>
+              <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                Pilih tempat yang nyaman dan pastikan kamu tidak terburu-buru saat menjawab.
+              </p>
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <div className="bg-pink-50 p-2 rounded-full h-fit text-pink-500">
-              <Heart size={20} />
-            </div>
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-200/80 flex items-start gap-3">
+            <Heart size={18} className="text-slate-500 mt-0.5 shrink-0" />
             <div>
-              <h4 className="font-semibold text-gray-800">Jawab Sesuai Keadaan</h4>
-              <p className="text-sm text-gray-500">Tidak ada jawaban benar atau salah. Pilihlah jawaban yang paling menggambarkan kondisimu.</p>
+              <h4 className="text-xs font-bold text-slate-800">Jawab Sesuai Keadaan</h4>
+              <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                Tidak ada jawaban benar atau salah. Pilihlah opsi yang paling menggambarkan kondisimu selama 30 hari terakhir.
+              </p>
             </div>
           </div>
 
-          <div className="flex gap-3">
-            <div className="bg-yellow-50 p-2 rounded-full h-fit text-yellow-500">
-              <FileText size={20} />
-            </div>
+          <div className="p-3 rounded-lg bg-slate-50 border border-slate-200/80 flex items-start gap-3">
+            <FileText size={18} className="text-slate-500 mt-0.5 shrink-0" />
             <div>
-              <h4 className="font-semibold text-gray-800">Kerahasiaan Data</h4>
-              <p className="text-sm text-gray-500">Data jawaban dijaga kerahasiaannya dan hanya dapat diakses oleh Guru BK dan Wali Kelas untuk pendampingan.</p>
+              <h4 className="text-xs font-bold text-slate-800">Kerahasiaan Terjaga</h4>
+              <p className="text-xs text-slate-500 mt-0.5 leading-relaxed">
+                Seluruh data jawaban dilindungi dan hanya digunakan oleh Guru BK & Wali Kelas demi pendampingan belajar.
+              </p>
             </div>
           </div>
         </div>
       </div>
     </Modal>
-  )
-}
+  );
+};
 
 interface QuestionnaireCardProps {
   id: string;
@@ -198,80 +193,62 @@ export const QuestionnaireCard = ({
 
   return (
     <>
-      <Card
-        hoverable
-        className={`h-full flex flex-col border border-gray-200 rounded-2xl transition-all duration-300 group overflow-hidden ${disabled ? "hover:border-[#70B748] hover:shadow-md bg-white" : "bg-gray-50/80"
-          }`}
-        styles={{
-          body: {
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            padding: "20px",
-          },
-        }}
-      >
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-1.5 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100">
-            <PiFolderStarLight size={14} className="text-blue-500" />
-            <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">
+      <div className="h-full flex flex-col bg-white border border-slate-200 rounded-xl p-5 shadow-sm transition-colors hover:border-slate-300">
+        <div className="flex items-center justify-between mb-3.5">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded bg-slate-100 border border-slate-200/70 text-slate-700">
+            <BookOpen size={13} className="text-slate-500" />
+            <span className="text-[11px] font-semibold uppercase tracking-wider">
               {category || "Umum"}
             </span>
           </div>
 
           {disabled ? (
-            <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-100">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>
-              <span className="text-xs font-bold">Tersedia</span>
-            </div>
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              Tersedia
+            </span>
           ) : (
-            <Tooltip title="Anda baru saja mengerjakan kuesioner ini. Harap tunggu hingga masa tenggang berakhir.">
-              <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-100 cursor-help">
+            <Tooltip title="Anda baru saja menyelesaikan kuesioner ini. Harap menunggu jadwal berikutnya.">
+              <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700 border border-amber-200 cursor-help">
                 <AlertCircle size={12} />
-                <span className="text-xs font-bold">Masa Tenggang</span>
-              </div>
+                Masa Tenggang
+              </span>
             </Tooltip>
           )}
         </div>
 
         <div className="flex-1 mb-5">
-          <h3
-            className={`text-lg font-bold mb-2 line-clamp-2 leading-snug transition-colors ${disabled ? "text-gray-800 group-hover:text-[#70B748]" : "text-gray-500"
-              }`}
-          >
+          <h3 className="text-base font-bold text-slate-900 mb-2 leading-snug line-clamp-2">
             {title}
           </h3>
-          <p className="text-gray-500 text-sm line-clamp-3 leading-relaxed">
-            {description || "Tidak ada deskripsi tersedia untuk kuesioner ini."}
+          <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
+            {description || "Tidak ada deskripsi tambahan untuk instrumen kuesioner ini."}
           </p>
         </div>
 
         <Button
           type="primary"
-          size="large"
           disabled={!disabled}
           onClick={handleCardClick}
-          className={`!w-full h-11 font-semibold rounded-xl border-none shadow-none transition-all duration-300 !flex !items-center !justify-center gap-2 ${disabled
-            ? "bg-[#70B748] hover:!bg-[#5a9639] hover:shadow-lg hover:shadow-green-200 hover:-translate-y-0.5"
-            : "bg-gray-200 text-gray-400 cursor-not-allowed"
-            }`}
+          className={`!w-full !h-10 !rounded-lg !text-xs !font-semibold !border-none transition-colors ${
+            disabled
+              ? "!bg-[#70B748] hover:!bg-[#5e9e3b] !text-white"
+              : "!bg-slate-100 !text-slate-400 cursor-not-allowed"
+          }`}
         >
           {disabled ? (
-            <div className="flex items-center justify-center gap-x-2">
-              <PlayCircle size={18} />
-              <span>Mulai Mengerjakan</span>
-            </div>
+            <span className="flex items-center justify-center gap-1.5">
+              <Play size={14} />
+              Mulai Pengerjaan
+            </span>
           ) : (
-            <div className="flex items-center justify-center gap-x-2">
-              <Clock size={18} />
-              <span className="text-sm">{timerString || "Menunggu..."}</span>
-            </div>
+            <span className="flex items-center justify-center gap-1.5">
+              <Clock size={14} />
+              Tersedia Dalam: {timerString || "Menghitung..."}
+            </span>
           )}
         </Button>
-      </Card>
+      </div>
 
       <AttentionModal
         open={isModalOpen}

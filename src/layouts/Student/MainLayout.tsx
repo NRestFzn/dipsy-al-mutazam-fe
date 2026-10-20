@@ -50,10 +50,10 @@ export default function StudentLayout() {
   }
 
   if (!user) {
-    return <Navigate to="/masuk-masuk" state={{ from: location }} replace />;
+    return <Navigate to="/masuk" state={{ from: location }} replace />;
   }
 
-  const profile = response?.data;
+  const profile = response?.data || user;
   const profilePictureUrl = getImageUrl(profile?.profilePicture);
 
   return (
