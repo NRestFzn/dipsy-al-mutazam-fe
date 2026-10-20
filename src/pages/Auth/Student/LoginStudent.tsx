@@ -32,8 +32,8 @@ export default function LoginStudent() {
     <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 overflow-hidden bg-gray-50 font-sans selection:bg-[#70B748] selection:text-white">
 
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#70B748]/10 blur-[100px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#5a9639]/10 blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-500/5 blur-[120px]" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-emerald-700/5 blur-[140px]" />
       </div>
 
       <div className="relative w-full max-w-[540px] z-10 animate-in fade-in zoom-in duration-500 slide-in-from-bottom-4">
@@ -121,9 +121,9 @@ export default function LoginStudent() {
                 htmlType="submit"
                 block
                 loading={isLoading}
-                className="!bg-gradient-to-r !from-[#70B748] !to-[#5a9639] !border-none !h-12 !rounded-xl !text-lg !font-bold !shadow-lg !shadow-green-500/20 hover:!shadow-green-500/40 hover:!scale-[1.02] active:!scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
+                className="!bg-[#70B748] hover:!bg-[#5e9e3b] !border-none !h-11 !rounded-xl !text-base !font-semibold !shadow-none hover:!shadow-sm transition-colors flex items-center justify-center gap-2"
               >
-                <span>Masuk Sekarang</span>
+                <span>Masuk</span>
                 {!isLoading && <ChevronRight size={20} className="!stroke-[3px]" />}
               </Button>
             </Form.Item>
@@ -150,7 +150,7 @@ export default function LoginStudent() {
                 to="/masuk-admin"
                 className="!text-gray-500 font-semibold text-xs !hover:text-[#70B748] !hover:underline transition-colors"
               >
-                Masuk Guru
+                Masuk Guru BK / Wali Kelas
               </Link>
             </div>
           </div>

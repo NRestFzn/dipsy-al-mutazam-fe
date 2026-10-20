@@ -38,7 +38,7 @@ export const WelcomeHeader = ({ fullname }: WelcomeHeaderProps) => {
           </h1>
 
           <p className="text-green-50 max-w-2xl text-sm sm:text-base leading-relaxed opacity-95 font-medium">
-            Bagaimana kabarmu hari ini? Yuk, luangkan waktu sejenak untuk mengisi skrining kesehatan mental di sekolah Al-Multazam. Guru BK siap mendampingimu.
+            Luangkan waktu sejenak untuk mengisi kuesioner skrining kesehatan mental. Hasilnya digunakan Guru BK untuk membantu pendampingan belajar dan keseharianmu di sekolah.
           </p>
         </div>
       </div>
@@ -76,7 +76,7 @@ const AttentionModal = (props: AttentionModalProps) => {
           size="large"
           onClick={onConfirm}
         >
-          Saya Siap & Lanjut
+          Lanjutkan
         </Button>,
       ]}
       centered
@@ -84,7 +84,7 @@ const AttentionModal = (props: AttentionModalProps) => {
     >
       <div className="py-4">
         <p className="text-gray-600 mb-4 text-base">
-          Halo! Agar hasil tes ini akurat dan bermanfaat untukmu, mohon perhatikan hal-hal berikut:
+          Agar hasil skrining bermanfaat secara optimal, mohon perhatikan petunjuk berikut:
         </p>
 
         <div className="space-y-4">
@@ -93,8 +93,8 @@ const AttentionModal = (props: AttentionModalProps) => {
               <Coffee size={20} />
             </div>
             <div>
-              <h4 className="font-semibold text-gray-800">Cari Tempat Tenang</h4>
-              <p className="text-sm text-gray-500">Pastikan kamu merasa nyaman dan tidak terburu-buru saat mengisi.</p>
+              <h4 className="font-semibold text-gray-800">Kondisi Tenang</h4>
+              <p className="text-sm text-gray-500">Isi kuesioner saat kamu memiliki waktu luang dan tidak terburu-buru.</p>
             </div>
           </div>
 
@@ -103,8 +103,8 @@ const AttentionModal = (props: AttentionModalProps) => {
               <Heart size={20} />
             </div>
             <div>
-              <h4 className="font-semibold text-gray-800">Jujur pada Diri Sendiri</h4>
-              <p className="text-sm text-gray-500">Tidak ada jawaban benar atau salah. Jawablah sesuai dengan apa yang kamu rasakan saat ini.</p>
+              <h4 className="font-semibold text-gray-800">Jawab Sesuai Keadaan</h4>
+              <p className="text-sm text-gray-500">Tidak ada jawaban benar atau salah. Pilihlah jawaban yang paling menggambarkan kondisimu.</p>
             </div>
           </div>
 
@@ -113,8 +113,8 @@ const AttentionModal = (props: AttentionModalProps) => {
               <FileText size={20} />
             </div>
             <div>
-              <h4 className="font-semibold text-gray-800">Hasil Bersifat Rahasia</h4>
-              <p className="text-sm text-gray-500">Jawabanmu aman dan hanya dilihat oleh Guru BK dan Wali Kelas untuk keperluan pendampingan di sekolah.</p>
+              <h4 className="font-semibold text-gray-800">Kerahasiaan Data</h4>
+              <p className="text-sm text-gray-500">Data jawaban dijaga kerahasiaannya dan hanya dapat diakses oleh Guru BK dan Wali Kelas untuk pendampingan.</p>
             </div>
           </div>
         </div>
