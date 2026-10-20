@@ -107,23 +107,6 @@ const router = createBrowserRouter([
               },
             ],
           },
-          {
-            path: "kelola-keluarga",
-            children: [
-              {
-                index: true,
-                element: <Loadable Component={Pages.KelolaKeluarga} />,
-              },
-              {
-                path: ":familyId",
-                element: <Loadable Component={Pages.DetailKeluarga} />,
-              },
-            ],
-          },
-          {
-            path: "odgj",
-            element: <Loadable Component={Pages.AdminDesaOdgj} />,
-          },
         ],
       },
 
