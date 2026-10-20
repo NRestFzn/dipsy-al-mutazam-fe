@@ -66,7 +66,7 @@ export default function Home() {
     navigate(`/result/${submissionId}`);
   };
 
-  const wargaHistoryColumn = getHistoryColumn({
+  const studentHistoryColumn = getHistoryColumn({
     onSee: handleViewResult,
     pagination: {
       page: pagination.page,
@@ -194,7 +194,7 @@ export default function Home() {
           >
             <div className="overflow-x-auto">
               <Table<HistoryTableData>
-                columns={wargaHistoryColumn}
+                columns={studentHistoryColumn}
                 dataSource={dataSource}
                 rowKey="id"
                 loading={historyLoading || historyFetching}

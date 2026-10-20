@@ -1,4 +1,4 @@
-﻿import { Avatar, Dropdown, Tag, type MenuProps } from "antd";
+import { Avatar, Dropdown, Tag, type MenuProps } from "antd";
 import { ChevronDown, LogOut, SwitchCamera, User } from "lucide-react";
 import type { Role, UserMeResponse } from "../../../types/AuthTypes/authTypes";
 import { ROLE_ID } from "../../../constants";
@@ -90,7 +90,7 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
             alt="Logo"
           />
           <span className="text-lg font-bold text-[#70B748] hidden sm:block">
-            Desa Cibiru Wetan
+            SMAIT Al-Multazam
           </span>
         </div>
 

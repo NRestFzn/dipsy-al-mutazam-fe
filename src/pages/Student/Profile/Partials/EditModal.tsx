@@ -1,15 +1,14 @@
 import {useEffect, useState} from 'react';
-import {Modal, Form, Input, Button, Alert, Row, Col, Select} from 'antd';
+import {Modal, Form, Input, Button, Alert, Row, Col} from 'antd';
 import {Info} from 'lucide-react';
-import type { ResidentMe } from '../../../../types/Resident/residentType';
-import { useUpdateProfile } from '../../../../hooks/useResident';
-import { useMasterData } from '../../../../hooks/useMasterData';
+import type { StudentMe } from '../../../../types/Student/studentType';
+import { useUpdateProfile } from '../../../../hooks/useStudent';
 import { getErrorMessage } from '../../../../utils/getErrorMessage';
 
 interface EditProfileModalProps {
   open: boolean;
   onClose: () => void;
-  initialData: ResidentMe;
+  initialData: StudentMe;
 }
 
 export default function EditProfileModal({
@@ -22,13 +21,10 @@ export default function EditProfileModal({
 
   const [errorMsg, setErrorMsg] = useState('');
 
-  const {salaryRanges} = useMasterData();
-
   useEffect(() => {
     if (open && initialData) {
       form.setFieldsValue({
         phoneNumber: initialData.userDetail.phoneNumber,
-        SalaryRangeId: initialData.userDetail?.salaryRange?.id,
       });
     }
   }, [open, initialData, form]);
@@ -36,7 +32,6 @@ export default function EditProfileModal({
   const handleSubmit = async (values: any) => {
     const payload = {
       phoneNumber: values.phoneNumber,
-      SalaryRangeId: values.SalaryRangeId,
       ...(values.newPassword
         ? {
             password: values.newPassword,
@@ -68,7 +63,7 @@ export default function EditProfileModal({
     >
       <Alert
         title="Perbarui Data Diri"
-        description="Pastikan data pekerjaan dan pendidikan yang Anda masukkan adalah data terbaru."
+        description="Pastikan nomor telepon yang Anda masukkan adalah nomor terbaru. NISN, tingkat, dan kelas hanya dapat diubah oleh pihak sekolah."
         type="info"
         showIcon
         icon={<Info size={20} />}
@@ -95,7 +90,7 @@ export default function EditProfileModal({
         disabled={updateMutation.isPending}
       >
         <Row gutter={16}>
-          <Col span={12}>
+          <Col span={24}>
             <Form.Item
               label="Nomor Telepon"
               name="phoneNumber"
@@ -105,25 +100,6 @@ export default function EditProfileModal({
             </Form.Item>
           </Col>
 
-          <Col span={12}>
-            <Form.Item
-              label="Rentang Gaji"
-              name="SalaryRangeId"
-              rules={[{required: true, message: 'Pilih rentang gaji'}]}
-            >
-              <Select
-                placeholder="Pilih Rentang Gaji"
-                loading={salaryRanges.isLoading}
-              >
-                {salaryRanges.data?.map((salary) => (
-                  <Select.Option key={salary.id} value={salary.id}>
-                    Rp {parseInt(salary.minRange).toLocaleString()} - Rp{' '}
-                    {parseInt(salary.maxRange).toLocaleString()}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
         </Row>
 
         <div className="bg-gray-50 p-4 rounded-lg mb-6 border border-gray-200 mt-2">

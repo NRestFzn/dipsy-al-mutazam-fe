@@ -18,7 +18,7 @@ export const WelcomeHeader = ({ fullname }: WelcomeHeaderProps) => {
   else if (currentHour >= 15 && currentHour < 18) greeting = "Selamat Sore";
   else if (currentHour >= 18) greeting = "Selamat Malam";
 
-  const firstName = fullname?.split(" ")[0] || "Warga";
+  const firstName = fullname?.split(" ")[0] || "Siswa";
 
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#70B748] to-[#5a9e36] text-white shadow-lg mb-10 transition-all hover:shadow-xl">
@@ -38,7 +38,7 @@ export const WelcomeHeader = ({ fullname }: WelcomeHeaderProps) => {
           </h1>
 
           <p className="text-green-50 max-w-2xl text-sm sm:text-base leading-relaxed opacity-95 font-medium">
-            Bagaimana kabarmu hari ini? Yuk, luangkan waktu sejenak untuk mengecek kondisi kesehatan mentalmu. Kami siap mendengarkan.
+            Bagaimana kabarmu hari ini? Yuk, luangkan waktu sejenak untuk mengisi skrining kesehatan mental di sekolah Al-Multazam. Guru BK siap mendampingimu.
           </p>
         </div>
       </div>
@@ -114,7 +114,7 @@ const AttentionModal = (props: AttentionModalProps) => {
             </div>
             <div>
               <h4 className="font-semibold text-gray-800">Hasil Bersifat Rahasia</h4>
-              <p className="text-sm text-gray-500">Jawabanmu aman dan hanya digunakan untuk keperluan analisa medis.</p>
+              <p className="text-sm text-gray-500">Jawabanmu aman dan hanya dilihat oleh Guru BK dan Wali Kelas untuk keperluan pendampingan di sekolah.</p>
             </div>
           </div>
         </div>

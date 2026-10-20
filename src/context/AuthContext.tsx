@@ -1,10 +1,10 @@
-﻿import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { authService } from "../service/authService";
 import type { APIError } from "../types/ErrorFallbackType";
 import { useQueryClient } from "@tanstack/react-query";
 import type { LoginPayload, LoginStudentPayload, RegisterPayload, Role, UserMeResponse } from "../types/AuthTypes/authTypes";
 import { ROLE_ID } from "../constants";
-import { residentService } from "../service/residentService";
+import { studentService } from "../service/studentService";
 
 interface AuthContextType {
 	user: UserMeResponse | null;
@@ -91,7 +91,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const fetchUserProfile = async (_: string, isResidentLogin: boolean = false) => {
 		try {
 			if (isResidentLogin) {
-				const residentResponse = await residentService.getResidentProfile();
+				const residentResponse = await studentService.getStudentProfile();
 				return residentResponse.data;
 			} else {
 				const profileResponse = await authService.getProfile();
@@ -123,7 +123,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 				if (isResidentOrKader) {
 					try {
-						const residentRes = await residentService.getResidentProfile();
+						const residentRes = await studentService.getStudentProfile();
 						if (residentRes.data) userData = residentRes.data;
 					} catch (e) {
 						console.error("Failed to fetch resident profile:", e);

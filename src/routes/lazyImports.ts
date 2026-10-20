@@ -1,4 +1,4 @@
-﻿import { lazy } from "react";
+import { lazy } from "react";
 
 // Fallbacks
 export const Unauthorized = lazy(
@@ -12,13 +12,13 @@ export const LoginStudent = lazy(() => import("../pages/Auth/Student/LoginStuden
 export const Register = lazy(() => import("../pages/Auth/Student/Register"));
 
 // Resident
-export const HomeKader = lazy(() => import("../pages/Resident/Kader/HomeKader"));
-export const Home = lazy(() => import("../pages/Resident/Home/Home"));
-export const Profile = lazy(() => import("../pages/Resident/Profile/Profile"));
-export const Quiz = lazy(() => import("../pages/Resident/Quiz/Quiz"));
-export const Result = lazy(() => import("../pages/Resident/Result/Result"));
-export const SummaryRWDashboard = lazy(() => import("../pages/Resident/Kader/Summary/RWSummaryDashboard"));
-export const SummaryRTDashboard = lazy(() => import("../pages/Resident/Kader/Summary/RTSummaryDashboard"));
+export const HomeKader = lazy(() => import("../pages/Student/Kader/HomeKader"));
+export const Home = lazy(() => import("../pages/Student/Home/Home"));
+export const Profile = lazy(() => import("../pages/Student/Profile/Profile"));
+export const Quiz = lazy(() => import("../pages/Student/Quiz/Quiz"));
+export const Result = lazy(() => import("../pages/Student/Result/Result"));
+export const SummaryRWDashboard = lazy(() => import("../pages/Student/Kader/Summary/RWSummaryDashboard"));
+export const SummaryRTDashboard = lazy(() => import("../pages/Student/Kader/Summary/RTSummaryDashboard"));
 
 // Admin General
 export const AdminDesaResponden = lazy(

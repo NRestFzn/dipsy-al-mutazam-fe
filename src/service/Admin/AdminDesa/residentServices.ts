@@ -1,5 +1,5 @@
 import type { ResponseData } from "../../../types/commons";
-import type { GetResidentsParams, ResidentData } from "../../../types/Resident/residentType";
+import type { GetResidentsParams, ResidentData } from "../../../types/Student/studentType";
 import { api } from "../../api";
 
 export type ResidentResponse = ResponseData<ResidentData[]>;

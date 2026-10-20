@@ -1,19 +1,19 @@
 import { Outlet, useNavigate, Navigate, useLocation } from "react-router";
 import { App, Spin } from "antd";
 import { Loader2 } from "lucide-react";
-import { useResident } from "../../hooks/useResident";
+import { useStudent } from "../../hooks/useStudent";
 import { useAuth } from "../../context/AuthContext";
 import { getImageUrl } from "../../utils/imageHelper";
 import { HomeHeader } from "./Partials/Header";
 import { HomeFooter } from "./Partials/Footer";
 
-export default function ResidentLayout() {
+export default function StudentLayout() {
   const { modal } = App.useApp();
   const { logout, activeRole, user, switchRole } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { data: response, isLoading } = useResident();
+  const { data: response, isLoading } = useStudent();
 
   const isCleanLayout =
     location.pathname.includes("/quiz") ||
@@ -60,7 +60,7 @@ export default function ResidentLayout() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {!isCleanLayout &&
         <HomeHeader
-          fullname={profile?.fullname || user?.fullname || "Warga"}
+          fullname={profile?.fullname || user?.fullname || "Siswa"}
           profileUrl={profilePictureUrl}
           activeRole={activeRole!}
           onLogout={handleLogout}
