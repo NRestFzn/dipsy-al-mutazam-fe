@@ -1,4 +1,4 @@
-import type { UserDetail } from "../Resident/residentType";
+﻿import type { UserDetail } from "../Resident/residentType";
 
 export interface UserHasRoles {
   id: string;
@@ -46,8 +46,8 @@ export interface LoginPayload {
   password: string;
 }
 
-export interface LoginResidentPayload {
-  nik: string,
+export interface LoginStudentPayload {
+  nisn: string,
   password: string
 }
 

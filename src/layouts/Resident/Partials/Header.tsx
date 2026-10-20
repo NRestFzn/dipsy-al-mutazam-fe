@@ -1,4 +1,4 @@
-import { Avatar, Dropdown, Tag, type MenuProps } from "antd";
+﻿import { Avatar, Dropdown, Tag, type MenuProps } from "antd";
 import { ChevronDown, LogOut, SwitchCamera, User } from "lucide-react";
 import type { Role, UserMeResponse } from "../../../types/AuthTypes/authTypes";
 import { ROLE_ID } from "../../../constants";
@@ -17,27 +17,27 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
   const navigate = useNavigate();
 
   const getRoleLabel = () => {
-    if (activeRole?.id === ROLE_ID.KADER) return "Petugas Kader";
-    if (activeRole?.id === ROLE_ID.KEPALA_KELUARGA) return "Kepala Keluarga";
-    if (activeRole?.id === ROLE_ID.WARGA) return "Warga Desa";
+    if (activeRole?.id === ROLE_ID.GURU_BK) return "Guru BK";
+    if (activeRole?.id === ROLE_ID.WALI_KELAS) return "Wali Kelas";
+    if (activeRole?.id === ROLE_ID.SISWA) return "Siswa";
     return "User";
   };
 
   const getRoleColor = () => {
-    if (activeRole?.id === ROLE_ID.KADER) return "blue";
-    if (activeRole?.id === ROLE_ID.KEPALA_KELUARGA) return "gold";
+    if (activeRole?.id === ROLE_ID.GURU_BK) return "blue";
+    if (activeRole?.id === ROLE_ID.WALI_KELAS) return "gold";
     return "green";
   };
 
   const getRoleTextClass = () => {
-    if (activeRole?.id === ROLE_ID.KADER) return "text-blue-500";
-    if (activeRole?.id === ROLE_ID.KEPALA_KELUARGA) return "text-amber-500";
+    if (activeRole?.id === ROLE_ID.GURU_BK) return "text-blue-500";
+    if (activeRole?.id === ROLE_ID.WALI_KELAS) return "text-amber-500";
     return "text-green-600";
   };
 
   const getAvatarClass = () => {
-    if (activeRole?.id === ROLE_ID.KADER) return "bg-blue-100 text-blue-600 border-blue-200";
-    if (activeRole?.id === ROLE_ID.KEPALA_KELUARGA) return "bg-amber-100 text-amber-600 border-amber-200";
+    if (activeRole?.id === ROLE_ID.GURU_BK) return "bg-blue-100 text-blue-600 border-blue-200";
+    if (activeRole?.id === ROLE_ID.WALI_KELAS) return "bg-amber-100 text-amber-600 border-amber-200";
     return "bg-green-100 text-green-600 border-green-200";
   };
 
@@ -124,3 +124,4 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
     </header>
   );
 };
+
