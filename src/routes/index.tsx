@@ -1,8 +1,8 @@
-﻿import { createBrowserRouter, Navigate } from "react-router";
+import { createBrowserRouter, Navigate } from "react-router";
 import { Suspense, type ComponentType, type LazyExoticComponent, } from "react";
 import Loading from "../pages/Loading";
 import ProtectedLayout from "../layouts/ProtectedLayout";
-import ResidentLayout from "../layouts/Resident/MainLayout";
+import StudentLayout from "../layouts/Student/MainLayout";
 import AdminDesaLayout from "../layouts/Admin/AdminDesa/AdminDesaLayout";
 import AdminMediLayout from "../layouts/Admin/AdminMedis/AdminMedisLayout";
 import { RoleGuard } from "../components/RoleGuard";
@@ -39,7 +39,7 @@ const router = createBrowserRouter([
       {
         element: (
           <RoleGuard allowedRoleIds={[ROLE_ID.SISWA]}>
-            <ResidentLayout />
+            <StudentLayout />
           </RoleGuard>
         ),
         children: [

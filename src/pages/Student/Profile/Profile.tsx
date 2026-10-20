@@ -17,7 +17,7 @@ import { useState } from "react";
 import EditProfileModal from "./Partials/EditModal";
 import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 import UpdatePhotoModal from "./Partials/UpdatePhotoProfile";
-import { useResident } from "../../../hooks/useResident";
+import { useStudent } from "../../../hooks/useStudent";
 import { getImageUrl } from "../../../utils/imageHelper";
 
 export default function Profile() {
@@ -26,15 +26,7 @@ export default function Profile() {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isPhotoModalOpen, setIsPhotoModalOpen] = useState(false);
 
-  const { data: response, isLoading, isError, refetch } = useResident();
-
-  const formatCurrency = (val: string) => {
-    return parseInt(val).toLocaleString("id-ID", {
-      style: "currency",
-      currency: "IDR",
-      maximumFractionDigits: 0,
-    });
-  };
+  const { data: response, isLoading, isError, refetch } = useStudent();
 
   if (isLoading) {
     return (
@@ -141,7 +133,7 @@ export default function Profile() {
                 color="green"
                 className="px-4 py-1 rounded-full text-sm border-0 bg-green-100 text-green-700 font-semibold"
               >
-                Warga Aktif
+                Siswa Aktif
               </Tag>
             </div>
 
@@ -150,10 +142,10 @@ export default function Profile() {
             <div className="grid grid-cols-2 divide-x divide-gray-100 bg-white">
               <div className="p-4 text-center">
                 <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">
-                  No Induk Kependudukan
+                  NISN
                 </p>
                 <p className="font-mono font-medium text-gray-700">
-                  {profile.userDetail.nik}
+                  {profile.userDetail.nisn || "-"}
                 </p>
               </div>
               <div className="p-4 text-center">
@@ -194,9 +186,6 @@ export default function Profile() {
               <Descriptions.Item label="Nomor Telepon">
                 {profile.userDetail.phoneNumber || "-"}
               </Descriptions.Item>
-              <Descriptions.Item label="Status Pernikahan">
-                {profile.userDetail?.marriageStatus?.name}
-              </Descriptions.Item>
             </Descriptions>
           </Card>
 
@@ -204,7 +193,7 @@ export default function Profile() {
             title={
               <div className="flex items-center gap-2">
                 <div className="w-1 h-5 bg-blue-500 rounded-full"></div>{" "}
-                Domisili & Pekerjaan
+                Informasi Akademik
               </div>
             }
             className="shadow-sm border-gray-200 rounded-2xl"
@@ -216,20 +205,11 @@ export default function Profile() {
               labelStyle={{ width: "180px", color: "#6b7280" }}
               contentStyle={{ fontWeight: 500, color: "#374151" }}
             >
-              <Descriptions.Item label="Wilayah Tinggal">
-                RW {String(profile.userDetail?.rukunWarga?.name).padStart(2, "0")}{" "}
-                / RT{" "}
-                {String(profile.userDetail?.rukunTetangga?.name).padStart(2, "0")}
+              <Descriptions.Item label="Tingkat">
+                {profile.userDetail?.gradeLevel?.name || "-"}
               </Descriptions.Item>
-              <Descriptions.Item label="Pendidikan Terakhir">
-                {profile.userDetail?.education?.name}
-              </Descriptions.Item>
-              <Descriptions.Item label="Pekerjaan">
-                {profile.userDetail.profession}
-              </Descriptions.Item>
-              <Descriptions.Item label="Rentang Pendapatan">
-                {formatCurrency(profile.userDetail?.salaryRange?.minRange as string)} -{" "}
-                {formatCurrency(profile.userDetail?.salaryRange?.maxRange as string)}
+              <Descriptions.Item label="Kelas">
+                {profile.userDetail?.classroom?.name || "-"}
               </Descriptions.Item>
             </Descriptions>
           </Card>

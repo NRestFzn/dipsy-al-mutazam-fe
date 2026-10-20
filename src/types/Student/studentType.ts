@@ -4,6 +4,7 @@ import type { UserMe } from "../profileTypes"
 export interface UserDetail {
     id: string;
     nik: string;
+    nisn?: string;
     profession: string
     phoneNumber: string
     gender: string,
@@ -21,17 +22,18 @@ export interface UserDetail {
     marriageStatus?: MarriageStatus
     education?: Education
     salaryRange?: SalaryRange
+    gradeLevel?: { id: string; name: string }
+    classroom?: { id: string; name: string }
     createdAt: string
     updatedAt: string
 }
 
-export interface ResidentMe extends UserMe {
+export interface StudentMe extends UserMe {
     userDetail: UserDetail
 }
 
-export interface UpdateProfileResidentPayload {
+export interface UpdateProfileStudentPayload {
     phoneNumber: string;
-    SalaryRangeId: string;
     newPassword?: string;
     confirmNewPassword?: string;
 }
