@@ -9,8 +9,8 @@ interface HeaderProps {
   profileUrl?: string;
   onLogout: () => void;
   activeRole: Role;
-  switchRole: (role: Role) => void
-  user: UserMeResponse
+  switchRole: (role: Role) => void;
+  user: UserMeResponse;
 }
 
 export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }: HeaderProps) => {
@@ -20,7 +20,7 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
     if (activeRole?.id === ROLE_ID.GURU_BK) return "Guru BK";
     if (activeRole?.id === ROLE_ID.WALI_KELAS) return "Wali Kelas";
     if (activeRole?.id === ROLE_ID.SISWA) return "Siswa";
-    return "User";
+    return "Pengguna";
   };
 
   const getRoleColor = () => {
@@ -29,25 +29,13 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
     return "green";
   };
 
-  const getRoleTextClass = () => {
-    if (activeRole?.id === ROLE_ID.GURU_BK) return "text-blue-500";
-    if (activeRole?.id === ROLE_ID.WALI_KELAS) return "text-amber-500";
-    return "text-green-600";
-  };
-
-  const getAvatarClass = () => {
-    if (activeRole?.id === ROLE_ID.GURU_BK) return "bg-blue-100 text-blue-600 border-blue-200";
-    if (activeRole?.id === ROLE_ID.WALI_KELAS) return "bg-amber-100 text-amber-600 border-amber-200";
-    return "bg-green-100 text-green-600 border-green-200";
-  };
-
-  const items: MenuProps['items'] = [
+  const items: MenuProps["items"] = [
     {
-      key: 'role-info',
+      key: "role-info",
       label: (
         <div className="flex flex-col px-1 py-1 cursor-default">
-          <span className="text-xs text-gray-400 font-medium">Masuk sebagai</span>
-          <Tag color={getRoleColor()} className="!mt-1 !w-fit !border-none !px-2 !py-0.5 !font-semibold">
+          <span className="text-[11px] text-slate-400 font-medium">Masuk sebagai</span>
+          <Tag color={getRoleColor()} className="!mt-1 !w-fit !border-none !px-2 !py-0.5 !font-semibold !text-xs">
             {getRoleLabel()}
           </Tag>
         </div>
@@ -56,72 +44,87 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
     },
     {
       key: "profile",
-      label: "Lihat Profil Saya",
-      icon: <User size={16} />,
+      label: <span className="text-slate-700 font-medium">Profil Saya</span>,
+      icon: <User size={15} className="text-slate-500" />,
       onClick: () => navigate("/profile"),
     },
     {
-      type: 'divider',
+      type: "divider",
     },
-    ...(user?.roles && user.roles.length > 1 ? [
-      {
-        key: 'switch-role',
-        label: <span className="text-gray-600 font-medium">Ganti Peran</span>,
-        icon: <SwitchCamera size={16} className="text-gray-500" />,
-        onClick: () => navigate("/pilih-peran"),
-      },
-      { type: 'divider' } as any,
-    ] : []),
+    ...(user?.roles && user.roles.length > 1
+      ? [
+          {
+            key: "switch-role",
+            label: <span className="text-slate-700 font-medium">Ganti Peran</span>,
+            icon: <SwitchCamera size={15} className="text-slate-500" />,
+            onClick: () => navigate("/pilih-peran"),
+          },
+          { type: "divider" } as any,
+        ]
+      : []),
     {
-      key: 'logout',
-      label: <span className="text-red-600 font-medium">Logout</span>,
-      icon: <LogOut size={16} className="text-red-500" />,
+      key: "logout",
+      label: <span className="text-rose-600 font-medium">Keluar</span>,
+      icon: <LogOut size={15} className="text-rose-500" />,
       onClick: onLogout,
     },
   ];
 
   return (
-    <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-99">
-      <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between`}>
-        <div className="flex items-center gap-3">
-          <img
-            className="w-10 h-10 object-contain"
-            src="/icon.png"
-            alt="Logo"
-          />
-          <span className="text-lg font-bold text-[#70B748] hidden sm:block">
-            SMAIT Al-Multazam
-          </span>
+    <header className="bg-white border-b border-slate-200 sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        {/* Brand */}
+        <div
+          onClick={() => navigate("/")}
+          className="flex items-center gap-3 cursor-pointer group"
+        >
+          <div className="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center p-1.5 shrink-0">
+            <img
+              className="w-full h-full object-contain"
+              src="/logo-al-multazam.png"
+              alt="Logo SMAIT Al-Multazam"
+            />
+          </div>
+          <div>
+            <span className="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors block leading-tight">
+              SMAIT Al-Multazam
+            </span>
+            <span className="text-[11px] text-slate-400 font-medium block">
+              Portal Konseling & Skrining
+            </span>
+          </div>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-4">
-            <Dropdown menu={{ items }} trigger={['click']} placement="bottomRight" arrow>
-              <div className="flex items-center gap-3 cursor-pointer p-1.5 pr-3 transition-colors">
-
-                <div className="hidden md:flex flex-col items-end">
-                  <span className="text-sm font-bold text-gray-700 leading-tight">
-                    {fullname}
-                  </span>
-                  <span className={`text-[10px] font-bold uppercase tracking-wider ${getRoleTextClass()}`}>
-                    {getRoleLabel()}
-                  </span>
-                </div>
-
-                <Avatar
-                  src={profileUrl}
-                  icon={!profileUrl && <User size={20} />}
-                  className={`flex-shrink-0 border-2 ${getAvatarClass()}`}
-                  size={40}
-                />
-
-                <ChevronDown size={16} className="text-gray-400 hidden sm:block" />
+        {/* User Dropdown */}
+        <div className="flex items-center gap-3">
+          <Dropdown menu={{ items }} trigger={["click"]} placement="bottomRight">
+            <button
+              type="button"
+              className="flex items-center gap-3 p-1.5 pl-2.5 rounded-lg border border-slate-200 hover:border-slate-300 hover:bg-slate-50 transition-colors cursor-pointer text-left focus:outline-none"
+            >
+              <div className="hidden sm:flex flex-col items-end">
+                <span className="text-xs font-semibold text-slate-800 leading-tight max-w-[140px] truncate">
+                  {fullname}
+                </span>
+                <span className="text-[10px] text-slate-400 font-medium">
+                  {getRoleLabel()}
+                </span>
               </div>
-            </Dropdown>
-          </div>
+
+              <Avatar
+                src={profileUrl}
+                icon={!profileUrl && <User size={16} />}
+                className="bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0 font-bold"
+                size={32}
+              >
+                {!profileUrl && fullname ? fullname.charAt(0).toUpperCase() : ""}
+              </Avatar>
+
+              <ChevronDown size={14} className="text-slate-400 hidden sm:block" />
+            </button>
+          </Dropdown>
         </div>
       </div>
     </header>
   );
 };
-

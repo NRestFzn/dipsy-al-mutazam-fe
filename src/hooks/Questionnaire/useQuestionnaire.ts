@@ -12,7 +12,7 @@ export const useQuestionnaire = () => {
   });
 
   return {
-    questionnaires: query.data?.data || [] as Questionnaire[],
+    questionnaires: query.data?.data || ([] as Questionnaire[]),
     loading: query.isLoading,
     error: query.error,
     refetch: query.refetch,
@@ -34,22 +34,21 @@ export const useAdminQuestionnaire = (params: GetQuestionnaireParams) => {
     queryKey: ["questionnaires", params],
     queryFn: () => questionnaireService.getAllQuestionnaire(params),
     staleTime: 1000 * 60 * 5,
-  })
+  });
 
-  return query
-}
+  return query;
+};
 
 export const useQuestionnaireDetail = (id: string | undefined) => {
   return useQuery({
     queryKey: ["questionnaire-detail", id],
     queryFn: () => {
       if (!id) throw new Error("ID is required");
-      // Panggil service yang punya logika fallback
       return questionnaireService.getDetailWithFallback(id);
     },
-    enabled: !!id, // Hanya jalan jika ID ada
-    staleTime: 1000 * 60 * 5, // Cache 5 menit
-    retry: 1, // Retry 1 kali saja jika gagal total
+    enabled: !!id,
+    staleTime: 1000 * 60 * 5,
+    retry: 1,
   });
 };
 
@@ -92,7 +91,6 @@ export const useQuestionnaireMutation = () => {
     createMutation,
     updateMutation,
     deleteMutation,
-
-    submitMutation
+    submitMutation,
   };
 };

@@ -1,21 +1,18 @@
 import { useNavigate } from "react-router";
 import {
-  Card,
   Avatar,
   Tag,
   Descriptions,
   Button,
   Skeleton,
-  Divider,
   Result,
 } from "antd";
-import { ArrowLeft, Edit, Camera } from "lucide-react";
+import { ArrowLeft, Edit, Camera, GraduationCap, User as UserIcon } from "lucide-react";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 
 import { useState } from "react";
 import EditProfileModal from "./Partials/EditModal";
-import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 import UpdatePhotoModal from "./Partials/UpdatePhotoProfile";
 import { useStudent } from "../../../hooks/useStudent";
 import { getImageUrl } from "../../../utils/imageHelper";
@@ -30,16 +27,11 @@ export default function Profile() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 pb-20">
-        <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-1">
-              <Skeleton.Node active style={{ width: "100%", height: 400 }} />
-            </div>
-            <div className="lg:col-span-2 space-y-6">
-              <Skeleton active paragraph={{ rows: 6 }} />
-              <Skeleton active paragraph={{ rows: 6 }} />
-            </div>
+      <div className="min-h-screen bg-slate-50 pb-16 font-sans">
+        <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
+          <div className="space-y-4">
+            <Skeleton active paragraph={{ rows: 4 }} />
+            <Skeleton active paragraph={{ rows: 6 }} />
           </div>
         </main>
       </div>
@@ -48,17 +40,26 @@ export default function Profile() {
 
   if (isError || !response?.data) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center w-screen">
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
         <Result
           status="error"
           title="Gagal Memuat Profil"
-          subTitle="Terjadi kesalahan saat mengambil data profil Anda."
+          subTitle="Terjadi kendala saat mengambil data profil siswa."
           extra={[
-            <Button type="primary" onClick={() => refetch()} key="retry">
+            <Button
+              type="primary"
+              onClick={() => refetch()}
+              key="retry"
+              className="!bg-[#70B748] !rounded-lg text-xs"
+            >
               Coba Lagi
             </Button>,
-            <Button onClick={() => navigate("/")} key="home">
-              Kembali ke Home
+            <Button
+              onClick={() => navigate("/")}
+              key="home"
+              className="!rounded-lg text-xs"
+            >
+              Kembali ke Beranda
             </Button>,
           ]}
         />
@@ -68,151 +69,144 @@ export default function Profile() {
 
   const profile = response.data;
   const profilePictureUrl = getImageUrl(profile.profilePicture);
-  const userDetail = profile.userDetail
+  const userDetail = profile.userDetail;
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20">
+    <div className="min-h-screen bg-slate-50 pb-16 font-sans text-slate-800">
       <main className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-        <div className="flex justify-between items-center mb-6">
+        {/* Top Navigation */}
+        <div className="flex items-center justify-between mb-6">
           <Button
             type="text"
             onClick={() => navigate("/")}
-            className="hover:bg-gray-200 text-gray-600 font-medium flex items-center gap-x-2 px-0"
+            className="!text-slate-600 hover:!bg-slate-200/60 font-medium flex items-center gap-1.5 px-2 text-xs !rounded-lg"
           >
-            <ArrowLeft size={18} />
+            <ArrowLeft size={16} />
             <span>Kembali ke Beranda</span>
           </Button>
           <Button
-            icon={<Edit size={16} />}
+            icon={<Edit size={14} />}
             onClick={() => setIsEditModalOpen(true)}
-            className="border-[#70B748] text-[#70B748] hover:bg-green-50"
+            className="!bg-white !border-slate-300 hover:!border-emerald-600 !text-slate-700 hover:!text-emerald-700 !rounded-lg text-xs font-semibold"
           >
             Edit Profil
           </Button>
         </div>
 
-        <div className="flex flex-col gap-6">
-          <Card className="shadow-sm border-gray-200 rounded-2xl overflow-hidden">
-            <div className="flex flex-col items-center py-8 bg-gradient-to-b from-white to-gray-50">
+        <div className="space-y-6">
+          {/* Identity Card */}
+          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div className="p-6 sm:p-8 flex flex-col sm:flex-row items-center sm:items-start gap-6">
               <div
-                className="relative group mb-4 cursor-pointer transition-transform hover:scale-105"
+                className="relative group cursor-pointer shrink-0"
                 onClick={() => setIsPhotoModalOpen(true)}
               >
                 <Avatar
-                  size={128}
+                  size={96}
                   src={profilePictureUrl}
-                  className="bg-gradient-to-br from-[#70B748] to-[#5a9639] text-white shadow-xl text-5xl font-bold border-4 border-white"
+                  className="bg-emerald-100 text-emerald-800 font-bold text-3xl border-2 border-slate-200 shadow-sm"
                 >
                   {profile.fullname.charAt(0).toUpperCase()}
                 </Avatar>
-
-                <div className="absolute inset-0 bg-black/30 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <Camera className="text-white w-8 h-8" />
+                <div className="absolute inset-0 bg-slate-900/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <Camera className="text-white w-6 h-6" />
                 </div>
+              </div>
 
-                <div className="absolute bottom-1 right-1 bg-white p-1.5 rounded-full shadow-md z-10 pointer-events-none">
-                  <Tag
-                    color={userDetail.gender === "m" ? "blue" : "magenta"}
-                    className="m-0 px-2 rounded-full font-bold flex items-center gap-1"
-                  >
-                    {userDetail.gender === "m" ? (
-                      <BsGenderMale />
-                    ) : (
-                      <BsGenderFemale />
-                    )}
+              <div className="flex-1 text-center sm:text-left">
+                <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1.5">
+                  <h1 className="text-xl font-bold text-slate-900 leading-snug">
+                    {profile.fullname}
+                  </h1>
+                  <Tag className="!m-0 !w-fit mx-auto sm:mx-0 !bg-emerald-50 !text-emerald-700 !border-emerald-200 !text-[11px] !font-semibold !rounded">
+                    Siswa Aktif
                   </Tag>
                 </div>
-              </div>
-
-              <h2 className="text-2xl font-bold text-gray-800 mb-1">
-                {profile.fullname}
-              </h2>
-              <p className="text-gray-500 mb-4 font-medium">{profile.email}</p>
-
-              <Tag
-                color="green"
-                className="px-4 py-1 rounded-full text-sm border-0 bg-green-100 text-green-700 font-semibold"
-              >
-                Siswa Aktif
-              </Tag>
-            </div>
-
-            <Divider className="my-0" />
-
-            <div className="grid grid-cols-2 divide-x divide-gray-100 bg-white">
-              <div className="p-4 text-center">
-                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">
-                  NISN
+                <p className="text-xs text-slate-500 font-medium mb-4">
+                  {profile.email || "Email belum didaftarkan"}
                 </p>
-                <p className="font-mono font-medium text-gray-700">
-                  {profile.userDetail.nisn || "-"}
-                </p>
-              </div>
-              <div className="p-4 text-center">
-                <p className="text-xs text-gray-400 uppercase tracking-wider mb-1">
-                  Terdaftar Sejak
-                </p>
-                <p className="font-medium text-gray-700">
-                  {dayjs(profile.userDetail.createdAt)
-                    .locale("id")
-                    .format("DD MMM YYYY")}
-                </p>
+
+                <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 text-xs text-slate-600 border-t border-slate-100 pt-3">
+                  <div>
+                    <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+                      NISN
+                    </span>
+                    <span className="font-mono font-medium text-slate-800">
+                      {userDetail?.nisn || "-"}
+                    </span>
+                  </div>
+                  <div className="w-px h-6 bg-slate-200 hidden sm:block"></div>
+                  <div>
+                    <span className="text-slate-400 block text-[10px] uppercase font-semibold">
+                      Terdaftar Sejak
+                    </span>
+                    <span className="font-medium text-slate-800">
+                      {userDetail?.createdAt
+                        ? dayjs(userDetail.createdAt).locale("id").format("DD MMM YYYY")
+                        : "-"}
+                    </span>
+                  </div>
+                </div>
               </div>
             </div>
-          </Card>
+          </div>
 
-          <Card
-            title={
-              <div className="flex items-center gap-2">
-                <div className="w-1 h-5 bg-[#70B748] rounded-full"></div>{" "}
-                Informasi Pribadi
-              </div>
-            }
-            className="shadow-sm border-gray-200 rounded-2xl"
-            styles={{ header: { borderBottom: "1px solid #f0f0f0" } }}
-          >
-            <Descriptions
-              column={1}
-              layout="horizontal"
-              labelStyle={{ width: "180px", color: "#6b7280" }}
-              contentStyle={{ fontWeight: 500, color: "#374151" }}
-            >
-              <Descriptions.Item label="Jenis Kelamin">
-                {userDetail.gender === "m" ? "Laki-Laki" : "Perempuan"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Tanggal Lahir">
-                {dayjs(userDetail.birthDate).locale("id").format("DD MMMM YYYY")}
-              </Descriptions.Item>
-              <Descriptions.Item label="Nomor Telepon">
-                {profile.userDetail.phoneNumber || "-"}
-              </Descriptions.Item>
-            </Descriptions>
-          </Card>
-
-          <Card
-            title={
-              <div className="flex items-center gap-2">
-                <div className="w-1 h-5 bg-blue-500 rounded-full"></div>{" "}
+          {/* Academic Information */}
+          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2">
+              <GraduationCap size={16} className="text-emerald-600" />
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700">
                 Informasi Akademik
-              </div>
-            }
-            className="shadow-sm border-gray-200 rounded-2xl"
-            styles={{ header: { borderBottom: "1px solid #f0f0f0" } }}
-          >
-            <Descriptions
-              column={1}
-              layout="horizontal"
-              labelStyle={{ width: "180px", color: "#6b7280" }}
-              contentStyle={{ fontWeight: 500, color: "#374151" }}
-            >
-              <Descriptions.Item label="Tingkat">
-                {profile.userDetail?.gradeLevel?.name || "-"}
-              </Descriptions.Item>
-              <Descriptions.Item label="Kelas">
-                {profile.userDetail?.classroom?.name || "-"}
-              </Descriptions.Item>
-            </Descriptions>
-          </Card>
+              </h2>
+            </div>
+            <div className="p-5">
+              <Descriptions
+                column={1}
+                size="small"
+                layout="horizontal"
+                labelStyle={{ width: "160px", color: "#64748b", fontSize: "12px", fontWeight: 500 }}
+                contentStyle={{ color: "#1e293b", fontSize: "12px", fontWeight: 600 }}
+              >
+                <Descriptions.Item label="Jenjang / Tingkat">
+                  {userDetail?.gradeLevel?.name || "-"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Rombongan Belajar (Kelas)">
+                  {userDetail?.classroom?.name || "-"}
+                </Descriptions.Item>
+              </Descriptions>
+            </div>
+          </div>
+
+          {/* Personal Information */}
+          <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+            <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2">
+              <UserIcon size={16} className="text-emerald-600" />
+              <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                Data Pribadi
+              </h2>
+            </div>
+            <div className="p-5">
+              <Descriptions
+                column={1}
+                size="small"
+                layout="horizontal"
+                labelStyle={{ width: "160px", color: "#64748b", fontSize: "12px", fontWeight: 500 }}
+                contentStyle={{ color: "#1e293b", fontSize: "12px", fontWeight: 600 }}
+              >
+                <Descriptions.Item label="Jenis Kelamin">
+                  {userDetail?.gender === "m" ? "Laki-Laki" : userDetail?.gender === "f" ? "Perempuan" : "-"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Tanggal Lahir">
+                  {userDetail?.birthDate
+                    ? dayjs(userDetail.birthDate).locale("id").format("DD MMMM YYYY")
+                    : "-"}
+                </Descriptions.Item>
+                <Descriptions.Item label="Nomor Telepon / WhatsApp">
+                  {userDetail?.phoneNumber || "-"}
+                </Descriptions.Item>
+              </Descriptions>
+            </div>
+          </div>
         </div>
 
         <EditProfileModal

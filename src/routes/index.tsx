@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router";
-import { Suspense, type ComponentType, type LazyExoticComponent, } from "react";
+import { Suspense, type ComponentType, type LazyExoticComponent } from "react";
 import Loading from "../pages/Loading";
 import ProtectedLayout from "../layouts/ProtectedLayout";
 import StudentLayout from "../layouts/Student/MainLayout";
@@ -44,12 +44,13 @@ const router = createBrowserRouter([
         ),
         children: [
           {
-            index: true, element: (
+            index: true,
+            element: (
               <>
                 <RootRedirect />
                 <Loadable Component={Pages.Home} />
               </>
-            )
+            ),
           },
           { path: "profile", element: <Loadable Component={Pages.Profile} /> },
           { path: "quiz/:id", element: <Loadable Component={Pages.Quiz} /> },
@@ -95,15 +96,28 @@ const router = createBrowserRouter([
             ],
           },
           {
+            path: "kelola-akademik",
+            children: [
+              {
+                index: true,
+                element: <Loadable Component={Pages.KelolaAkademik} />,
+              },
+              {
+                path: "preview-siswa/:studentId",
+                element: <Loadable Component={Pages.PreviewStudent} />,
+              },
+            ],
+          },
+          {
             path: "kelola-wilayah",
             children: [
               {
                 index: true,
-                element: <Loadable Component={Pages.KelolaWilayah} />,
+                element: <Navigate to="/admin/kelola-akademik" replace />,
               },
               {
                 path: "preview-warga/:residentId",
-                element: <Loadable Component={Pages.PreviewResident} />,
+                element: <Navigate to="/admin/kelola-akademik" replace />,
               },
             ],
           },
@@ -137,8 +151,8 @@ const router = createBrowserRouter([
               {
                 path: "category",
                 element: <Loadable Component={Pages.AdminMedisCategory} />,
-              }
-            ]
+              },
+            ],
           },
           {
             path: "responden",
@@ -180,4 +194,3 @@ const router = createBrowserRouter([
 ]);
 
 export default router;
-

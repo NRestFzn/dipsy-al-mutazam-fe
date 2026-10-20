@@ -209,8 +209,8 @@ export default function Result() {
                 <Paragraph className="!mb-0 text-gray-700 leading-relaxed">
                   {recommendation ||
                   (isUnstable
-                    ? "Hasil skrining menunjukkan adanya beberapa hal yang perlu diperhatikan lebih lanjut. Jangan ragu berbicara dengan Guru BK atau Wali Kelas agar kamu bisa mendapat pendampingan yang sesuai."
-                    : "Hasil skrining menunjukkan kondisi kamu saat ini cukup baik. Tetap jaga pola hidup yang sehat, luangkan waktu untuk beristirahat, dan tetap terbuka bercerita kepada Guru BK jika ada yang mengganjal.")}
+                    ? "Hasil skrining mengindikasikan adanya aspek yang memerlukan perhatian lebih lanjut. Kamu dianjurkan berkonsultasi dengan Guru BK atau Wali Kelas untuk mendiskusikan langkah pendampingan yang tepat."
+                    : "Hasil skrining menunjukkan kondisi yang terpantau baik. Pertahankan kebiasaan sehat dan istirahat yang cukup. Pintu ruang BK senantiasa terbuka bila kamu membutuhkan teman berdiskusi.")}
                 </Paragraph>
               </div>
             </div>

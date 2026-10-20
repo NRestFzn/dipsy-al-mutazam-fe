@@ -17,7 +17,7 @@ interface AuthContextType {
 	switchRole: (role: Role) => void;
 	isLoadingUser: boolean;
 	isLoading: boolean;
-	error: APIError | null
+	error: APIError | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -31,7 +31,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [activeRole, setActiveRole] = useState<Role | null>(null);
 	const [isLoading, setIsLoading] = useState({
 		loadingUser: true,
-		loadingBtn: false
+		loadingBtn: false,
 	});
 	const [error, setError] = useState<APIError | null>(null);
 
@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		const priorityOrder = [ROLE_ID.GURU_BK, ROLE_ID.WALI_KELAS, ROLE_ID.SISWA];
 
 		for (const roleId of priorityOrder) {
-			const found = roles.find(r => r.id === roleId);
+			const found = roles.find((r) => r.id === roleId);
 			if (found) return found;
 		}
 
@@ -53,7 +53,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			setUserState(userData);
 			if (userData.roles && userData.roles.length > 0) {
 				const savedRoleId = localStorage.getItem("activeRoleId");
-				const savedRole = userData.roles.find(r => String(r.id) === savedRoleId);
+				const savedRole = userData.roles.find((r) => String(r.id) === savedRoleId);
 
 				const nextRole = savedRole || getPriorityRole(userData.roles);
 				setActiveRole(nextRole);
@@ -117,8 +117,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				const response = await authService.getProfile();
 				let userData = response.data;
 
-				const isResidentOrKader = userData?.roles?.some(r =>
-					r.id === ROLE_ID.SISWA
+				const isResidentOrKader = userData?.roles?.some(
+					(r) => r.id === ROLE_ID.SISWA
 				);
 
 				if (isResidentOrKader) {
@@ -133,7 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				if (userData) {
 					const userDataWithToken: UserMeResponse = {
 						...userData,
-						accessToken: token
+						accessToken: token,
 					};
 					setUser(userDataWithToken);
 				}
@@ -154,7 +154,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 		try {
 			const response = await authService.login(loginData);
-			return await handleLoginSuccess(response, false)
+			return await handleLoginSuccess(response, false);
 		} catch (err: any) {
 			console.error("Login Error:", err);
 			setError(err as APIError);
@@ -168,8 +168,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		setIsLoading((prev) => ({ ...prev, loadingBtn: true }));
 
 		try {
-			const response = await authService.loginStudent(loginData)
-			return await handleLoginSuccess(response, true)
+			const response = await authService.loginStudent(loginData);
+			return await handleLoginSuccess(response, true);
 		} catch (error) {
 			console.error("Student Login Error:", error);
 			setError(error as APIError);
@@ -177,19 +177,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		} finally {
 			setIsLoading((prev) => ({ ...prev, loadingBtn: false }));
 		}
-	}
+	};
 
 	const register = async (registerData: RegisterPayload): Promise<void> => {
 		setIsLoading((prev) => ({ ...prev, loadingBtn: true }));
 		setError(null);
+
 		try {
 			const response = await authService.register(registerData);
-			if (response.statusCode === 200 || response.statusCode === 201) {
-				await loginStudent({ nisn: registerData.nik, password: registerData.password });
-			} else {
-				throw new Error(response.message || "Registration failed");
-			}
+			await handleLoginSuccess(response, true);
 		} catch (err: any) {
+			console.error("Register Error:", err);
 			setError(err as APIError);
 			throw err;
 		} finally {
@@ -197,10 +195,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	};
 
-	const handleLoginSuccess = async (response: any, isResidentLogin: boolean) => {
-		if (response?.statusCode === 200 && response?.data) {
-			const loginResponseData = response.data;
-			const token = loginResponseData.accessToken;
+	const handleLoginSuccess = async (response: any, isResidentLogin: boolean = false) => {
+		if (response.data) {
+			const token = response.data.token || response.data.accessToken;
 
 			localStorage.setItem("authToken", token as string);
 
@@ -209,7 +206,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			if (userData) {
 				const fullUserData: UserMeResponse = {
 					...userData,
-					accessToken: token
+					accessToken: token,
 				};
 				setUser(fullUserData);
 				return { data: fullUserData };
@@ -233,7 +230,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				isLoading: isLoading.loadingBtn,
 				isLoadingUser: isLoading.loadingUser,
 				error,
-			}}>
+			}}
+		>
 			{children}
 		</AuthContext.Provider>
 	);
@@ -246,4 +244,3 @@ export const useAuth = (): AuthContextType => {
 	}
 	return context;
 };
-
