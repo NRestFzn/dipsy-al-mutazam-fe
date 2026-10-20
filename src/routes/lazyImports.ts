@@ -8,10 +8,10 @@ export const NotFound = lazy(() => import("../pages/Fallbacks/NotFound"));
 
 // Auth
 export const Login = lazy(() => import("../pages/Auth/Admin/Login"));
-export const LoginStudent = lazy(() => import("../pages/Auth/Student/LoginStudent"))
+export const LoginStudent = lazy(() => import("../pages/Auth/Student/LoginStudent"));
 export const Register = lazy(() => import("../pages/Auth/Student/Register"));
 
-// Resident
+// Student
 export const HomeKader = lazy(() => import("../pages/Student/Kader/HomeKader"));
 export const Home = lazy(() => import("../pages/Student/Home/Home"));
 export const Profile = lazy(() => import("../pages/Student/Profile/Profile"));
@@ -28,7 +28,7 @@ export const AdminMedisResponden = lazy(
   () => import("../pages/Admin/AdminMedis/Responden/AdminMedisReponden")
 );
 
-// Admin Desa Dashboards
+// Admin Wali Kelas / Akademik
 export const DesaRwDashboard = lazy(
   () =>
     import("../pages/Admin/AdminDesa/Responden/DesaRwDashboard/DesaRwDashboard")
@@ -43,12 +43,11 @@ export const DesaWargaDashboard = lazy(
       "../pages/Admin/AdminDesa/Responden/DesaWargaDashboard/DesaWargaDashboard"
     )
 );
-export const KelolaWilayah = lazy(
-  () => import("../pages/Admin/AdminDesa/KelolaWilayah/KelolaWilayah")
+export const KelolaAkademik = lazy(
+  () => import("../pages/Admin/KelolaAkademik/KelolaAkademik")
 );
-export const PreviewResident = lazy(
-  () =>
-    import("../pages/Admin/AdminDesa/KelolaWilayah/partials/PreviewResident")
+export const PreviewStudent = lazy(
+  () => import("../pages/Admin/KelolaAkademik/partials/PreviewStudent")
 );
 export const AdminDesaProfile = lazy(
   () => import("../pages/Admin/AdminDesa/ProfileAdmin/ProfileAdmin")
@@ -83,4 +82,3 @@ export const AdminMedisProfile = lazy(
 export const AdminMedisCategory = lazy(
   () => import("../pages/Admin/AdminMedis/MasterData/Category/CategoryPage")
 );
-

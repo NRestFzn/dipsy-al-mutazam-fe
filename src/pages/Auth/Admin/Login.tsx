@@ -1,20 +1,16 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { Form, Input, Button, Alert, Typography } from "antd";
-import { Mail, Lock, ShieldCheck } from "lucide-react";
+import { useNavigate, Link } from "react-router";
+import { Form, Input, Button, Alert } from "antd";
+import { Mail, Lock, ShieldCheck, UserCheck } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import { getErrorMessage } from "../../../utils/getErrorMessage";
 import { ROLE_ID } from "../../../constants";
 import type { LoginPayload, Role } from "../../../types/AuthTypes/authTypes";
 
-const { Title, Text, Paragraph } = Typography;
-
 export default function Login() {
   const navigate = useNavigate();
   const { login, isLoading, error } = useAuth();
-
   const [formError, setFormError] = useState<string | null>(null);
-  const [isFormFilled, setIsFormFilled] = useState(false);
 
   const onFinish = async (values: LoginPayload) => {
     setFormError(null);
@@ -25,11 +21,11 @@ export default function Login() {
       });
 
       const userData = response?.data;
-      const roles = userData.roles || [];
+      const roles = userData?.roles || [];
 
       const getRedirectPath = (userRoles: Role[]) => {
-        if (userRoles.some(r => r.id === ROLE_ID.WALI_KELAS)) return "/admin/responden";
-        if (userRoles.some(r => r.id === ROLE_ID.GURU_BK)) return "/admin-medis/responden";
+        if (userRoles.some((r) => r.id === ROLE_ID.WALI_KELAS)) return "/admin/responden";
+        if (userRoles.some((r) => r.id === ROLE_ID.GURU_BK)) return "/admin-medis/responden";
 
         return "/";
       };
@@ -42,179 +38,139 @@ export default function Login() {
     }
   };
 
-  const handleValuesChange = (_: any, allValues: LoginPayload) => {
-    const hasEmail = allValues.email && allValues.email.trim() !== "";
-    const hasPassword = allValues.password && allValues.password.trim() !== "";
-
-    setIsFormFilled(!!(hasEmail && hasPassword));
-  };
-
   return (
-    <div className="min-h-screen flex w-full bg-white overflow-hidden font-sans">
-      <div className="hidden lg:flex lg:w-1/2 bg-[#70B748] relative flex-col p-12 overflow-hidden h-screen">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent scale-150 pointer-events-none" />
-        <div className="relative z-10 flex-none">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md border border-white/20 shadow-lg">
-              <img
-                src="/logo-al-multazam.png"
-                alt="Logo Al-Multazam"
-                className="w-10 h-10 object-contain drop-shadow-md"
+    <div className="min-h-screen w-full flex flex-col justify-between bg-slate-50 font-sans p-4 sm:p-6 text-slate-800">
+      <div className="flex-1 flex items-center justify-center py-8">
+        <div className="w-full max-w-[440px]">
+          {/* Main Card Container */}
+          <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm">
+            {/* Institution Brand Header */}
+            <div className="flex items-center gap-3.5 pb-6 mb-6 border-b border-slate-100">
+              <div className="w-11 h-11 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
+                <img
+                  src="/logo-al-multazam.png"
+                  alt="Logo SMAIT Al-Multazam"
+                  className="w-8 h-8 object-contain"
+                />
+              </div>
+              <div>
+                <h1 className="text-base font-bold text-slate-900 leading-tight">
+                  SMAIT Al-Multazam
+                </h1>
+                <p className="text-xs text-slate-500 font-medium">
+                  Portal Guru BK & Wali Kelas
+                </p>
+              </div>
+            </div>
+
+            {/* Title & Context */}
+            <div className="mb-6">
+              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-100 text-emerald-800 text-xs font-semibold mb-2">
+                <ShieldCheck size={14} className="text-emerald-600" />
+                Akses Tenaga Pendidik
+              </div>
+              <h2 className="text-xl font-bold text-slate-900 tracking-tight">
+                Masuk Portal Pengajar
+              </h2>
+              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                Gunakan email dinas atau akun pendamping konseling siswa SMAIT Al-Multazam.
+              </p>
+            </div>
+
+            {(error || formError) && (
+              <Alert
+                message="Autentikasi Gagal"
+                description={formError || getErrorMessage(error)}
+                type="error"
+                showIcon
+                className="!mb-6 !rounded-lg !border-rose-200 !bg-rose-50/70 text-xs"
               />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white font-bold tracking-wide uppercase text-xs opacity-90">
-                Sekolah
-              </span>
-              <span className="text-white font-bold text-lg leading-none">
-                Al-Multazam
-              </span>
-            </div>
-          </div>
+            )}
 
-          <Title level={1} className="!text-white !font-bold !text-5xl leading-tight mb-4">
-            Portal Masuk Guru BK <br /> & Wali Kelas Al-Multazam
-          </Title>
-          <Paragraph className="!text-white/90 text-base max-w-md leading-relaxed mb-0">
-            Platform terintegrasi untuk pemantauan dan pengelolaan data kesehatan mental siswa.
-          </Paragraph>
-        </div>
-
-        <div className="relative z-10 flex-1 flex items-center justify-center py-2">
-          <img
-            src="/enthusiastic-rafiki.png"
-            alt="Ilustrasi Sehat Jiwa"
-            className="w-full max-w-[480px] object-contain drop-shadow-2xl "
-          />
-        </div>
-
-        <div className="relative z-10 flex-none text-white/70 text-sm flex items-center gap-2">
-          <ShieldCheck size={16} />
-          <span className="font-medium tracking-wide">Sistem Terenkripsi & Aman</span>
-        </div>
-      </div>
-
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 bg-gray-50/50 h-screen overflow-y-auto">
-        <div className="w-full max-w-md">
-          <div className="flex flex-col items-center text-center mb-8 lg:hidden mt-8 pt-4">
-            <div className="mb-4 p-3 bg-white rounded-full shadow-sm border border-gray-100">
-              <img
-                src="/logo-al-multazam.png"
-                alt="Logo"
-                className="w-16 h-16 object-contain"
-              />
-            </div>
-
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#70B748]/10 border border-[#70B748]/20 text-[#70B748] text-xs font-bold uppercase tracking-wider mb-3">
-              <ShieldCheck size={14} />
-              <span>Admin Access</span>
-            </div>
-
-            <Title level={3} className="!mb-1 !font-bold text-gray-800">
-              Portal Masuk Guru BK & Wali Kelas Al-Multazam
-            </Title>
-            <Text className="text-gray-500 text-sm">
-              Masuk untuk memantau skrining kesehatan mental siswa
-            </Text>
-          </div>
-
-          <div className="hidden lg:block mb-8">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-md bg-gray-100 text-gray-600 text-xs font-bold uppercase tracking-wider mb-4">
-              <ShieldCheck size={14} />
-              Portal Internal
-            </div>
-            <Title level={2} className="!mb-2 !font-bold text-gray-800">
-              Selamat Datang Kembali
-            </Title>
-            <Text type="secondary" className="text-gray-500 text-base">
-              Masukkan kredensial Anda untuk mengakses dashboard.
-            </Text>
-          </div>
-
-          {(error || formError) && (
-            <Alert
-              title="Autentikasi Gagal"
-              description={formError || getErrorMessage(error)}
-              type="error"
-              showIcon
-              className="!mb-6 rounded-xl border-red-200 bg-red-50 text-red-700"
-            />
-          )}
-
-          <Form
-            name="login_admin"
-            layout="vertical"
-            onFinish={onFinish}
-            requiredMark={false}
-            onValuesChange={handleValuesChange}
-            size="large"
-            className="space-y-5"
-          >
-            <Form.Item
-              name="email"
-              label={<span className="font-semibold text-gray-700 ml-1">Email</span>}
-              rules={[
-                { required: true, message: "Email wajib diisi" },
-                { type: "email", message: "Format email tidak valid" },
-              ]}
+            <Form
+              name="login_admin"
+              layout="vertical"
+              onFinish={onFinish}
+              requiredMark={false}
+              size="middle"
+              className="space-y-4"
             >
-              <Input
-                prefix={<Mail className="text-gray-400 mr-2" size={20} />}
-                placeholder="guru@almultazam.sch.id"
-                className="rounded-xl py-2.5 border-gray-300 hover:border-[#70B748] focus:border-[#70B748] transition-colors"
-              />
-            </Form.Item>
-
-            <Form.Item
-              name="password"
-              label={<span className="font-semibold text-gray-700 ml-1">Kata Sandi</span>}
-              rules={[
-                { required: true, message: "Password wajib diisi" },
-              ]}
-            >
-              <Input.Password
-                prefix={<Lock className="text-gray-400 mr-2" size={20} />}
-                placeholder="••••••••"
-                className="rounded-xl py-2.5 border-gray-300 hover:border-[#70B748] focus:border-[#70B748] transition-colors"
-              />
-            </Form.Item>
-
-            <Form.Item className="pt-2">
-              <Button
-                type="primary"
-                htmlType="submit"
-                block
-                loading={isLoading}
-                disabled={!isFormFilled}
-                className={`
-                  !h-12 !text-base !font-bold !rounded-xl transition-all duration-300
-                  ${isFormFilled
-                    ? "!bg-[#70B748] hover:!bg-[#5a9639] shadow-sm hover:brightness-95"
-                    : "!bg-gray-200 !text-gray-400 !border-gray-200 cursor-not-allowed shadow-none"
-                  }
-                `}
+              <Form.Item
+                name="email"
+                label={
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                    Alamat Email
+                  </span>
+                }
+                rules={[
+                  { required: true, message: "Alamat email wajib diisi" },
+                  { type: "email", message: "Format email tidak valid" },
+                ]}
+                className="!mb-0"
               >
-                Masuk ke Portal
-              </Button>
-            </Form.Item>
-          </Form>
+                <Input
+                  prefix={<Mail className="text-slate-400 mr-2" size={17} />}
+                  placeholder="nama@almultazam.sch.id"
+                  className="!rounded-lg !py-2.5 !border-slate-300 hover:!border-emerald-600 focus:!border-emerald-600 text-sm"
+                  autoComplete="email"
+                />
+              </Form.Item>
 
-          <div className="mt-8 pt-6 border-t border-gray-200">
-            <div className="flex gap-3 bg-red-50 p-4 rounded-xl border border-red-100">
-              <div className="flex-shrink-0 mt-0.5">
-                <ShieldCheck className="text-red-500" size={20} />
+              <Form.Item
+                name="password"
+                label={
+                  <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
+                    Kata Sandi
+                  </span>
+                }
+                rules={[{ required: true, message: "Kata sandi wajib diisi" }]}
+                className="!mb-2"
+              >
+                <Input.Password
+                  prefix={<Lock className="text-slate-400 mr-2" size={17} />}
+                  placeholder="Masukkan kata sandi"
+                  className="!rounded-lg !py-2.5 !border-slate-300 hover:!border-emerald-600 focus:!border-emerald-600 text-sm"
+                  autoComplete="current-password"
+                />
+              </Form.Item>
+
+              <Form.Item className="!mb-0 !pt-2">
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  block
+                  loading={isLoading}
+                  className="!bg-[#70B748] hover:!bg-[#5e9e3b] !border-none !h-10 !rounded-lg !text-sm !font-semibold text-white transition-colors"
+                >
+                  Masuk ke Portal
+                </Button>
+              </Form.Item>
+            </Form>
+
+            {/* Footer Navigation */}
+            <div className="mt-5 pt-4 border-t border-slate-100 flex flex-col gap-2.5 text-xs text-center">
+              <div className="text-slate-500">
+                Masuk sebagai siswa?{" "}
+                <Link
+                  to="/masuk"
+                  className="text-emerald-700 font-semibold hover:underline inline-flex items-center gap-1"
+                >
+                  <UserCheck size={13} />
+                  Portal Siswa (NISN)
+                </Link>
               </div>
-              <div className="flex flex-col">
-                <span className="font-bold text-red-700 text-xs uppercase mb-1">Area Terbatas</span>
-                <Text className="text-xs text-gray-600 leading-relaxed">
-                  Akses ini dikhususkan untuk <strong>Guru BK</strong> dan <strong>Wali Kelas</strong>. Aktivitas login Anda tercatat demi keamanan data siswa.
-                </Text>
+              <div className="text-slate-400 text-[11px]">
+                Belum memiliki akun pengajar? Hubungi Bagian Kurikulum & TU SMAIT Al-Multazam.
               </div>
             </div>
           </div>
-
         </div>
       </div>
+
+      {/* Grounded Institutional Footer */}
+      <footer className="text-center py-4 text-xs text-slate-400 font-normal">
+        © {new Date().getFullYear()} SMAIT Al-Multazam. Sistem Informasi Konseling Siswa.
+      </footer>
     </div>
   );
 }
