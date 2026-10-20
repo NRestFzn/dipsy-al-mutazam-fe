@@ -1,4 +1,4 @@
-﻿export const ROLE_ID = {
+export const ROLE_ID = {
     SISWA: "<UUID_ROLE_SISWA>",
     GURU_BK: "<UUID_ROLE_GURU_BK>",
     WALI_KELAS: "<UUID_ROLE_WALI_KELAS>",

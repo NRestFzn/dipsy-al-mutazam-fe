@@ -2,7 +2,7 @@ import { Modal, Form, Input, Select, DatePicker, Row, Col, Spin, Checkbox, Typog
 import { useState } from "react";
 import { useMasterData } from "../../../../../hooks/useMasterData";
 import { useResident } from "../../../../../hooks/Admin/AdminDesa/useResident";
-import type { CreateResidentPayload } from "../../../../../types/Resident/residentType";
+import type { CreateResidentPayload } from "../../../../../types/Student/studentType";
 import { useInfiniteSelectOptions } from "../../../../../hooks/Common/useInfiniteSelectOptions";
 
 interface CreateResidentModalProps {

@@ -2,7 +2,7 @@ import { Modal, Input, List, Avatar, Spin, Empty, Button } from "antd";
 import { Search, User, Loader2 } from "lucide-react";
 import { useState, useRef, useCallback } from "react";
 import { useDebounce } from "use-debounce";
-import { useInfiniteResidents } from "../../../../hooks/useResident";
+import { useInfiniteStudents } from "../../../../hooks/useStudent";
 import { getImageUrl } from "../../../../utils/imageHelper";
 
 interface ResidentSelectionModalProps {
@@ -26,7 +26,7 @@ export const ResidentSelectionModal = ({
         hasNextPage,
         isFetchingNextPage,
         isError
-    } = useInfiniteResidents(debouncedSearch);
+    } = useInfiniteStudents(debouncedSearch);
 
     const residents = data?.pages?.flatMap((page) => page.data || []) || [];
 

@@ -1,4 +1,4 @@
-﻿import { Database, File, FileHeartIcon, HouseIcon, Tags } from "lucide-react";
+import { Database, File, FileHeartIcon, HouseIcon, Tags } from "lucide-react";
 
 interface SidebarItemProps {
     key: string;

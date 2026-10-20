@@ -187,7 +187,7 @@ export default function Result() {
             <div className="flex-1 p-8 lg:p-10 flex flex-col justify-center max-lg:p-3">
               <div className="flex items-center gap-2 mb-4">
                 <Tag color={isUnstable ? "error" : "success"} className="px-3 py-1 text-sm rounded-full">
-                  Hasil Pemeriksaan Kesehatan Mental
+                  Hasil Skrining Kesehatan Mental Siswa
                 </Tag>
               </div>
 
@@ -209,8 +209,8 @@ export default function Result() {
                 <Paragraph className="!mb-0 text-gray-700 leading-relaxed">
                   {recommendation ||
                   (isUnstable
-                    ? "Hasil pemeriksaan menunjukkan adanya beberapa hal yang perlu kamu perhatikan lebih lanjut. Tidak ada salahnya untuk mencoba lebih peduli pada kondisi diri sendiri dan luangkan waktu untuk beristirahat sejenak."
-                    : "Hasil pemeriksaan menunjukkan kondisi kamu saat ini cukup baik. Tetap jaga pola hidup yang sehat dan luangkan waktu untuk berkumpul bersama keluarga agar pikiran tetap tenang.")}
+                    ? "Hasil skrining menunjukkan adanya beberapa hal yang perlu diperhatikan lebih lanjut. Jangan ragu berbicara dengan Guru BK atau Wali Kelas agar kamu bisa mendapat pendampingan yang sesuai."
+                    : "Hasil skrining menunjukkan kondisi kamu saat ini cukup baik. Tetap jaga pola hidup yang sehat, luangkan waktu untuk beristirahat, dan tetap terbuka bercerita kepada Guru BK jika ada yang mengganjal.")}
                 </Paragraph>
               </div>
             </div>

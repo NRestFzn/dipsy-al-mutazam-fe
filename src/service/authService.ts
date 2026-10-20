@@ -1,4 +1,4 @@
-﻿import type { LoginPayload, RegisterPayload, AuthResponse, UserMeResponse, LoginStudentPayload } from "../types/AuthTypes/authTypes";
+import type { LoginPayload, RegisterPayload, AuthResponse, UserMeResponse, LoginStudentPayload } from "../types/AuthTypes/authTypes";
 import type { ResponseData } from "../types/commons";
 import { api } from "./api";
 
