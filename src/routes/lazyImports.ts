@@ -1,4 +1,4 @@
-import { lazy } from "react";
+﻿import { lazy } from "react";
 
 // Fallbacks
 export const Unauthorized = lazy(
@@ -8,11 +8,10 @@ export const NotFound = lazy(() => import("../pages/Fallbacks/NotFound"));
 
 // Auth
 export const Login = lazy(() => import("../pages/Auth/Admin/Login"));
-export const LoginResident = lazy(() => import("../pages/Auth/Resident/LoginResident"))
-export const Register = lazy(() => import("../pages/Auth/Resident/Register"));
+export const LoginStudent = lazy(() => import("../pages/Auth/Student/LoginStudent"))
+export const Register = lazy(() => import("../pages/Auth/Student/Register"));
 
 // Resident
-export const RoleSelection = lazy(() => import("../pages/Auth/Resident/RoleSelection"));
 export const HomeKader = lazy(() => import("../pages/Resident/Kader/HomeKader"));
 export const HomeKepalaKeluarga = lazy(() => import("../pages/Resident/KepalaKeluarga/HomeKepalaKeluarga"));
 export const Home = lazy(() => import("../pages/Resident/Home/Home"));
@@ -94,3 +93,4 @@ export const AdminMedisProfile = lazy(
 export const AdminMedisCategory = lazy(
   () => import("../pages/Admin/AdminMedis/MasterData/Category/CategoryPage")
 );
+

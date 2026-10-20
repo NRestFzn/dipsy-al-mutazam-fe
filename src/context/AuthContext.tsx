@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
+﻿import React, { createContext, useContext, useState, useEffect, useCallback } from "react";
 import { authService } from "../service/authService";
 import type { APIError } from "../types/ErrorFallbackType";
 import { useQueryClient } from "@tanstack/react-query";
-import type { LoginPayload, LoginResidentPayload, RegisterPayload, Role, UserMeResponse } from "../types/AuthTypes/authTypes";
+import type { LoginPayload, LoginStudentPayload, RegisterPayload, Role, UserMeResponse } from "../types/AuthTypes/authTypes";
 import { ROLE_ID } from "../constants";
 import { residentService } from "../service/residentService";
 
@@ -11,7 +11,7 @@ interface AuthContextType {
 	activeRole: Role | null;
 	isAuthenticated: boolean;
 	login: (data: LoginPayload) => Promise<any>;
-	loginResident: (data: LoginResidentPayload) => Promise<any>;
+	loginStudent: (data: LoginStudentPayload) => Promise<any>;
 	register: (data: RegisterPayload) => Promise<void>;
 	logout: () => void;
 	switchRole: (role: Role) => void;
@@ -38,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	const getPriorityRole = (roles: Role[]): Role | null => {
 		if (!roles || roles.length === 0) return null;
 
-		const priorityOrder = [ROLE_ID.KADER, ROLE_ID.KEPALA_KELUARGA, ROLE_ID.WARGA];
+		const priorityOrder = [ROLE_ID.GURU_BK, ROLE_ID.WALI_KELAS, ROLE_ID.SISWA];
 
 		for (const roleId of priorityOrder) {
 			const found = roles.find(r => r.id === roleId);
@@ -118,7 +118,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				let userData = response.data;
 
 				const isResidentOrKader = userData?.roles?.some(r =>
-					r.id === ROLE_ID.WARGA || r.id === ROLE_ID.KADER || r.id === ROLE_ID.KEPALA_KELUARGA
+					r.id === ROLE_ID.SISWA
 				);
 
 				if (isResidentOrKader) {
@@ -164,14 +164,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	};
 
-	const loginResident = async (loginData: LoginResidentPayload) => {
+	const loginStudent = async (loginData: LoginStudentPayload) => {
 		setIsLoading((prev) => ({ ...prev, loadingBtn: true }));
 
 		try {
-			const response = await authService.loginResident(loginData)
+			const response = await authService.loginStudent(loginData)
 			return await handleLoginSuccess(response, true)
 		} catch (error) {
-			console.error("Resident Login Error:", error);
+			console.error("Student Login Error:", error);
 			setError(error as APIError);
 			throw error;
 		} finally {
@@ -185,7 +185,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const response = await authService.register(registerData);
 			if (response.statusCode === 200 || response.statusCode === 201) {
-				await loginResident({ nik: registerData.nik, password: registerData.password });
+				await loginStudent({ nisn: registerData.nik, password: registerData.password });
 			} else {
 				throw new Error(response.message || "Registration failed");
 			}
@@ -226,7 +226,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				isAuthenticated: !!user,
 				activeRole,
 				login,
-				loginResident,
+				loginStudent,
 				register,
 				logout,
 				switchRole,
@@ -246,3 +246,4 @@ export const useAuth = (): AuthContextType => {
 	}
 	return context;
 };
+
