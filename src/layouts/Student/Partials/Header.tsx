@@ -56,7 +56,7 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
     },
     {
       key: "profile",
-      label: "Lihat Profil Saya",
+      label: "Profil Saya",
       icon: <User size={16} />,
       onClick: () => navigate("/profile"),
     },
@@ -74,7 +74,7 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
     ] : []),
     {
       key: 'logout',
-      label: <span className="text-red-600 font-medium">Logout</span>,
+      label: <span className="text-red-600 font-medium">Keluar</span>,
       icon: <LogOut size={16} className="text-red-500" />,
       onClick: onLogout,
     },
@@ -86,8 +86,8 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
         <div className="flex items-center gap-3">
           <img
             className="w-10 h-10 object-contain"
-            src="/icon.png"
-            alt="Logo"
+            src="/logo-al-multazam.png"
+            alt="Logo SMAIT Al-Multazam"
           />
           <span className="text-lg font-bold text-[#70B748] hidden sm:block">
             SMAIT Al-Multazam

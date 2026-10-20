@@ -7,15 +7,15 @@ export const QuizInstruction = () => (
         <ul className="text-xs sm:text-sm text-green-700 space-y-2 pl-2">
             <li className="flex items-start gap-2">
                 <span className="block w-1 h-1 rounded-full bg-green-400 mt-1.5 flex-shrink-0"></span>
-                Pertanyaan menyangkut masalah yang Anda alami dalam 30 hari terakhir.
+                Pertanyaan berkaitan dengan apa yang kamu rasakan atau alami dalam 30 hari terakhir.
             </li>
             <li className="flex items-start gap-2">
                 <span className="block w-1 h-1 rounded-full bg-green-400 mt-1.5 flex-shrink-0"></span>
-                Untuk setiap pertanyaan pilih jawaban yang paling sesuai.
+                Pilih satu opsi jawaban yang paling sesuai untuk setiap pertanyaan.
             </li>
             <li className="flex items-start gap-2">
                 <span className="block w-1 h-1 rounded-full bg-green-400 mt-1.5 flex-shrink-0"></span>
-                Jawaban bersifat rahasia dan hanya digunakan untuk membantu Anda.
+                Jawaban bersifat rahasia dan digunakan untuk pendampingan konseling di sekolah.
             </li>
         </ul>
     </div>

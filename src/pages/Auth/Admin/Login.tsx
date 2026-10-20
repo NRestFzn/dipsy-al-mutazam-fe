@@ -84,7 +84,7 @@ export default function Login() {
           <img
             src="/enthusiastic-rafiki.png"
             alt="Ilustrasi Sehat Jiwa"
-            className="w-full max-w-[480px] object-contain drop-shadow-2xl hover:scale-105 transition-transform duration-500"
+            className="w-full max-w-[480px] object-contain drop-shadow-2xl "
           />
         </div>
 
@@ -114,7 +114,7 @@ export default function Login() {
               Portal Masuk Guru BK & Wali Kelas Al-Multazam
             </Title>
             <Text className="text-gray-500 text-sm">
-              Masuk untuk memantau kesehatan mental siswa
+              Masuk untuk memantau skrining kesehatan mental siswa
             </Text>
           </div>
 
@@ -189,12 +189,12 @@ export default function Login() {
                 className={`
                   !h-12 !text-base !font-bold !rounded-xl transition-all duration-300
                   ${isFormFilled
-                    ? "!bg-[#70B748] hover:!bg-[#5a9639] shadow-lg shadow-[#70B748]/20 hover:scale-[1.02] active:scale-95"
+                    ? "!bg-[#70B748] hover:!bg-[#5a9639] shadow-sm hover:brightness-95"
                     : "!bg-gray-200 !text-gray-400 !border-gray-200 cursor-not-allowed shadow-none"
                   }
                 `}
               >
-                Masuk Dashboard
+                Masuk ke Portal
               </Button>
             </Form.Item>
           </Form>
