@@ -8,7 +8,7 @@ export const HomeFooter = () => {
           <img
             src="/logo-al-multazam.png"
             alt="Logo SMAIT Al-Multazam"
-            className="w-6 h-6 object-contain"
+            className="h-6 w-auto object-contain"
           />
           <span className="font-semibold text-slate-800">
             SMAIT Al-Multazam

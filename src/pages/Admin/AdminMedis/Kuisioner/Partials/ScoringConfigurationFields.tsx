@@ -155,7 +155,7 @@ export default function ScoringConfigurationFields() {
                     {(fields, { add, remove }) => (
                         <div className="space-y-4">
                             {fields.map((field, index) => (
-                                <div key={field.key} className="border-l-4 border-l-[#70B748] bg-gray-50 p-4 space-y-4">
+                                <div key={field.key} className="border-l-4 border-l-[#00A651] bg-gray-50 p-4 space-y-4">
                                     <Form.Item name={[field.name, "key"]} hidden>
                                         <Input />
                                     </Form.Item>

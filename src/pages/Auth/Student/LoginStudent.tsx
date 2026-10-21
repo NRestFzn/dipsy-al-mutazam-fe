@@ -33,22 +33,15 @@ export default function LoginStudent() {
           {/* Card Container */}
           <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm">
             {/* Header / Brand */}
-            <div className="flex items-center gap-3.5 pb-6 mb-6 border-b border-slate-100">
-              <div className="w-11 h-11 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
-                <img
-                  src="/logo-al-multazam.png"
-                  alt="Logo SMAIT Al-Multazam"
-                  className="w-8 h-8 object-contain"
-                />
-              </div>
-              <div>
-                <h1 className="text-base font-bold text-slate-900 leading-tight">
-                  SMAIT Al-Multazam
-                </h1>
-                <p className="text-xs text-slate-500 font-medium">
-                  Portal Skrining Siswa
-                </p>
-              </div>
+            <div className="pb-6 mb-6 border-b border-slate-100 flex flex-col items-start">
+              <img
+                src="/logo-al-multazam.png"
+                alt="Logo SMAIT Al-Multazam"
+                className="h-11 w-auto object-contain mb-2"
+              />
+              <p className="text-xs text-slate-500 font-medium">
+                Portal Skrining Kesehatan Mental Siswa
+              </p>
             </div>
 
             <div className="mb-6">
@@ -124,7 +117,7 @@ export default function LoginStudent() {
                   htmlType="submit"
                   block
                   loading={isLoading}
-                  className="!bg-[#70B748] hover:!bg-[#5e9e3b] !border-none !h-10 !rounded-lg !text-sm !font-semibold transition-colors"
+                  className="!bg-[#00A651] hover:!bg-[#009245] !border-none !h-10 !rounded-lg !text-sm !font-semibold transition-colors text-white"
                 >
                   Masuk
                 </Button>

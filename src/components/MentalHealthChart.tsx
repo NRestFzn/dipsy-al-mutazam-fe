@@ -105,7 +105,7 @@ export default function MentalHealthChart({
 
 	const donutData = [
 		{ name: "Berisiko", value: overallDepressionRate, color: "#EF4444" },
-		{ name: "Stabil", value: healthyMentalPercentage, color: "#10B981" },
+		{ name: "Stabil", value: healthyMentalPercentage, color: "#00A651" },
 	];
 
 	const formattedChartData = useMemo(() => {
@@ -239,8 +239,8 @@ export default function MentalHealthChart({
 					<Bar dataKey="Mental Berisiko" fill="#EF4444" radius={[0, 4, 4, 0]} barSize={40}>
 						<Cell fill="#EF4444" />
 					</Bar>
-					<Bar dataKey="Mental Stabil" fill="#10B981" radius={[0, 4, 4, 0]} barSize={40}>
-						<Cell fill="#10B981" />
+					<Bar dataKey="Mental Stabil" fill="#00A651" radius={[0, 4, 4, 0]} barSize={40}>
+						<Cell fill="#00A651" />
 					</Bar>
 				</BarChart>
 			);
@@ -256,7 +256,7 @@ export default function MentalHealthChart({
 						<Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
 						<Legend verticalAlign="top" height={36} iconType="circle" />
 						<Bar dataKey="Mental Berisiko" stackId="a" fill="#EF4444" radius={[0, 0, 4, 4]} barSize={32} />
-						<Bar dataKey="Mental Stabil" stackId="a" fill="#10B981" radius={[4, 4, 0, 0]} barSize={32} />
+						<Bar dataKey="Mental Stabil" stackId="a" fill="#00A651" radius={[4, 4, 0, 0]} barSize={32} />
 					</BarChart>
 				);
 			case "risk_percentage":
@@ -266,9 +266,9 @@ export default function MentalHealthChart({
 						<XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 12 }} dy={10} />
 						<YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 12 }} unit="%" />
 						<Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
-						<Bar dataKey="Resiko (%)" fill="#F59E0B" radius={[4, 4, 4, 4]} barSize={32}>
+						<Bar dataKey="Resiko (%)" fill="#F58220" radius={[4, 4, 4, 4]} barSize={32}>
 							{formattedChartData.map((entry, index) => (
-								<Cell key={`cell-${index}`} fill={(entry as any)["Resiko (%)"] > 50 ? '#EF4444' : '#F59E0B'} />
+								<Cell key={`cell-${index}`} fill={(entry as any)["Resiko (%)"] > 50 ? '#EF4444' : '#F58220'} />
 							))}
 						</Bar>
 					</BarChart>
@@ -354,7 +354,7 @@ export default function MentalHealthChart({
 								<span className="text-gray-600">Kondisi Normal / Stabil</span>
 								<span className="font-bold text-emerald-500">{healthyMentalPercentage}%</span>
 							</div>
-							<Progress percent={healthyMentalPercentage} showInfo={false} strokeColor="#10B981" trailColor="#F3F4F6" />
+							<Progress percent={healthyMentalPercentage} showInfo={false} strokeColor="#00A651" trailColor="#F3F4F6" />
 						</div>
 					</div>
 

@@ -166,7 +166,7 @@ export default function Register() {
                 <img
                   src="/logo-al-multazam.png"
                   alt="Logo SMAIT Al-Multazam"
-                  className="w-8 h-8 object-contain"
+                  className="w-auto h-8 object-contain"
                 />
               </div>
               <div>

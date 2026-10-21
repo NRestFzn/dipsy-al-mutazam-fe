@@ -68,7 +68,7 @@ const AttentionModal = (props: AttentionModalProps) => {
         <Button
           key="submit"
           type="primary"
-          className="!bg-[#70B748] hover:!bg-[#5e9e3b] !rounded-lg text-sm font-semibold !border-none"
+          className="!bg-[#00A651] hover:!bg-[#009245] !rounded-lg text-sm font-semibold !border-none"
           onClick={onConfirm}
         >
           Mulai Mengerjakan
@@ -232,7 +232,7 @@ export const QuestionnaireCard = ({
           onClick={handleCardClick}
           className={`!w-full !h-10 !rounded-lg !text-xs !font-semibold !border-none transition-colors ${
             disabled
-              ? "!bg-[#70B748] hover:!bg-[#5e9e3b] !text-white"
+              ? "!bg-[#00A651] hover:!bg-[#009245] !text-white"
               : "!bg-slate-100 !text-slate-400 cursor-not-allowed"
           }`}
         >
