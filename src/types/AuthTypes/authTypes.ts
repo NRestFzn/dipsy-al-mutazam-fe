@@ -53,17 +53,23 @@ export interface LoginStudentPayload {
 
 export interface RegisterPayload {
   fullname: string;
+  nisn?: string;
+  nik?: string;
   email?: string | null;
   password: string;
   confirmPassword: string;
   gender: "m" | "f";
-  profession: string;
   birthDate: string;
-  MarriageStatusId: string;
-  RukunWargaId: string;
-  RukunTetanggaId: string;
-  EducationId: string;
-  SalaryRangeId: string;
-  nik: string;
+  GradeId?: string;
+  ClassId?: string;
+  RukunWargaId?: string;
+  RukunTetanggaId?: string;
+  profession?: string;
+  MarriageStatusId?: string;
+  EducationId?: string;
+  SalaryRangeId?: string;
   phoneNumber?: string | null;
+  nis?: string;
+  entryYear?: string;
+  academicYear?: string;
 }

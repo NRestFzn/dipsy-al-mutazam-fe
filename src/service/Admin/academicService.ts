@@ -20,231 +20,216 @@ import type {
 export const academicService = {
   // ===================== GRADE / TINGKAT =====================
   getGrades: async (params?: GetGradesParams): Promise<GradeResponse> => {
-    try {
-      const response = await api.get<GradeResponse>("/v1/grade", { params });
-      return response.data;
-    } catch {
-      // Fallback ke /v1/rukun-warga bila backend belum switch route
-      const response = await api.get<any>("/v1/rukun-warga", { params });
-      const mappedData: GradeItem[] = (response.data.data || []).map((rw: any) => ({
-        id: String(rw.id),
-        name: rw.name?.startsWith("Kelas") ? rw.name : `Tingkat ${rw.name}`,
-        classCount: rw.rtCount ?? rw.classCount ?? 0,
-        studentCount: rw.wargaCount ?? rw.studentCount ?? 0,
-      }));
-      return {
-        ...response.data,
-        data: mappedData,
-      };
-    }
+    const response = await api.get<any>("/v1/grade", { params });
+    const rawResponse = response.data;
+    const mappedData: GradeItem[] = (rawResponse.data || []).map((rw: any) => ({
+      id: String(rw.id),
+      name: rw.name?.startsWith("Tingkat") || rw.name?.startsWith("Kelas") ? rw.name : `Tingkat ${rw.name}`,
+      level: rw.level,
+      classCount: rw.classCount ?? 0,
+      studentCount: rw.studentCount ?? 0,
+    }));
+    return {
+      ...rawResponse,
+      data: mappedData,
+    };
   },
 
   createGrade: async (payload: CreateGradePayload) => {
-    try {
-      const response = await api.post("/v1/grade", payload);
-      return response.data;
-    } catch {
-      // Fallback ke create RW
-      const response = await api.post("/v1/rukun-warga", { count: payload.count || 1 });
-      return response.data;
-    }
+    const response = await api.post("/v1/grade", {
+      name: payload.name,
+      level: payload.level,
+    });
+    return response.data;
   },
 
   updateGrade: async (id: string, payload: UpdateGradePayload) => {
-    try {
-      const response = await api.put(`/v1/grade/${id}`, payload);
-      return response.data;
-    } catch {
-      const response = await api.put(`/v1/rukun-warga/${id}`, payload);
-      return response.data;
-    }
+    const response = await api.put(`/v1/grade/${id}`, {
+      name: payload.name,
+      level: payload.level,
+    });
+    return response.data;
   },
 
   deleteGrade: async (id: string) => {
-    try {
-      const response = await api.delete(`/v1/grade/${id}`);
-      return response.data;
-    } catch {
-      const response = await api.delete(`/v1/rukun-warga/${id}`);
-      return response.data;
-    }
+    const response = await api.delete(`/v1/grade/${id}`);
+    return response.data;
   },
 
   // ===================== CLASS / KELAS =====================
   getClasses: async (params?: GetClassesParams): Promise<ClassResponse> => {
-    const selectedGrade = params?.gradeId || params?.RukunWargaId;
-
-    try {
-      const response = await api.get<ClassResponse>("/v1/class", { params });
-      return response.data;
-    } catch {
-      const response = await api.get<any>("/v1/rukun-tetangga", {
-        params: {
-          ...params,
-          RukunWargaId: selectedGrade,
-        },
-      });
-      const mappedData: ClassItem[] = (response.data.data || []).map((rt: any) => ({
-        id: String(rt.id),
-        name: rt.name?.startsWith("Kelas") ? rt.name : `Kelas ${rt.name}`,
-        gradeId: String(rt.RukunWargaId),
-        RukunWargaId: String(rt.RukunWargaId),
-        studentCount: rt.wargaCount ?? 0,
-      }));
-      return {
-        ...response.data,
-        data: mappedData,
-      };
+    const selectedGrade = params?.gradeId || params?.GradeId || params?.RukunWargaId;
+    const queryParams: any = { ...params };
+    if (selectedGrade) {
+      queryParams.GradeId = selectedGrade;
     }
+    const response = await api.get<any>("/v1/class", { params: queryParams });
+    const rawResponse = response.data;
+    const mappedData: ClassItem[] = (rawResponse.data || []).map((rt: any) => ({
+      id: String(rt.id),
+      name: rt.name?.startsWith("Kelas") ? rt.name : `Kelas ${rt.name}`,
+      gradeId: String(rt.GradeId || rt.grade?.id || ""),
+      studentCount: rt.studentCount ?? 0,
+      homeroomTeacher: rt.homeroomTeacher?.fullname || rt.homeroomTeacher || undefined,
+      homeroomTeacherId: rt.homeroomTeacherId || rt.homeroomTeacher?.id,
+    }));
+    return {
+      ...rawResponse,
+      data: mappedData,
+    };
   },
 
   createClass: async (payload: CreateClassPayload) => {
-    try {
-      const response = await api.post("/v1/class", payload);
-      return response.data;
-    } catch {
-      const response = await api.post("/v1/rukun-tetangga", {
-        count: payload.count || 1,
-        RukunWargaId: payload.gradeId,
-      });
-      return response.data;
-    }
+    const body = {
+      name: payload.name,
+      GradeId: payload.gradeId || payload.GradeId,
+      homeroomTeacherId: payload.homeroomTeacherId || payload.homeroomTeacher,
+    };
+    const response = await api.post("/v1/class", body);
+    return response.data;
   },
 
   updateClass: async (id: string, payload: UpdateClassPayload) => {
-    try {
-      const response = await api.put(`/v1/class/${id}`, payload);
-      return response.data;
-    } catch {
-      const response = await api.put(`/v1/rukun-tetangga/${id}`, payload);
-      return response.data;
-    }
+    const body: any = {
+      name: payload.name,
+      GradeId: payload.gradeId || payload.GradeId,
+      homeroomTeacherId: payload.homeroomTeacherId || payload.homeroomTeacher,
+    };
+    const response = await api.put(`/v1/class/${id}`, body);
+    return response.data;
   },
 
   deleteClass: async (id: string) => {
-    try {
-      const response = await api.delete(`/v1/class/${id}`);
-      return response.data;
-    } catch {
-      const response = await api.delete(`/v1/rukun-tetangga/${id}`);
-      return response.data;
-    }
+    const response = await api.delete(`/v1/class/${id}`);
+    return response.data;
   },
 
   // ===================== STUDENTS / SISWA =====================
   getStudents: async (params?: GetStudentsAdminParams): Promise<StudentAdminResponse> => {
-    try {
-      const response = await api.get<StudentAdminResponse>("/v1/student", { params });
-      return response.data;
-    } catch {
-      const response = await api.get<any>("/v1/resident", {
-        params: {
-          ...params,
-          RukunWargaId: params?.gradeLevelId || params?.RukunWargaId,
-          RukunTetanggaId: params?.classroomId || params?.RukunTetanggaId,
-        },
-      });
+    const queryParams: any = {
+      ...params,
+      GradeId: params?.gradeLevelId || params?.GradeId || params?.RukunWargaId,
+      ClassId: params?.classroomId || params?.ClassId || params?.RukunTetanggaId,
+    };
+    const response = await api.get<any>("/v1/student", { params: queryParams });
+    const rawResponse = response.data;
 
-      const mappedData: StudentAdminItem[] = (response.data.data || []).map((res: any) => ({
-        id: String(res.id),
-        fullname: res.fullname,
-        nisn: res.userDetail?.nisn || res.userDetail?.nik || res.nik || "-",
-        nik: res.userDetail?.nik || res.nik,
-        email: res.email,
-        phoneNumber: res.userDetail?.phoneNumber || res.phoneNumber,
-        gender: res.gender || res.userDetail?.gender || "m",
-        birthDate: res.birthDate || res.userDetail?.birthDate || "",
-        gradeLevelId: String(res.userDetail?.RukunWargaId || ""),
-        classroomId: String(res.userDetail?.RukunTetanggaId || ""),
-        gradeLevel: res.userDetail?.gradeLevel || {
-          id: String(res.userDetail?.RukunWargaId || ""),
-          name: `Tingkat ${res.userDetail?.RukunWarga?.name || ""}`,
-        },
-        classroom: res.userDetail?.classroom || {
-          id: String(res.userDetail?.RukunTetanggaId || ""),
-          name: `Kelas ${res.userDetail?.RukunTetangga?.name || ""}`,
-        },
-      }));
+    const mappedData: StudentAdminItem[] = (rawResponse.data || []).map((res: any) => {
+      const gradeObj = res.userDetail?.grade;
+      const classObj = res.userDetail?.class;
+      const gradeName = gradeObj?.name
+        ? (gradeObj.name.startsWith("Tingkat") ? gradeObj.name : `Tingkat ${gradeObj.name}`)
+        : "-";
+      const className = classObj?.name
+        ? (classObj.name.startsWith("Kelas") ? classObj.name : `Kelas ${classObj.name}`)
+        : "-";
 
       return {
-        ...response.data,
-        data: mappedData,
+        id: String(res.id),
+        fullname: res.fullname,
+        nisn: res.userDetail?.nisn || res.nisn || "-",
+        email: res.email,
+        phoneNumber: res.userDetail?.phoneNumber || res.phoneNumber || "-",
+        gender: res.userDetail?.gender || res.gender || "m",
+        birthDate: res.userDetail?.birthDate || res.birthDate || "",
+        gradeLevelId: String(res.userDetail?.GradeId || ""),
+        classroomId: String(res.userDetail?.ClassId || ""),
+        gradeLevel: {
+          id: String(gradeObj?.id || res.userDetail?.GradeId || ""),
+          name: gradeName,
+        },
+        classroom: {
+          id: String(classObj?.id || res.userDetail?.ClassId || ""),
+          name: className,
+        },
       };
-    }
+    });
+
+    return {
+      ...rawResponse,
+      data: mappedData,
+    };
   },
 
   getStudentDetail: async (id: string): Promise<{ data: StudentAdminItem }> => {
-    try {
-      const response = await api.get<{ data: StudentAdminItem }>(`/v1/student/${id}`);
-      return response.data;
-    } catch {
-      const response = await api.get<any>(`/v1/resident/${id}`);
-      const res = response.data.data;
-      const mapped: StudentAdminItem = {
-        id: String(res.id),
-        fullname: res.fullname,
-        nisn: res.userDetail?.nisn || res.userDetail?.nik || res.nik || "-",
-        nik: res.userDetail?.nik || res.nik,
-        email: res.email,
-        phoneNumber: res.userDetail?.phoneNumber || res.phoneNumber,
-        gender: res.gender || res.userDetail?.gender || "m",
-        birthDate: res.birthDate || res.userDetail?.birthDate || "",
-        gradeLevelId: String(res.userDetail?.RukunWargaId || ""),
-        classroomId: String(res.userDetail?.RukunTetanggaId || ""),
-        gradeLevel: res.userDetail?.gradeLevel,
-        classroom: res.userDetail?.classroom,
-      };
-      return { data: mapped };
-    }
+    const response = await api.get<any>(`/v1/student/${id}`);
+    const res = response.data.data;
+
+    const gradeObj = res.userDetail?.grade;
+    const classObj = res.userDetail?.class;
+    const gradeName = gradeObj?.name
+      ? (gradeObj.name.startsWith("Tingkat") ? gradeObj.name : `Tingkat ${gradeObj.name}`)
+      : "-";
+    const className = classObj?.name
+      ? (classObj.name.startsWith("Kelas") ? classObj.name : `Kelas ${classObj.name}`)
+      : "-";
+
+    const mapped: StudentAdminItem = {
+      id: String(res.id),
+      fullname: res.fullname,
+      nisn: res.userDetail?.nisn || res.nisn || "-",
+      email: res.email,
+      phoneNumber: res.userDetail?.phoneNumber || res.phoneNumber || "-",
+      gender: res.userDetail?.gender || res.gender || "m",
+      birthDate: res.userDetail?.birthDate || res.birthDate || "",
+      gradeLevelId: String(res.userDetail?.GradeId || ""),
+      classroomId: String(res.userDetail?.ClassId || ""),
+      gradeLevel: {
+        id: String(gradeObj?.id || res.userDetail?.GradeId || ""),
+        name: gradeName,
+      },
+      classroom: {
+        id: String(classObj?.id || res.userDetail?.ClassId || ""),
+        name: className,
+      },
+    };
+    return { data: mapped };
   },
 
   createStudent: async (payload: CreateStudentAdminPayload) => {
-    const payloadWithFallbacks = {
-      ...payload,
-      nik: payload.nisn,
-      RukunWargaId: payload.gradeLevelId,
-      RukunTetanggaId: payload.classroomId,
-      profession: "Siswa",
-      EducationId: "1",
-      MarriageStatusId: "1",
-      SalaryRangeId: "1",
-      isKader: false,
+    const body = {
+      fullname: payload.fullname,
+      nisn: payload.nisn,
+      email: payload.email || undefined,
+      phoneNumber: payload.phoneNumber || undefined,
+      gender: payload.gender || "m",
+      birthDate: payload.birthDate,
+      GradeId: payload.gradeLevelId || payload.GradeId,
+      ClassId: payload.classroomId || payload.ClassId,
+      password: payload.password || "Password123!",
+      confirmPassword: payload.confirmPassword || payload.password || "Password123!",
+      nis: payload.nis,
+      entryYear: payload.entryYear,
+      academicYear: payload.academicYear,
     };
-
-    try {
-      const response = await api.post("/v1/student", payloadWithFallbacks);
-      return response.data;
-    } catch {
-      const response = await api.post("/v1/resident", payloadWithFallbacks);
-      return response.data;
-    }
+    const response = await api.post("/v1/student", body);
+    return response.data;
   },
 
   updateStudent: async (id: string, payload: UpdateStudentAdminPayload) => {
-    const payloadWithFallbacks = {
-      ...payload,
-      nik: payload.nisn,
-      RukunWargaId: payload.gradeLevelId,
-      RukunTetanggaId: payload.classroomId,
-      profession: "Siswa",
+    const body: any = {
+      fullname: payload.fullname,
+      nisn: payload.nisn,
+      email: payload.email || `${payload.nisn}@al-multazam.sch.id`,
+      phoneNumber: payload.phoneNumber || undefined,
+      gender: payload.gender || "m",
+      birthDate: payload.birthDate,
+      GradeId: payload.gradeLevelId || payload.GradeId,
+      ClassId: payload.classroomId || payload.ClassId,
+      nis: payload.nis,
+      entryYear: payload.entryYear,
+      academicYear: payload.academicYear,
     };
-
-    try {
-      const response = await api.put(`/v1/student/${id}`, payloadWithFallbacks);
-      return response.data;
-    } catch {
-      const response = await api.put(`/v1/resident/${id}`, payloadWithFallbacks);
-      return response.data;
+    if (payload.password) {
+      body.password = payload.password;
+      body.confirmPassword = payload.confirmPassword || payload.password;
     }
+    const response = await api.put(`/v1/student/${id}`, body);
+    return response.data;
   },
 
   deleteStudent: async (id: string) => {
-    try {
-      const response = await api.delete(`/v1/student/${id}`);
-      return response.data;
-    } catch {
-      const response = await api.delete(`/v1/resident/${id}`);
-      return response.data;
-    }
+    const response = await api.delete(`/v1/student/${id}`);
+    return response.data;
   },
 };

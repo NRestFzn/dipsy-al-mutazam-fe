@@ -168,10 +168,14 @@ export default function Profile() {
                 contentStyle={{ color: "#1e293b", fontSize: "12px", fontWeight: 600 }}
               >
                 <Descriptions.Item label="Jenjang / Tingkat">
-                  {userDetail?.gradeLevel?.name || "-"}
+                  {userDetail?.grade?.name
+                    ? (userDetail.grade.name.startsWith("Tingkat") ? userDetail.grade.name : `Tingkat ${userDetail.grade.name}`)
+                    : (userDetail?.gradeLevel?.name || "-")}
                 </Descriptions.Item>
                 <Descriptions.Item label="Rombongan Belajar (Kelas)">
-                  {userDetail?.classroom?.name || "-"}
+                  {userDetail?.class?.name
+                    ? (userDetail.class.name.startsWith("Kelas") ? userDetail.class.name : `Kelas ${userDetail.class.name}`)
+                    : (userDetail?.classroom?.name || "-")}
                 </Descriptions.Item>
               </Descriptions>
             </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Form,
   Input,
@@ -17,62 +17,74 @@ import {
   InfoCircleOutlined,
 } from '@ant-design/icons';
 import { useAuth } from '../../../context/AuthContext';
-import { useMasterData } from '../../../hooks/useMasterData';
 import { useNavigate, Link } from 'react-router';
 import type { RegisterPayload } from '../../../types/AuthTypes/authTypes';
-import { useInfiniteSelectOptions } from '../../../hooks/Common/useInfiniteSelectOptions';
+import { academicService } from '../../../service/Admin/academicService';
 
 export default function Register() {
   const navigate = useNavigate();
 
   const [showModal, setShowModal] = useState(false);
-  const [selectedRW, setSelectedRW] = useState<string | null>(null);
+  const [selectedGrade, setSelectedGrade] = useState<string | null>(null);
+
+  const [grades, setGrades] = useState<{ label: string; value: string }[]>([]);
+  const [classes, setClasses] = useState<{ label: string; value: string }[]>([]);
+  const [loadingGrades, setLoadingGrades] = useState(false);
+  const [loadingClasses, setLoadingClasses] = useState(false);
 
   const [accountForm] = Form.useForm();
   const [profileForm] = Form.useForm();
 
   const { register, isLoading, error } = useAuth();
-  const {
-    educations,
-    marriageStatuses,
-    salaryRanges,
-    infiniteRukunWarga,
-    infiniteRukunTetangga
-  } = useMasterData();
 
-  const rwQuery = infiniteRukunWarga(20);
-  const {
-    options: rwOptions,
-    onPopupScroll: onRWScroll,
-    isLoading: loadingRW,
-    isFetchingNextPage: fetchingNextRW
-  } = useInfiniteSelectOptions({
-    queryResult: rwQuery,
-    labelKey: (item: any) => `Tingkat ${item.name}`,
-    valueKey: 'id'
-  });
+  useEffect(() => {
+    const fetchGrades = async () => {
+      setLoadingGrades(true);
+      try {
+        const res = await academicService.getGrades();
+        const options = (res.data || []).map((g) => ({
+          label: g.name,
+          value: g.id,
+        }));
+        setGrades(options);
+      } catch (err) {
+        console.error('Failed to fetch grades:', err);
+      } finally {
+        setLoadingGrades(false);
+      }
+    };
 
-  const rtQuery = infiniteRukunTetangga(20, selectedRW);
-  const {
-    options: rtOptions,
-    onPopupScroll: onRTScroll,
-    isLoading: loadingRT,
-    isFetchingNextPage: fetchingNextRT
-  } = useInfiniteSelectOptions({
-    queryResult: rtQuery,
-    labelKey: (item: any) => `Kelas ${item.name}`,
-    valueKey: 'id'
-  });
+    fetchGrades();
+  }, []);
 
-  const { data: educationList, isLoading: loadEdu } = educations;
-  const { data: marriageList, isLoading: loadMarriage } = marriageStatuses;
-  const { data: salaryList, isLoading: loadSalary } = salaryRanges;
+  useEffect(() => {
+    if (!selectedGrade) {
+      setClasses([]);
+      return;
+    }
 
-  const isMasterDataLoading = loadEdu || loadMarriage || loadSalary;
+    const fetchClasses = async () => {
+      setLoadingClasses(true);
+      try {
+        const res = await academicService.getClasses({ gradeId: selectedGrade });
+        const options = (res.data || []).map((c) => ({
+          label: c.name,
+          value: c.id,
+        }));
+        setClasses(options);
+      } catch (err) {
+        console.error('Failed to fetch classes:', err);
+      } finally {
+        setLoadingClasses(false);
+      }
+    };
 
-  const handleRWChange = (val: string) => {
-    setSelectedRW(val);
-    accountForm.setFieldValue('rt', undefined);
+    fetchClasses();
+  }, [selectedGrade]);
+
+  const handleGradeChange = (val: string) => {
+    setSelectedGrade(val);
+    accountForm.setFieldValue('ClassId', undefined);
   };
 
   const onAccountFinish = () => {
@@ -84,19 +96,15 @@ export default function Register() {
       const accountValues = accountForm.getFieldsValue();
       const payload: RegisterPayload = {
         fullname: profileValues.namaLengkap,
-        email: accountValues.email || null,
+        nisn: accountValues.nisn,
+        email: accountValues.email || undefined,
         password: accountValues.password,
         confirmPassword: accountValues.confirmPassword,
         gender: profileValues.gender,
-        profession: profileValues.pekerjaan || "Siswa",
         birthDate: profileValues.tanggalLahir.format('YYYY-MM-DD'),
-        MarriageStatusId: profileValues.statusPernikahan || (marriageList?.[0]?.id ?? ""),
-        RukunWargaId: accountValues.rw,
-        RukunTetanggaId: accountValues.rt,
-        EducationId: profileValues.pendidikan || (educationList?.[0]?.id ?? ""),
-        SalaryRangeId: profileValues.gaji || (salaryList?.[0]?.id ?? ""),
-        nik: accountValues.nik,
-        phoneNumber: profileValues.noHp || null,
+        GradeId: accountValues.GradeId,
+        ClassId: accountValues.ClassId,
+        phoneNumber: profileValues.noHp || undefined,
       };
 
       await register(payload);
@@ -126,17 +134,6 @@ export default function Register() {
     if (error.message) return error.message;
     return 'Terjadi kesalahan saat pendaftaran. Silakan coba lagi.';
   };
-
-  if (isMasterDataLoading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50 font-sans">
-        <div className="flex flex-col items-center gap-2">
-          <Spin size="default" />
-          <span className="text-xs text-slate-500 font-medium">Memuat data akademik...</span>
-        </div>
-      </div>
-    );
-  }
 
   const filterOption = (input: string, option: any) => {
     const labelStr = String(option?.label ?? '');
@@ -205,7 +202,7 @@ export default function Register() {
                     NISN (Nomor Induk Siswa Nasional)
                   </span>
                 }
-                name="nik"
+                name="nisn"
                 rules={[
                   { required: true, message: 'NISN wajib diisi' },
                   { len: 10, message: 'NISN harus tepat 10 digit angka' },
@@ -297,17 +294,15 @@ export default function Register() {
                       Tingkat / Jenjang
                     </span>
                   }
-                  name="rw"
+                  name="GradeId"
                   rules={[{ required: true, message: 'Pilih tingkat' }]}
                   className="!mb-0"
                 >
                   <Select
                     placeholder="Pilih Tingkat"
-                    onChange={handleRWChange}
-                    options={rwOptions}
-                    loading={loadingRW}
-                    onPopupScroll={onRWScroll}
-                    notFoundContent={fetchingNextRW ? <Spin size="small" /> : null}
+                    onChange={handleGradeChange}
+                    options={grades}
+                    loading={loadingGrades}
                     showSearch={{ filterOption }}
                     className="text-sm h-10"
                   />
@@ -319,17 +314,16 @@ export default function Register() {
                       Kelas
                     </span>
                   }
-                  name="rt"
+                  name="ClassId"
                   rules={[{ required: true, message: 'Pilih kelas' }]}
                   className="!mb-0"
                 >
                   <Select
                     placeholder="Pilih Kelas"
-                    disabled={!selectedRW}
-                    options={rtOptions}
-                    loading={loadingRT}
-                    onPopupScroll={onRTScroll}
-                    notFoundContent={fetchingNextRT ? <Spin size="small" /> : null}
+                    disabled={!selectedGrade}
+                    options={classes}
+                    loading={loadingClasses}
+                    notFoundContent={loadingClasses ? <Spin size="small" /> : null}
                     showSearch={{ filterOption }}
                     className="text-sm h-10"
                   />
@@ -404,7 +398,7 @@ export default function Register() {
           <Form.Item
             label={
               <span className="text-xs font-semibold uppercase tracking-wider text-slate-600">
-                Nomor Telepon / WhatsApp
+                Nomor Telepon / WhatsApp (Opsional)
               </span>
             }
             name="noHp"

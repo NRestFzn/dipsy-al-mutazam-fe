@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { Form, Input, Button, Alert } from "antd";
-import { Mail, Lock, UserCheck } from "lucide-react";
+import { Mail, Lock} from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import { getErrorMessage } from "../../../utils/getErrorMessage";
 import { ROLE_ID } from "../../../constants";
@@ -144,7 +144,7 @@ export default function Login() {
                   to="/masuk"
                   className="text-emerald-700 font-semibold hover:underline inline-flex items-center gap-1"
                 >
-                  <UserCheck size={13} />
+                
                   Portal Siswa (NISN)
                 </Link>
               </div>

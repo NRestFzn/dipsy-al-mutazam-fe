@@ -27,7 +27,7 @@ export default function UpdateStudentModal({ open, onCancel, student }: UpdateSt
 
   useEffect(() => {
     if (student) {
-      const initialGrade = student.gradeLevelId || student.RukunWargaId || null;
+      const initialGrade = student.gradeLevelId || student.gradeLevel?.id || null;
       setSelectedGrade(initialGrade);
 
       form.setFieldsValue({
@@ -38,7 +38,7 @@ export default function UpdateStudentModal({ open, onCancel, student }: UpdateSt
         gender: student.gender,
         birthDate: student.birthDate ? dayjs(student.birthDate) : undefined,
         gradeLevelId: initialGrade,
-        classroomId: student.classroomId || student.RukunTetanggaId,
+        classroomId: student.classroomId || student.classroom?.id,
       });
     }
   }, [student, form]);

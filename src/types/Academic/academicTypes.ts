@@ -3,6 +3,7 @@ import type { ResponseData } from "../commons";
 export interface GradeItem {
   id: string;
   name: string;
+  level?: "SMP" | "SMA" | null;
   classCount?: number;
   studentCount?: number;
   createdAt?: string;
@@ -13,9 +14,11 @@ export interface ClassItem {
   id: string;
   name: string;
   gradeId?: string;
+  GradeId?: string;
   RukunWargaId?: string; // fallback mapping
   grade?: GradeItem;
   homeroomTeacher?: string;
+  homeroomTeacherId?: string;
   studentCount?: number;
   createdAt?: string;
   updatedAt?: string;
@@ -31,9 +34,7 @@ export interface StudentAdminItem {
   gender: "m" | "f";
   birthDate: string;
   gradeLevelId?: string;
-  RukunWargaId?: string; // fallback mapping
   classroomId?: string;
-  RukunTetanggaId?: string; // fallback mapping
   gradeLevel?: { id: string; name: string };
   classroom?: { id: string; name: string };
   createdAt?: string;
@@ -42,24 +43,30 @@ export interface StudentAdminItem {
 
 export interface CreateGradePayload {
   name: string;
+  level?: "SMP" | "SMA";
   count?: number;
 }
 
 export interface UpdateGradePayload {
-  name: string;
+  name?: string;
+  level?: "SMP" | "SMA";
 }
 
 export interface CreateClassPayload {
   name: string;
   gradeId: string;
+  GradeId?: string;
   homeroomTeacher?: string;
+  homeroomTeacherId?: string;
   count?: number;
 }
 
 export interface UpdateClassPayload {
-  name: string;
-  gradeId: string;
+  name?: string;
+  gradeId?: string;
+  GradeId?: string;
   homeroomTeacher?: string;
+  homeroomTeacherId?: string;
 }
 
 export interface CreateStudentAdminPayload {
@@ -72,6 +79,11 @@ export interface CreateStudentAdminPayload {
   birthDate: string;
   gradeLevelId: string;
   classroomId: string;
+  GradeId?: string;
+  ClassId?: string;
+  nis?: string;
+  entryYear?: string;
+  academicYear?: string;
   password?: string;
   confirmPassword?: string;
 }
@@ -86,10 +98,18 @@ export interface UpdateStudentAdminPayload {
   birthDate: string;
   gradeLevelId: string;
   classroomId: string;
+  GradeId?: string;
+  ClassId?: string;
+  nis?: string;
+  entryYear?: string;
+  academicYear?: string;
+  password?: string;
+  confirmPassword?: string;
 }
 
 export interface GetGradesParams {
   name?: string;
+  level?: string;
   page?: number;
   pageSize?: number;
   order?: string;
@@ -98,6 +118,7 @@ export interface GetGradesParams {
 export interface GetClassesParams {
   name?: string;
   gradeId?: string;
+  GradeId?: string;
   RukunWargaId?: string;
   page?: number;
   pageSize?: number;
@@ -110,8 +131,10 @@ export interface GetStudentsAdminParams {
   nisn?: string;
   nik?: string;
   gradeLevelId?: string;
+  GradeId?: string;
   RukunWargaId?: string;
   classroomId?: string;
+  ClassId?: string;
   RukunTetanggaId?: string;
   page?: number;
   pageSize?: number;
@@ -121,4 +144,3 @@ export interface GetStudentsAdminParams {
 export type GradeResponse = ResponseData<GradeItem[]>;
 export type ClassResponse = ResponseData<ClassItem[]>;
 export type StudentAdminResponse = ResponseData<StudentAdminItem[]>;
-

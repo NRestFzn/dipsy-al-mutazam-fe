@@ -90,7 +90,7 @@ export const adminMedisService = {
 		endDate?: string
 	): Promise<UserSummaryResponse> {
 		const response = await api.get<ApiResponse<UserSummaryResponse>>(
-			`/v1/questionnaire-submission/summary-user/${questionnaireId}`,
+			`/v1/questionnaire-submission/summary-student/${questionnaireId}`,
 			{
 				params: { UserId: userId, RukunTetanggaId: RukunTetanggaId, RukunWargaId: RukunWargaId, startDate, endDate }
 			}
@@ -137,7 +137,7 @@ export const adminMedisService = {
 	},
 
 	async getAllRW(): Promise<GetAllRWResponse> {
-		const response = await api.get<GetAllRWResponse>("/v1/rukun-warga");
+		const response = await api.get<GetAllRWResponse>("/v1/grade");
 		return response.data;
 	},
 
@@ -324,7 +324,7 @@ export const adminMedisService = {
 			);
 			return response.data.data;
 		} catch {
-			return this.summaryRw(questionnaireId, gradeId, startDate, endDate);
+			throw new Error("Gagal memuat rekap tingkat");
 		}
 	},
 
@@ -345,7 +345,7 @@ export const adminMedisService = {
 			);
 			return response.data.data;
 		} catch {
-			return this.summaryRt(questionnaireId, gradeId, classId, startDate, endDate);
+			throw new Error("Gagal memuat rekap kelas");
 		}
 	},
 
