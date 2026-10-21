@@ -13,6 +13,8 @@ export interface UserDetail {
 
     RukunWargaId: string
     RukunTetanggaId: string
+    gradeLevelId?: string
+    classroomId?: string
     MarriageStatusId: string
     EducationId: string
     SalaryRangeId: string
@@ -48,21 +50,20 @@ export interface GetResidentsParams {
     fullname?: string;
     nik?: string;
     RukunWargaId?: string;
+    gradeLevelId?: string;
     RukunTetanggaId?: string;
+    classroomId?: string;
+    statusSubmit?: "hasSubmitted" | "hasNotSubmitted";
     order?: string;
 }
 
-export interface CreateResidentPayload {
-    fullname: string;
-    email: string;
-    gender: "m" | "f";
-    profession: string;
-    birthDate: string;
-    MarriageStatusId: string;
-    RukunWargaId: string;
-    RukunTetanggaId: string;
-    EducationId: string;
-    SalaryRangeId: string;
-    nik: string;
-    isKader: boolean;
+export interface PaginatedResidents {
+    statusCode: number;
+    message: string;
+    data: ResidentData[];
+    metadata: {
+        page: number;
+        pageSize: number;
+        total: number;
+    };
 }

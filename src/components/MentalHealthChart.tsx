@@ -18,9 +18,11 @@ import {
 import { Users, FileText, Activity, AlertCircle, History } from "lucide-react";
 import dayjs from "dayjs";
 
-export interface PerRwData {
-	rwId: string;
-	rwName: number;
+export interface PerGradeData {
+	gradeId?: string;
+	rwId?: string;
+	gradeName?: number | string;
+	rwName?: number | string;
 	userCount: number;
 	submitCount: number;
 	stableMentalCount: number;
@@ -28,15 +30,21 @@ export interface PerRwData {
 	unStableMentalPercentage: number;
 }
 
-export interface PerRtData {
-	rtId: string;
-	rtName: number;
+export type PerRwData = PerGradeData;
+
+export interface PerClassData {
+	classId?: string;
+	rtId?: string;
+	className?: number | string;
+	rtName?: number | string;
 	userCount: number;
 	submitCount: number;
 	stableMentalCount: number;
 	unStableMentalCount: number;
 	unStableMentalPercentage: number;
 }
+
+export type PerRtData = PerClassData;
 
 export interface SubmissionData {
 	submissionId: string;
@@ -50,6 +58,7 @@ export interface SubmissionData {
 export interface UserListData {
 	UserId: string;
 	fullname: string;
+	nisn?: string;
 	lastSubmissionDate: string;
 	isMentalUnStable: boolean;
 }
@@ -59,8 +68,10 @@ interface MentalHealthChartProps {
 	totalSubmit?: number;
 	totalUser?: number;
 
-	perRwData?: PerRwData[];
-	perRtData?: PerRtData[];
+	perGradeData?: PerGradeData[];
+	perClassData?: PerClassData[];
+	perRwData?: PerGradeData[];
+	perRtData?: PerClassData[];
 	usersData?: UserListData[];
 	submissionsData?: SubmissionData[];
 
@@ -72,6 +83,8 @@ export default function MentalHealthChart({
 	overallDepressionRate,
 	totalSubmit = 0,
 	totalUser = 0,
+	perGradeData,
+	perClassData,
 	perRwData,
 	perRtData,
 	usersData,
@@ -81,10 +94,10 @@ export default function MentalHealthChart({
 
 	const mode = useMemo(() => {
 		if (submissionsData && submissionsData.length > 0) return "USER_HISTORY";
-		if (perRtData && perRtData.length > 0) return "RT_LEVEL";
-		if (usersData && usersData.length > 0) return "USER_LIST";
-		return "RW_LEVEL"; // Default
-	}, [submissionsData, perRtData]);
+		if ((perClassData && perClassData.length > 0) || (perRtData && perRtData.length > 0)) return "CLASS_LEVEL";
+		if (usersData && usersData.length > 0) return "STUDENT_LIST";
+		return "GRADE_LEVEL";
+	}, [submissionsData, perClassData, perRtData, usersData]);
 
 	const [chartView, setChartView] = useState<string>("health_distribution");
 
@@ -106,40 +119,54 @@ export default function MentalHealthChart({
 				}));
 		}
 
-		if (mode === "RT_LEVEL" && perRtData) {
-			return perRtData.map(item => ({
-				name: `RT ${String(item.rtName).padStart(2, '0')}`,
-				"Mental Stabil": item.stableMentalCount,
-				"Mental Berisiko": item.unStableMentalCount,
-				"Resiko (%)": item.unStableMentalPercentage,
-				"Jumlah Warga": item.userCount,
-				"Jumlah Pengerjaan": item.submitCount
-			}));
+		if (mode === "CLASS_LEVEL") {
+			const classList = perClassData || perRtData || [];
+			return classList.map(item => {
+				const rawName = item.className ?? item.rtName ?? "";
+				const displayName = String(rawName).startsWith("Kelas") || String(rawName).includes("-")
+					? String(rawName)
+					: `Kelas ${rawName}`;
+				return {
+					name: displayName,
+					"Mental Stabil": item.stableMentalCount,
+					"Mental Berisiko": item.unStableMentalCount,
+					"Resiko (%)": item.unStableMentalPercentage,
+					"Jumlah Siswa": item.userCount,
+					"Jumlah Pengerjaan": item.submitCount
+				};
+			});
 		}
 
-		if (mode === "USER_LIST" && usersData) {
+		if (mode === "STUDENT_LIST" && usersData) {
 			const riskyCount = usersData.filter(u => u.isMentalUnStable).length;
 			const stableCount = usersData.length - riskyCount;
 
 			return [
 				{
-					name: "Status Mental Warga",
+					name: "Status Skrining Siswa",
 					"Mental Berisiko": riskyCount,
 					"Mental Stabil": stableCount,
-					"Jumlah Pengguna": usersData.length
+					"Jumlah Siswa": usersData.length
 				}
 			];
 		}
 
-		return (perRwData || []).map(item => ({
-			name: `RW ${String(item.rwName).padStart(2, '0')}`,
-			"Mental Stabil": item.stableMentalCount,
-			"Mental Berisiko": item.unStableMentalCount,
-			"Resiko (%)": item.unStableMentalPercentage,
-			"Jumlah Pengguna": item.userCount,
-			"Jumlah Pengerjaan": item.submitCount
-		}));
-	}, [mode, perRwData, perRtData, submissionsData]);
+		const gradeList = perGradeData || perRwData || [];
+		return gradeList.map(item => {
+			const rawName = item.gradeName ?? item.rwName ?? "";
+			const displayName = String(rawName).startsWith("Tingkat") || String(rawName).startsWith("Kelas")
+				? String(rawName)
+				: `Tingkat ${rawName}`;
+			return {
+				name: displayName,
+				"Mental Stabil": item.stableMentalCount,
+				"Mental Berisiko": item.unStableMentalCount,
+				"Resiko (%)": item.unStableMentalPercentage,
+				"Jumlah Siswa": item.userCount,
+				"Jumlah Pengerjaan": item.submitCount
+			};
+		});
+	}, [mode, perGradeData, perClassData, perRwData, perRtData, submissionsData, usersData]);
 
 	const CustomTooltip = ({ active, payload, label }: any) => {
 		if (active && payload && payload.length) {
@@ -201,12 +228,12 @@ export default function MentalHealthChart({
 			);
 		}
 
-		if (mode === "USER_LIST") {
+		if (mode === "STUDENT_LIST") {
 			return (
 				<BarChart data={formattedChartData} margin={{ top: 20, right: 30, left: 0, bottom: 0 }} layout="vertical">
 					<CartesianGrid strokeDasharray="3 3" horizontal={true} vertical={false} stroke="#E5E7EB" />
 					<XAxis type="number" hide />
-					<YAxis dataKey="name" type="category" width={150} tick={{ fontSize: 14, fill: '#4B5563' }} axisLine={false} tickLine={false} />
+					<YAxis dataKey="name" type="category" width={170} tick={{ fontSize: 14, fill: '#4B5563' }} axisLine={false} tickLine={false} />
 					<Tooltip cursor={{ fill: 'transparent' }} />
 					<Legend />
 					<Bar dataKey="Mental Berisiko" fill="#EF4444" radius={[0, 4, 4, 0]} barSize={40}>
@@ -254,7 +281,7 @@ export default function MentalHealthChart({
 						<YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 12 }} />
 						<Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
 						<Legend verticalAlign="top" height={36} iconType="circle" />
-						<Bar dataKey="Jumlah Pengguna" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={20} />
+						<Bar dataKey="Jumlah Siswa" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={20} />
 						<Bar dataKey="Jumlah Pengerjaan" fill="#06B6D4" radius={[4, 4, 0, 0]} barSize={20} />
 					</BarChart>
 				);
@@ -282,7 +309,7 @@ export default function MentalHealthChart({
 						/>
 						<KpiCard
 							title="Terindikasi Berisiko"
-							value={`${submissionsData?.filter(s => s.isMentalUnStable === 1).length} Kali`}
+							value={`${submissionsData?.filter(s => s.isMentalUnStable === 1).length || 0} Kali`}
 							icon={AlertCircle}
 							colorClass="text-red-600"
 							bgClass="bg-red-50"
@@ -291,7 +318,7 @@ export default function MentalHealthChart({
 				) : (
 					<>
 						<KpiCard
-							title="Jumlah Pengguna"
+							title="Jumlah Siswa"
 							value={totalUser}
 							icon={Users}
 							colorClass="text-blue-600"
@@ -312,19 +339,19 @@ export default function MentalHealthChart({
 						<div className="flex items-center gap-2 mb-2">
 							<Activity className="text-gray-400" size={18} />
 							<span className="text-gray-500 text-sm font-medium">
-								{mode === "USER_HISTORY" ? "Status Akumulasi Personal" : "Status Akumulasi Wilayah"}
+								{mode === "USER_HISTORY" ? "Status Akumulasi Personal" : "Status Akumulasi Tingkat / Kelas"}
 							</span>
 						</div>
 
 						<div className="mt-4">
 							<div className="flex justify-between text-sm mb-1">
-								<span className="text-gray-600">Risiko Gangguan Mental</span>
+								<span className="text-gray-600">Risiko Butuh Perhatian</span>
 								<span className="font-bold text-red-500">{overallDepressionRate}%</span>
 							</div>
 							<Progress percent={overallDepressionRate} showInfo={false} strokeColor="#EF4444" trailColor="#F3F4F6" />
 
 							<div className="flex justify-between text-sm mt-3 mb-1">
-								<span className="text-gray-600">Kondisi Stabil</span>
+								<span className="text-gray-600">Kondisi Normal / Stabil</span>
 								<span className="font-bold text-emerald-500">{healthyMentalPercentage}%</span>
 							</div>
 							<Progress percent={healthyMentalPercentage} showInfo={false} strokeColor="#10B981" trailColor="#F3F4F6" />
@@ -372,25 +399,25 @@ export default function MentalHealthChart({
 						</div>
 						<div>
 							<h3 className="font-bold text-gray-800">
-								{mode === "USER_HISTORY" ? "Grafik Riwayat Tes" :
-									mode === "USER_LIST" ? "Distribusi Status Warga" :
-										"Analisis Detail Wilayah"}
+								{mode === "USER_HISTORY" ? "Grafik Riwayat Skrining" :
+									mode === "STUDENT_LIST" ? "Distribusi Status Siswa" :
+										"Analisis Detail Tingkat & Kelas"}
 							</h3>
 							<p className="text-xs text-gray-500">
-								{mode === "USER_HISTORY" ? "Perkembangan skor indikasi dari waktu ke waktu" : "Visualisasi data per wilayah"}
+								{mode === "USER_HISTORY" ? "Perkembangan skor indikasi dari waktu ke waktu" : "Visualisasi data per tingkat / kelas"}
 							</p>
 						</div>
 					</div>
 
-					{mode !== "USER_HISTORY" && mode !== "USER_LIST" && (
+					{mode !== "USER_HISTORY" && mode !== "STUDENT_LIST" && (
 						<Select
 							defaultValue="health_distribution"
 							style={{ width: 240 }}
 							onChange={setChartView}
 							options={[
-								{ value: 'health_distribution', label: 'Distribusi Sehat vs Berisiko' },
+								{ value: 'health_distribution', label: 'Distribusi Stabil vs Berisiko' },
 								{ value: 'risk_percentage', label: 'Persentase Risiko (%)' },
-								{ value: 'participation', label: 'Partisipasi Warga dan Pengisian' },
+								{ value: 'participation', label: 'Partisipasi Siswa dan Pengisian' },
 							]}
 						/>
 					)}
