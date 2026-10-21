@@ -308,6 +308,47 @@ export const adminMedisService = {
 		return response.data.data;
 	},
 
+	async summaryGrade(
+		questionnaireId: string,
+		gradeId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<RWSummary> {
+		try {
+			const params: Record<string, any> = { gradeId, GradeId: gradeId, RukunWargaId: gradeId };
+			if (startDate) params.startDate = startDate;
+			if (endDate) params.endDate = endDate;
+			const response = await api.get<ApiResponse<RWSummary>>(
+				`/v1/questionnaire-submission/summary-grade/${questionnaireId}`,
+				{ params }
+			);
+			return response.data.data;
+		} catch {
+			return this.summaryRw(questionnaireId, gradeId, startDate, endDate);
+		}
+	},
+
+	async summaryClass(
+		questionnaireId: string,
+		gradeId: string,
+		classId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<RTSummary> {
+		try {
+			const params: Record<string, any> = { gradeId, classId, GradeId: gradeId, ClassId: classId, RukunWargaId: gradeId, RukunTetanggaId: classId };
+			if (startDate) params.startDate = startDate;
+			if (endDate) params.endDate = endDate;
+			const response = await api.get<ApiResponse<RTSummary>>(
+				`/v1/questionnaire-submission/summary-class/${questionnaireId}`,
+				{ params }
+			);
+			return response.data.data;
+		} catch {
+			return this.summaryRt(questionnaireId, gradeId, classId, startDate, endDate);
+		}
+	},
+
 	async updateProfilePicture(file: File) {
 		const formData = new FormData();
 		formData.append("profilePicture", file);
