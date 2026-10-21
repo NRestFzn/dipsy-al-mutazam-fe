@@ -25,8 +25,8 @@ export const getWaliKelasDashboardColumn = (): ColumnsType<WaliKelasStudentDataR
         render: (text, record) => (
             <div className="flex flex-col">
                 <span className="font-semibold text-gray-800">{text}</span>
-                {record.nisn && (
-                    <span className="text-xs text-gray-400">NISN: {record.nisn}</span>
+                {(record.nisn || record.nik) && (
+                    <span className="text-xs text-gray-400">NISN: {record.nisn || record.nik}</span>
                 )}
             </div>
         ),

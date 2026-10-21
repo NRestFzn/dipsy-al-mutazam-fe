@@ -8,7 +8,7 @@ import type { Questionnaire, QuestionnaireQuestion } from "../../../../types/adm
 export default function KuisionerPreview() {
     const navigate = useNavigate();
     const params = useParams<{ questionnaireId: string }>();
-    const questionnaireId = params?.questionnaireId?.split("=")?.[1] as string
+    const questionnaireId = params?.questionnaireId?.split("=")?.[1] as string;
 
     const [loading, setLoading] = useState(true);
     const [detail, setDetail] = useState<Questionnaire | null>(null);
@@ -24,7 +24,6 @@ export default function KuisionerPreview() {
         setLoading(true);
         try {
             const data = await adminMedisService.getQuestionnaireById(questionnaireId!);
-            
             setDetail(data);
 
             if (data.questions && Array.isArray(data.questions)) {
@@ -33,7 +32,6 @@ export default function KuisionerPreview() {
             } else {
                 setQuestions([]);
             }
-
         } catch (error) {
             console.error("Gagal memuat pratinjau", error);
         } finally {
@@ -53,7 +51,7 @@ export default function KuisionerPreview() {
     if (!detail) {
         return (
             <div className="h-screen flex flex-col justify-center items-center bg-gray-50">
-                <Empty description="Kuisioner tidak ditemukan" />
+                <Empty description="Kuesioner tidak ditemukan" />
                 <Button className="mt-4" onClick={() => navigate(-1)}>Kembali</Button>
             </div>
         );
@@ -61,10 +59,6 @@ export default function KuisionerPreview() {
 
     return (
         <main className="min-h-screen bg-gray-50 pb-20 relative overflow-hidden">
-            
-            <img className="absolute z-0 -bottom-10 -right-20 w-[250px] lg:w-[500px] opacity-80 pointer-events-none" src="/berat.png" alt="" />
-            <img className="absolute z-0 -bottom-5 -left-10 w-[150px] lg:w-[300px] scale-x-[-1] opacity-80 pointer-events-none" src="/berat.png" alt="" />
-
             <div className="pt-6 px-6 sm:px-10 lg:px-0 max-w-3xl mx-auto z-50 relative">
                 <Button 
                     onClick={() => navigate(-1)} 
@@ -73,38 +67,38 @@ export default function KuisionerPreview() {
                     shape="round"
                     size="large"
                 >
-                    Kembali ke Admin
+                    Kembali
                 </Button>
             </div>
 
             <div className="max-w-3xl mx-auto pt-8 relative z-10">
-                <div className="bg-[#70B748] rounded-t-2xl p-8 text-white shadow-lg">
+                <div className="bg-[#00A651] rounded-t-2xl p-8 text-white shadow-lg">
                     <div className="flex items-start justify-between">
                         <div>
                             <div className="flex items-center gap-2 mb-2 opacity-90">
                                 <FileText size={20} />
-                                <span className="font-medium tracking-wide text-sm uppercase">Mode Pratinjau</span>
+                                <span className="font-medium tracking-wide text-sm uppercase">Mode Pratinjau Kuesioner</span>
                             </div>
                             <h1 className="text-3xl font-bold mb-2">{detail.title}</h1>
-                            <p className="text-green-50 text-lg leading-relaxed opacity-90">
-                                {detail.description || "Tidak ada deskripsi."}
+                            <p className="text-emerald-50 text-base leading-relaxed opacity-90">
+                                {detail.description || "Tidak ada petunjuk pengisian."}
                             </p>
                         </div>
-                        <Tag color={detail.status === 'publish' ? 'success' : 'warning'} className="border-none px-3 py-1">
-                            {detail.status === 'publish' ? 'Terbit' : 'Konsep'}
+                        <Tag color={detail.status === 'publish' ? 'success' : 'warning'} className="border-none px-3 py-1 font-semibold">
+                            {detail.status === 'publish' ? 'Aktif' : 'Draf'}
                         </Tag>
                     </div>
                 </div>
 
                 <div className="bg-white rounded-b-2xl shadow-lg border-x border-b border-gray-200 p-8 min-h-[400px]">
                     {questions.length === 0 ? (
-                        <Empty description="Belum ada pertanyaan di kuisioner ini" />
+                        <Empty description="Belum ada butir pertanyaan pada instrumen ini" />
                     ) : (
                         <div className="space-y-8">
                             {questions.map((q, index) => (
-                                <div key={q.id} className="p-4 rounded-lg border border-gray-100 hover:border-green-200 hover:bg-green-50/30 transition-colors">
+                                <div key={q.id} className="p-4 rounded-lg border border-gray-100 hover:border-emerald-200 hover:bg-emerald-50/20 transition-colors">
                                     <h3 className="text-lg font-medium text-gray-800 mb-4 flex gap-3">
-                                        <span className="flex-shrink-0 w-8 h-8 bg-green-100 text-[#70B748] rounded-full flex items-center justify-center text-sm font-bold">
+                                        <span className="flex-shrink-0 w-8 h-8 bg-emerald-100 text-[#00A651] rounded-full flex items-center justify-center text-sm font-bold">
                                             {index + 1}
                                         </span>
                                         <span className="pt-1">{q.questionText}</span>

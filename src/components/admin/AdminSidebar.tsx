@@ -4,11 +4,9 @@ import { Menu, ConfigProvider, type MenuProps } from "antd";
 import {
     File,
     FileHeartIcon,
-    HouseIcon,
+    GraduationCap,
     Database,
     Tags,
-    UsersRound,
-    Brain
 } from "lucide-react";
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -38,14 +36,12 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
 
     const [openKeys, setOpenKeys] = useState<string[]>([]);
 
-    const itemsAdminDesa: MenuItem[] = [
+    const itemsWaliKelas: MenuItem[] = [
         getItem('Responden', '/admin/responden', <FileHeartIcon size={20} />),
-        getItem('Kelola Wilayah', '/admin/kelola-wilayah', <HouseIcon size={20} />),
-        getItem('Manajemen Keluarga', '/admin/kelola-keluarga', <UsersRound size={20} />),
-        getItem('Warga ODGJ', '/admin/odgj', <Brain size={20} />),
+        getItem('Kelola Akademik', '/admin/kelola-akademik', <GraduationCap size={20} />),
     ];
 
-    const itemsAdminMedis: MenuItem[] = [
+    const itemsGuruBK: MenuItem[] = [
         getItem('Responden', '/admin-medis/responden', <FileHeartIcon size={20} />),
         getItem('Kuisioner', '/admin-medis/kuisioner', <File size={20} />),
         getItem('Master Data', 'sub-master-data', <Database size={20} />, [
@@ -53,7 +49,7 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
         ]),
     ];
 
-    const items = isAdminMedis ? itemsAdminMedis : itemsAdminDesa;
+    const items = isAdminMedis ? itemsGuruBK : itemsWaliKelas;
 
     useEffect(() => {
         if (pathname.includes('/master-data')) {
@@ -74,10 +70,10 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
             theme={{
                 components: {
                     Menu: {
-                        itemSelectedBg: "#f0f7e9",
-                        itemSelectedColor: "#70B748",
+                        itemSelectedBg: "#e6f6ee",
+                        itemSelectedColor: "#00A651",
                         itemHoverBg: "#f9fafb",
-                        itemHoverColor: "#70B748",
+                        itemHoverColor: "#00A651",
                         itemColor: "#52525b",
                         iconSize: 20,
                     },
@@ -87,18 +83,14 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
             <Menu
                 mode="inline"
                 selectedKeys={[pathname]}
-
                 openKeys={openKeys}
                 onOpenChange={onOpenChange as any}
-
                 inlineCollapsed={responsiveSidebar}
-
                 style={{
                     borderRight: 0,
                     background: 'transparent',
                     fontSize: '15px',
                     fontWeight: 500,
-                    margin: 0
                 }}
                 items={items}
                 onClick={onClick}

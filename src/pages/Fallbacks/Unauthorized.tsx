@@ -10,7 +10,7 @@ export default function Unauthorized() {
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4 relative overflow-hidden">
       
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-[#70B748]/10 rounded-full blur-3xl" />
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-[#00A651]/10 rounded-full blur-3xl" />
       <div className="absolute bottom-[-10%] right-[-10%] w-96 h-96 bg-green-200/20 rounded-full blur-3xl" />
       
       <Card 
@@ -46,7 +46,7 @@ export default function Unauthorized() {
       </Card>
 
       <div className="absolute bottom-6 text-center w-full text-gray-400 text-xs">
-        &copy; {new Date().getFullYear()} Desa Sehat Jiwa - Cibiru Wetan
+        &copy; {new Date().getFullYear()} SMAIT Al-Multazam. Hak Cipta Dilindungi.
       </div>
     </div>
   );
