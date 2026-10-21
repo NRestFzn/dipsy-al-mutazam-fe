@@ -8,7 +8,7 @@ interface ResultPieChartProps {
 export default function ResultPieChart({ yaCount, tidakCount }: ResultPieChartProps) {
   const data = [
     { name: "Ya", value: yaCount, color: "#EF4444" },
-    { name: "Tidak", value: tidakCount, color: "#70B748" },
+    { name: "Tidak", value: tidakCount, color: "#00A651" },
   ];
 
   const total = yaCount + tidakCount;

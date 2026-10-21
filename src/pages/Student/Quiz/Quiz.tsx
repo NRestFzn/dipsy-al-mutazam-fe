@@ -77,7 +77,7 @@ export default function Quiz() {
             cancelButtonProps: {
                 size: 'large',
                 type: 'primary',
-                className: '!bg-[#70B748] !hover:bg-[#5a9639] w-full sm:w-auto mt-2 sm:mt-0' // Primary color untuk action "Stay"
+                className: '!bg-[#00A651] !hover:bg-[#009245] w-full sm:w-auto mt-2 sm:mt-0' // Primary color untuk action "Stay"
             },
             width: 420,
             centered: true,
@@ -95,7 +95,7 @@ export default function Quiz() {
                 title: "Belum Selesai",
                 content: `Masih ada ${unansweredCount} pertanyaan yang belum dijawab. Mohon lengkapi semua jawaban.`,
                 okText: "Saya Mengerti",
-                okButtonProps: { className: "!bg-[#70B748]" }
+                okButtonProps: { className: "!bg-[#00A651] hover:!bg-[#009245]" }
             });
             return;
         }
@@ -131,7 +131,7 @@ export default function Quiz() {
     if (isLoading) {
         return (
             <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-3">
-                <Spin indicator={<Loader2 className="animate-spin text-[#70B748]" size={48} />} />
+                <Spin indicator={<Loader2 className="animate-spin text-[#00A651]" size={48} />} />
                 <p className="text-gray-500 font-medium">Menyiapkan soal...</p>
             </div>
         );
@@ -205,7 +205,7 @@ export default function Quiz() {
                             onClick={handleSubmit}
                             loading={submitting}
                             disabled={answeredCount < totalQuestions}
-                            className="h-12 text-lg font-semibold !hover:bg-[#5a9639] border-none shadow-md hover:shadow-lg transition-all"
+                            className="h-12 text-lg font-semibold !bg-[#00A651] !hover:bg-[#009245] border-none shadow-md hover:shadow-lg transition-all text-white"
                             icon={!submitting && <Send size={18} />}
                         >
                             {submitting ? "Mengirim Jawaban..." : "Kirim Jawaban"}

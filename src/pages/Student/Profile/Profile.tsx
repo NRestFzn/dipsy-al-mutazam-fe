@@ -50,7 +50,7 @@ export default function Profile() {
               type="primary"
               onClick={() => refetch()}
               key="retry"
-              className="!bg-[#70B748] !rounded-lg text-xs"
+              className="!bg-[#00A651] hover:!bg-[#009245] !rounded-lg text-xs"
             >
               Coba Lagi
             </Button>,

@@ -109,7 +109,18 @@ export default function MedisResult() {
         </div>
 
         <Tag
-          color={isRisk ? 'error' : 'success'}
+          style={
+            (detailData.resultLabel || '').trim().toLowerCase() === 'borderline'
+              ? { backgroundColor: '#FFF7ED', color: '#F58220', borderColor: '#FED7AA' }
+              : undefined
+          }
+          color={
+            (detailData.resultLabel || '').trim().toLowerCase() === 'borderline'
+              ? undefined
+              : isRisk
+              ? 'error'
+              : 'success'
+          }
           className="text-sm font-semibold px-4 py-1.5 rounded-full"
         >
           {getQuestionnaireResultLabel(

@@ -57,7 +57,7 @@ export default function PreviewStudent() {
             <Button
               type="primary"
               onClick={() => navigate("/admin/kelola-akademik")}
-              className="!bg-[#70B748] hover:!bg-[#5e9e3b] !rounded-lg"
+              className="!bg-[#00A651] hover:!bg-[#009245] !rounded-lg"
             >
               Kembali ke Kelola Akademik
             </Button>

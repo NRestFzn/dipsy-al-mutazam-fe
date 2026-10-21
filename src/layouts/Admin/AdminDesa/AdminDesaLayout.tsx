@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router";
 import MainLayout from '../MainLayout'
 import AdminSideBar from "../../../components/admin/AdminSidebar";
 import { Button, Drawer, Grid, Layout } from "antd";
-import { Heart, Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 const { Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -76,11 +76,8 @@ function AdminDesaLayout() {
             >
                 <div className="flex flex-col h-full py-4 px-4">
                     <div className="flex items-center justify-between mb-6 px-2">
-                        <div className="flex items-center gap-x-2">
-                            <Heart className="fill-[#00A651] text-[#00A651] w-5 h-5 md:w-8 md:h-8 shrink-0" />
-                            <div className="text-[#00A651] text-base md:text-lg font-bold leading-tight">
-                                {headerTitle}
-                            </div>
+                        <div className="flex items-center gap-x-2.5">
+                            <img src="/logo-al-multazam.png" alt="Logo SMAIT Al-Multazam" className="h-7 w-auto object-contain" />
                         </div>
                         <Button type="text" icon={<PanelLeftClose size={20} />} onClick={() => setMobileDrawerOpen(false)} />
                     </div>

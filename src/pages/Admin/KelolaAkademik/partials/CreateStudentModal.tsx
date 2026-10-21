@@ -68,7 +68,7 @@ export default function CreateStudentModal({ open, onCancel }: CreateStudentModa
       cancelText="Batal"
       okButtonProps={{
         loading: createStudentMutation.isPending,
-        className: "!bg-[#70B748] hover:!bg-[#5e9e3b]",
+        className: "!bg-[#00A651] hover:!bg-[#009245]",
       }}
       destroyOnHidden
       centered
