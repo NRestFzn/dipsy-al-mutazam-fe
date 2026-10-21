@@ -30,6 +30,8 @@ const router = createBrowserRouter([
     path: "/unauthorized",
     element: <Loadable Component={Pages.Unauthorized} />,
   },
+  { path: "/wali-kelas", element: <Navigate to="/admin/responden" replace /> },
+  { path: "/kader", element: <Navigate to="/admin/responden" replace /> },
   { path: "*", element: <Loadable Component={Pages.NotFound} /> },
 
   {
@@ -79,19 +81,19 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <Loadable Component={Pages.AdminDesaResponden} />,
+                element: <Loadable Component={Pages.HomeWaliKelas} />,
               },
               {
                 path: ":questionnaireId",
-                element: <Loadable Component={Pages.DesaRwDashboard} />,
+                element: <Loadable Component={Pages.ClassSummaryDashboard} />,
               },
               {
                 path: ":questionnaireId/:rwId",
-                element: <Loadable Component={Pages.DesaRtDashboard} />,
+                element: <Loadable Component={Pages.ClassSummaryDashboard} />,
               },
               {
                 path: ":questionnaireId/:rwId/:rtId",
-                element: <Loadable Component={Pages.DesaWargaDashboard} />,
+                element: <Loadable Component={Pages.ClassSummaryDashboard} />,
               },
             ],
           },
@@ -159,19 +161,19 @@ const router = createBrowserRouter([
             children: [
               {
                 index: true,
-                element: <Loadable Component={Pages.AdminMedisResponden} />,
+                element: <Loadable Component={Pages.Responden} />,
               },
               {
                 path: ":questionnaireId",
-                element: <Loadable Component={Pages.RWDashboard} />,
+                element: <Loadable Component={Pages.GradeDashboard} />,
               },
               {
                 path: ":questionnaireId/:rwId",
-                element: <Loadable Component={Pages.RTDashboard} />,
+                element: <Loadable Component={Pages.ClassDashboard} />,
               },
               {
                 path: ":questionnaireId/:rwId/:rtId",
-                element: <Loadable Component={Pages.WargaDashboard} />,
+                element: <Loadable Component={Pages.StudentDashboard} />,
               },
               {
                 path: "submissions/:questionnaireId/:rwId/:rtId/:userId",
@@ -180,10 +182,6 @@ const router = createBrowserRouter([
               {
                 path: "result/:submissionId",
                 element: <Loadable Component={Pages.MedisResult} />,
-              },
-              {
-                path: ":rwId/:rtId/:keluargaId/history/tes",
-                element: <Loadable Component={Pages.Result} />,
               },
             ],
           },
