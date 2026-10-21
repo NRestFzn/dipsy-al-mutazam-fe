@@ -161,22 +161,15 @@ export default function Register() {
 
           <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm">
             {/* Header Brand */}
-            <div className="flex items-center gap-3.5 pb-5 mb-5 border-b border-slate-100">
-              <div className="w-11 h-11 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
-                <img
-                  src="/logo-al-multazam.png"
-                  alt="Logo SMAIT Al-Multazam"
-                  className="w-auto h-8 object-contain"
-                />
-              </div>
-              <div>
-                <h1 className="text-base font-bold text-slate-900 leading-tight">
-                  SMAIT Al-Multazam
-                </h1>
-                <p className="text-xs text-slate-500 font-medium">
-                  Registrasi Akun Siswa Baru
-                </p>
-              </div>
+            <div className="pb-5 mb-5 border-b border-slate-100 flex flex-col items-start">
+              <img
+                src="/logo-al-multazam.png"
+                alt="Logo SMAIT Al-Multazam"
+                className="h-11 w-auto object-contain mb-2"
+              />
+              <p className="text-xs text-slate-500 font-medium">
+                Registrasi Akun Siswa Baru
+              </p>
             </div>
 
             <div className="mb-5">
