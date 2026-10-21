@@ -176,7 +176,7 @@ export default function EditProfileModal({
               type="primary"
               htmlType="submit"
               loading={updateMutation.isPending}
-              className="!bg-[#70B748] hover:!bg-[#5e9e3b] !rounded-lg text-xs font-semibold !border-none"
+              className="!bg-[#00A651] hover:!bg-[#009245] !rounded-lg text-xs font-semibold !border-none"
             >
               Simpan Data
             </Button>

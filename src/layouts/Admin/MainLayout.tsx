@@ -108,23 +108,21 @@ function MainLayout(props: MainLayoutProps) {
         <section className="flex items-center gap-3">
           {startAction && <div>{startAction}</div>}
 
-          {!startAction && (
-            <a
-              className="flex items-center space-x-2 md:space-x-3 cursor-pointer"
-              href={`${roleName === "guru bk" || roleName === "admin medis" ? "/admin-medis/responden" : "/admin/responden"}`}
-            >
-              <div className="flex items-center gap-3">
-                <img
-                  className="w-8 h-8 object-contain"
-                  src="/icon.png"
-                  alt="Logo"
-                />
-                <span className="text-base md:text-lg font-bold text-gray-900 hidden sm:block">
-                  SMAIT Al-Multazam
-                </span>
-              </div>
-            </a>
-          )}
+          <a
+            className="flex items-center space-x-2 md:space-x-3 cursor-pointer"
+            href={`${roleName === "guru bk" || roleName === "admin medis" ? "/admin-medis/responden" : "/admin/responden"}`}
+          >
+            <img
+              className="h-8 md:h-9 w-auto object-contain"
+              src="/logo-al-multazam.png"
+              alt="Logo SMAIT Al-Multazam"
+            />
+            <div className="hidden lg:block border-l border-slate-200 pl-3">
+              <span className="text-xs text-slate-500 font-medium block leading-tight">
+                Portal Guru & Pembimbing
+              </span>
+            </div>
+          </a>
         </section>
         <ProfileComponent logout={logout} role={roleName} fullname={fullname} profileUrl={profileUrl} />
       </Header>

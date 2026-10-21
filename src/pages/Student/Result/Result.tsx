@@ -156,10 +156,11 @@ export default function Result() {
     );
   }
 
-  const statusColor = isUnstable ? 'text-red-500' : 'text-[#70B748]';
-  const statusBg = isUnstable
+  const isBorderline = resultLabel.trim().toLowerCase() === 'borderline';
+  const statusColor = isBorderline ? 'text-[#F58220]' : isUnstable ? 'text-red-500' : 'text-[#00A651]';
+  const statusBg = isBorderline ? 'bg-amber-50 border-amber-200' : isUnstable
     ? 'bg-red-50 border-red-100'
-    : 'bg-green-50 border-green-100';
+    : 'bg-emerald-50 border-emerald-100';
   const StatusIcon = isUnstable ? AlertCircle : CheckCircle2;
 
   return (
@@ -186,7 +187,7 @@ export default function Result() {
 
             <div className="flex-1 p-8 lg:p-10 flex flex-col justify-center max-lg:p-3">
               <div className="flex items-center gap-2 mb-4">
-                <Tag color={isUnstable ? "error" : "success"} className="px-3 py-1 text-sm rounded-full">
+                <Tag color={isBorderline ? "warning" : isUnstable ? "error" : "success"} className="px-3 py-1 text-sm rounded-full">
                   Hasil Skrining Kesehatan Mental Siswa
                 </Tag>
               </div>
@@ -203,7 +204,7 @@ export default function Result() {
               </div>
 
               <div className={`p-6 rounded-xl border ${statusBg} mb-6`}>
-                <h4 className={`font-semibold text-lg mb-2 ${isUnstable ? 'text-red-700' : 'text-green-700'}`}>
+                <h4 className={`font-semibold text-lg mb-2 ${isBorderline ? 'text-amber-800' : isUnstable ? 'text-red-700' : 'text-emerald-800'}`}>
                   {resultLabel}
                 </h4>
                 <Paragraph className="!mb-0 text-gray-700 leading-relaxed">

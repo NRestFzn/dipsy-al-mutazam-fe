@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { Form, Input, Button, Alert } from "antd";
-import { Mail, Lock, ShieldCheck, UserCheck } from "lucide-react";
+import { Mail, Lock, UserCheck } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import { getErrorMessage } from "../../../utils/getErrorMessage";
 import { ROLE_ID } from "../../../constants";
@@ -45,30 +45,19 @@ export default function Login() {
           {/* Main Card Container */}
           <div className="bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-sm">
             {/* Institution Brand Header */}
-            <div className="flex items-center gap-3.5 pb-6 mb-6 border-b border-slate-100">
-              <div className="w-11 h-11 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
-                <img
-                  src="/logo-al-multazam.png"
-                  alt="Logo SMAIT Al-Multazam"
-                  className="w-8 h-8 object-contain"
-                />
-              </div>
-              <div>
-                <h1 className="text-base font-bold text-slate-900 leading-tight">
-                  SMAIT Al-Multazam
-                </h1>
-                <p className="text-xs text-slate-500 font-medium">
-                  Portal Guru BK & Wali Kelas
-                </p>
-              </div>
+            <div className="pb-6 mb-6 border-b border-slate-100 flex flex-col items-start">
+              <img
+                src="/logo-al-multazam.png"
+                alt="Logo SMAIT Al-Multazam"
+                className="h-11 w-auto object-contain mb-2"
+              />
+              <p className="text-xs text-slate-500 font-medium">
+                Portal Guru BK & Wali Kelas
+              </p>
             </div>
 
             {/* Title & Context */}
             <div className="mb-6">
-              <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-100 text-emerald-800 text-xs font-semibold mb-2">
-                <ShieldCheck size={14} className="text-emerald-600" />
-                Akses Tenaga Pendidik
-              </div>
               <h2 className="text-xl font-bold text-slate-900 tracking-tight">
                 Masuk Portal Pengajar
               </h2>
@@ -140,7 +129,7 @@ export default function Login() {
                   htmlType="submit"
                   block
                   loading={isLoading}
-                  className="!bg-[#70B748] hover:!bg-[#5e9e3b] !border-none !h-10 !rounded-lg !text-sm !font-semibold text-white transition-colors"
+                  className="!bg-[#00A651] hover:!bg-[#009245] !border-none !h-10 !rounded-lg !text-sm !font-semibold text-white transition-colors"
                 >
                   Masuk ke Portal
                 </Button>

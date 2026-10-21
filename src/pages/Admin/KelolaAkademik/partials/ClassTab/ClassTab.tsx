@@ -107,7 +107,7 @@ export default function ClassTab() {
           type="primary"
           icon={<Plus size={16} />}
           onClick={() => setIsCreateOpen(true)}
-          className="w-full sm:w-auto !bg-[#70B748] hover:!bg-[#5e9e3b] !rounded-lg text-sm font-semibold !border-none"
+          className="w-full sm:w-auto !bg-[#00A651] hover:!bg-[#009245] !rounded-lg text-sm font-semibold !border-none"
         >
           Tambah Kelas
         </Button>

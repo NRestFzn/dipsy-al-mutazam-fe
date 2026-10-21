@@ -34,7 +34,7 @@ export default function ModalCreateGrade({ open, onClose }: ModalCreateGradeProp
       cancelText="Batal"
       okButtonProps={{
         loading: createGradeMutation.isPending,
-        className: "!bg-[#70B748] hover:!bg-[#5e9e3b]",
+        className: "!bg-[#00A651] hover:!bg-[#009245]",
       }}
       destroyOnHidden
       centered

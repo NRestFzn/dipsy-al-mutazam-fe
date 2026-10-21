@@ -78,18 +78,13 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
           onClick={() => navigate("/")}
           className="flex items-center gap-3 cursor-pointer group"
         >
-          <div className="w-9 h-9 rounded-lg bg-emerald-50 border border-emerald-100 flex items-center justify-center p-1.5 shrink-0">
-            <img
-              className="w-full h-full object-contain"
-              src="/logo-al-multazam.png"
-              alt="Logo SMAIT Al-Multazam"
-            />
-          </div>
-          <div>
-            <span className="text-sm font-bold text-slate-900 group-hover:text-emerald-700 transition-colors block leading-tight">
-              SMAIT Al-Multazam
-            </span>
-            <span className="text-[11px] text-slate-400 font-medium block">
+          <img
+            className="h-9 w-auto object-contain"
+            src="/logo-al-multazam.png"
+            alt="Logo SMAIT Al-Multazam"
+          />
+          <div className="hidden sm:block border-l border-slate-200 pl-3">
+            <span className="text-xs text-slate-500 font-medium block leading-tight">
               Portal Konseling & Skrining
             </span>
           </div>
@@ -114,7 +109,7 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
               <Avatar
                 src={profileUrl}
                 icon={!profileUrl && <User size={16} />}
-                className="bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0 font-bold"
+                className="bg-emerald-100 text-[#00A651] border border-emerald-200 shrink-0 font-bold"
                 size={32}
               >
                 {!profileUrl && fullname ? fullname.charAt(0).toUpperCase() : ""}
