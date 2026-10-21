@@ -349,7 +349,7 @@ export default function Register() {
                   htmlType="submit"
                   block
                   loading={isLoading}
-                  className="!bg-[#70B748] hover:!bg-[#5e9e3b] !border-none !h-10 !rounded-lg text-sm font-semibold text-white"
+                  className="!bg-[#00A651] hover:!bg-[#009245] !border-none !h-10 !rounded-lg text-sm font-semibold text-white"
                 >
                   Lanjut: Lengkapi Data Diri
                 </Button>
@@ -466,7 +466,7 @@ export default function Register() {
               type="primary"
               htmlType="submit"
               loading={isLoading}
-              className="!bg-[#70B748] hover:!bg-[#5e9e3b] !rounded-lg text-xs font-semibold !border-none text-white"
+              className="!bg-[#00A651] hover:!bg-[#009245] !rounded-lg text-xs font-semibold !border-none text-white"
             >
               Simpan & Selesaikan Pendaftaran
             </Button>
