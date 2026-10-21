@@ -1,9 +1,9 @@
-import {useEffect} from 'react';
-import {Modal, Form, Input, Select, DatePicker, Button, message} from 'antd';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
+import { useEffect } from 'react';
+import { Modal, Form, Input, Select, DatePicker, Button, message } from 'antd';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import dayjs from 'dayjs';
-import type {AdminProfile} from '../../../../../types/adminDesaService';
-import {adminDesaService} from '../../../../../service/adminDesaService';
+import type { AdminProfile } from '../../../../../types/adminDesaService';
+import { adminDesaService } from '../../../../../service/adminDesaService';
 
 interface EditAdminProfileModalProps {
   open: boolean;
@@ -22,8 +22,8 @@ export default function EditAdminProfileModal({
   const updateMutation = useMutation({
     mutationFn: adminDesaService.updateProfile,
     onSuccess: () => {
-      message.success('Profil Admin berhasil diperbarui');
-      queryClient.invalidateQueries({queryKey: ['admin-desa', 'me']});
+      message.success('Profil berhasil diperbarui');
+      queryClient.invalidateQueries({ queryKey: ['admin-desa', 'me'] });
       onClose();
       form.resetFields(['newPassword', 'confirmNewPassword']);
     },
@@ -63,7 +63,7 @@ export default function EditAdminProfileModal({
 
   return (
     <Modal
-      title="Edit Profil Admin"
+      title="Edit Profil"
       open={open}
       onCancel={onClose}
       footer={null}
@@ -80,7 +80,7 @@ export default function EditAdminProfileModal({
         <Form.Item
           label="Nama Lengkap"
           name="fullname"
-          rules={[{required: true, message: 'Nama lengkap wajib diisi'}]}
+          rules={[{ required: true, message: 'Nama lengkap wajib diisi' }]}
         >
           <Input placeholder="Nama Lengkap" />
         </Form.Item>
@@ -89,8 +89,8 @@ export default function EditAdminProfileModal({
           label="Email"
           name="email"
           rules={[
-            {required: true, message: 'Email wajib diisi'},
-            {type: 'email', message: 'Format email tidak valid'},
+            { required: true, message: 'Email wajib diisi' },
+            { type: 'email', message: 'Format email tidak valid' },
           ]}
         >
           <Input placeholder="Contoh: nama@email.com" />
@@ -99,12 +99,12 @@ export default function EditAdminProfileModal({
         <Form.Item
           label="Jenis Kelamin"
           name="gender"
-          rules={[{required: true, message: 'Pilih jenis kelamin'}]}
+          rules={[{ required: true, message: 'Pilih jenis kelamin' }]}
         >
           <Select
             options={[
-              {label: 'Laki-laki', value: 'm'},
-              {label: 'Perempuan', value: 'f'},
+              { label: 'Laki-laki', value: 'm' },
+              { label: 'Perempuan', value: 'f' },
             ]}
           />
         </Form.Item>
@@ -112,7 +112,7 @@ export default function EditAdminProfileModal({
         <Form.Item
           label="Tanggal Lahir"
           name="birthDate"
-          rules={[{required: true, message: 'Tanggal lahir wajib diisi'}]}
+          rules={[{ required: true, message: 'Tanggal lahir wajib diisi' }]}
         >
           <DatePicker className="w-full" format="DD MMMM YYYY" />
         </Form.Item>
@@ -124,9 +124,9 @@ export default function EditAdminProfileModal({
           <Form.Item
             label="Password Baru"
             name="newPassword"
-            rules={[{min: 8, message: 'Minimal 8 karakter'}]}
+            rules={[{ min: 8, message: 'Minimal 8 karakter' }]}
           >
-            <Input.Password placeholder="Kosongkan jika tidak ubah" />
+            <Input.Password placeholder="Kosongkan jika tidak diubah" />
           </Form.Item>
 
           <Form.Item
@@ -134,7 +134,7 @@ export default function EditAdminProfileModal({
             name="confirmNewPassword"
             dependencies={['newPassword']}
             rules={[
-              ({getFieldValue}) => ({
+              ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('newPassword') === value) {
                     return Promise.resolve();
@@ -159,7 +159,7 @@ export default function EditAdminProfileModal({
             type="primary"
             htmlType="submit"
             loading={updateMutation.isPending}
-            className="bg-[#70B748] hover:bg-[#5a9639]"
+            className="!bg-[#00A651] hover:!bg-[#009245]"
           >
             Simpan
           </Button>

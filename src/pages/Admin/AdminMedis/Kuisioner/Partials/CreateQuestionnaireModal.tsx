@@ -261,7 +261,7 @@ export default function CreateQuestionnaireModal({ open, onCancel, editingData }
                         type="primary"
                         htmlType="submit"
                         loading={isPending}
-                        className="!bg-[#70B748] hover:bg-[#5a9639]"
+                        className="!bg-[#00A651] hover:bg-[#009245]"
                     >
                         {isEditMode ? "Simpan Perubahan" : "Buat"}
                     </Button>
