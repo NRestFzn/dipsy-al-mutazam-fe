@@ -32,8 +32,6 @@ export default function RoleSelection() {
             switchRole(selectedRole);
             if (roleId === ROLE_ID.KADER) {
                 navigate("/kader", { replace: true });
-            } else if (roleId === ROLE_ID.KEPALA_KELUARGA) {
-                navigate("/keluarga", { replace: true });
             } else {
                 navigate("/", { replace: true });
             }
