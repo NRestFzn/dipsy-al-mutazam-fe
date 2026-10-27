@@ -64,7 +64,7 @@ const router = createBrowserRouter([
       {
         path: "admin",
         element: (
-          <RoleGuard allowedRoleIds={[ROLE_ID.WALI_KELAS, ROLE_ID.GURU_BK]} loginPath="/masuk-admin">
+          <RoleGuard allowedRoleIds={[ROLE_ID.WALI_KELAS]} loginPath="/masuk-admin">
             <AdminDesaLayout />
           </RoleGuard>
         ),
@@ -95,19 +95,6 @@ const router = createBrowserRouter([
               },
             ],
           },
-          {
-            path: "kelola-akademik",
-            children: [
-              {
-                index: true,
-                element: <Loadable Component={Pages.KelolaAkademik} />,
-              },
-              {
-                path: "preview-siswa/:studentId",
-                element: <Loadable Component={Pages.PreviewStudent} />,
-              },
-            ],
-          },
         ],
       },
 
@@ -135,6 +122,19 @@ const router = createBrowserRouter([
           {
             path: "kelola-guru",
             element: <Loadable Component={Pages.KelolaGuru} />,
+          },
+          {
+            path: "kelola-akademik",
+            children: [
+              {
+                index: true,
+                element: <Loadable Component={Pages.KelolaAkademik} />,
+              },
+              {
+                path: "preview-siswa/:studentId",
+                element: <Loadable Component={Pages.PreviewStudent} />,
+              },
+            ],
           },
           {
             path: "master-data",

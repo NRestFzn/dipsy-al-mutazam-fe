@@ -57,7 +57,7 @@ export default function StudentTab() {
   });
 
   const handleDetail = (record: StudentAdminItem) => {
-    navigate(`/admin/kelola-akademik/preview-siswa/${record.id}`);
+    navigate(`/admin-medis/kelola-akademik/preview-siswa/${record.id}`);
   };
 
   const handleEdit = (record: StudentAdminItem) => {

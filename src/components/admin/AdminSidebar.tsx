@@ -39,11 +39,11 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
 
     const itemsAdminDesa: MenuItem[] = [
         getItem('Responden', '/admin/responden', <FileHeartIcon size={20} />),
-        getItem('Kelola Akademik', '/admin/kelola-akademik', <GraduationCap size={20} />),
     ];
 
     const itemsAdminMedis: MenuItem[] = [
         getItem('Responden', '/admin-medis/responden', <FileHeartIcon size={20} />),
+        getItem('Kelola Akademik', '/admin-medis/kelola-akademik', <GraduationCap size={20} />),
         getItem('Kuisioner', '/admin-medis/kuisioner', <File size={20} />),
         getItem('Kelola Guru', '/admin-medis/kelola-guru', <UserCog size={20} />),
         getItem('Master Data', 'sub-master-data', <Database size={20} />, [
