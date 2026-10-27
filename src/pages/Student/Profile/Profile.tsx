@@ -206,10 +206,10 @@ export default function Profile() {
               contentStyle={{ fontWeight: 500, color: "#374151" }}
             >
               <Descriptions.Item label="Tingkat">
-                {userDetail?.Grade?.name || "-"}
+                {userDetail?.grade?.name || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="Kelas">
-                {userDetail?.Class?.name || "-"}
+                {userDetail?.class?.name || "-"}
               </Descriptions.Item>
               <Descriptions.Item label="NIS">
                 {userDetail?.nis || "-"}
