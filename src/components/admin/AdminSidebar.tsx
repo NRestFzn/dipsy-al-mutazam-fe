@@ -4,7 +4,7 @@ import { Menu, ConfigProvider, type MenuProps } from "antd";
 import {
     File,
     FileHeartIcon,
-    HouseIcon,
+    GraduationCap,
     Database,
     Tags
 } from "lucide-react";
@@ -38,7 +38,7 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
 
     const itemsAdminDesa: MenuItem[] = [
         getItem('Responden', '/admin/responden', <FileHeartIcon size={20} />),
-        getItem('Kelola Wilayah', '/admin/kelola-wilayah', <HouseIcon size={20} />),
+        getItem('Kelola Akademik', '/admin/kelola-akademik', <GraduationCap size={20} />),
     ];
 
     const itemsAdminMedis: MenuItem[] = [

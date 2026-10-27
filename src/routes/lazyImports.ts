@@ -44,12 +44,11 @@ export const DesaWargaDashboard = lazy(
       "../pages/Admin/AdminDesa/Responden/DesaWargaDashboard/DesaWargaDashboard"
     )
 );
-export const KelolaWilayah = lazy(
-  () => import("../pages/Admin/AdminDesa/KelolaWilayah/KelolaWilayah")
+export const KelolaAkademik = lazy(
+  () => import("../pages/Admin/KelolaAkademik/KelolaAkademik")
 );
-export const PreviewResident = lazy(
-  () =>
-    import("../pages/Admin/AdminDesa/KelolaWilayah/partials/PreviewResident")
+export const PreviewStudent = lazy(
+  () => import("../pages/Admin/KelolaAkademik/partials/PreviewStudent")
 );
 export const AdminDesaProfile = lazy(
   () => import("../pages/Admin/AdminDesa/ProfileAdmin/ProfileAdmin")
