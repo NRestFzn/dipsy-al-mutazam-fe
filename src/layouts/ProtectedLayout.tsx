@@ -27,7 +27,7 @@ export default function ProtectedLayout() {
   if (isLoadingUser) {
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50">
-        <Loader2 className="animate-spin text-[#70B748]" size={32} />
+        <Loader2 className="animate-spin text-[#00A651]" size={32} />
         <span className="ml-2 text-gray-600 font-medium">Memuat...</span>
       </div>
     );

@@ -81,7 +81,7 @@ export default function Home() {
       <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center gap-4">
         <Spin
           indicator={
-            <Loader2 className="animate-spin text-[#70B748]" size={48} />
+            <Loader2 className="animate-spin text-[#00A651]" size={48} />
           }
         />
         <p className="text-gray-500 font-medium">Sedang memuat data...</p>
@@ -102,7 +102,7 @@ export default function Home() {
         <section className="mb-12">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
-              <span className="w-1.5 h-6 bg-[#70B748] rounded-full block"></span>
+              <span className="w-1.5 h-6 bg-[#00A651] rounded-full block"></span>
               <h2 className="text-xl font-bold text-gray-800">
                 Daftar Kuesioner
               </h2>

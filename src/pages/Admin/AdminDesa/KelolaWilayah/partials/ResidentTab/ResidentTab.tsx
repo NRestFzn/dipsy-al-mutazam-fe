@@ -183,7 +183,7 @@ export default function ResidentTab() {
                     <Button
                         type="primary"
                         icon={<Plus size={16} />}
-                        className="w-full !bg-[#70B748] !hover:bg-[#5a9639] md:w-auto"
+                        className="w-full !bg-[#00A651] !hover:bg-[#009245] md:w-auto"
                         onClick={() => setIsModalOpen(true)}
                     >
                         Tambah Warga

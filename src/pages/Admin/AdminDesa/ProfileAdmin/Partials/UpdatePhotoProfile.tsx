@@ -84,7 +84,7 @@ export default function UpdatePhotoModal({ open, onClose, currentPhotoUrl, fulln
                     onClick={handleSave}
                     loading={updatePictureMutation.isPending}
                     disabled={!fileToUpload} // Disable jika belum pilih foto baru
-                    className="bg-[#70B748] hover:bg-[#5a9639]"
+                    className="bg-[#00A651] hover:bg-[#009245]"
                 >
                     Simpan Foto
                 </Button>
@@ -97,7 +97,7 @@ export default function UpdatePhotoModal({ open, onClose, currentPhotoUrl, fulln
                     <Avatar
                         size={180}
                         src={preview}
-                        className="bg-gradient-to-br from-[#70B748] to-[#5a9639] text-white text-6xl border-4 border-gray-100 shadow-lg"
+                        className="bg-gradient-to-br from-[#00A651] to-[#009245] text-white text-6xl border-4 border-gray-100 shadow-lg"
                     >
                         {!preview && fullname?.charAt(0)?.toUpperCase()}
                     </Avatar>

@@ -135,7 +135,7 @@ export default function DesaRtDashboard() {
             />
             <div className="flex justify-end gap-2 pt-2">
                 <Button onClick={clearFilter} size="small">Reset</Button>
-                <Button type="primary" className="!bg-[#70B748]" onClick={applyFilter} size="small">
+                <Button type="primary" className="!bg-[#00A651]" onClick={applyFilter} size="small">
                     Terapkan
                 </Button>
             </div>
@@ -151,7 +151,7 @@ export default function DesaRtDashboard() {
     if (loading.init) {
         return (
             <div className="flex justify-center items-center h-[60vh]">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#70B748]"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A651]"></div>
             </div>
         );
     }

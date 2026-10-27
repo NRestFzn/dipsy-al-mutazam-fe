@@ -107,7 +107,7 @@ export default function RTTab() {
                 <Button
                     type="primary"
                     icon={<Plus size={16} />}
-                    className="bg-[#70B748] w-full md:w-auto h-10"
+                    className="bg-[#00A651] w-full md:w-auto h-10"
                     onClick={() => setIsModalOpen(true)}
                     disabled={!selectedRW || isPending}
                     title={!selectedRW ? "Pilih RW terlebih dahulu" : "Tambah RT"}

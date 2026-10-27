@@ -115,7 +115,7 @@ export default function OdgjManagement() {
           <Button
             type="primary"
             icon={<Plus size={16} />}
-            className="!bg-[#70B748]"
+            className="!bg-[#00A651]"
             onClick={() => {
               setEditingData(null);
               setFormOpen(true);

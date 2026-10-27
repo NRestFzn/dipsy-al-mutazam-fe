@@ -69,7 +69,7 @@ export const ResidentSelectionModal = ({
             <div className="h-[400px] overflow-y-auto pr-2 custom-scrollbar">
                 {isLoading && residents.length === 0 ? (
                     <div className="flex flex-col justify-center items-center h-full gap-3">
-                        <Spin indicator={<Loader2 className="animate-spin text-[#70B748]" size={32} />} />
+                        <Spin indicator={<Loader2 className="animate-spin text-[#00A651]" size={32} />} />
                         <span className="text-gray-400 text-sm">Memuat data warga...</span>
                     </div>
                 ) : isError ? (
@@ -94,7 +94,7 @@ export const ResidentSelectionModal = ({
                                                 key="select"
                                                 size="small"
                                                 type="text"
-                                                className="text-[#70B748] font-semibold bg-green-50 hover:bg-green-100 border border-green-100 rounded-lg px-4"
+                                                className="text-[#00A651] font-semibold bg-green-50 hover:bg-green-100 border border-green-100 rounded-lg px-4"
                                             >
                                                 Pilih
                                             </Button>
@@ -111,7 +111,7 @@ export const ResidentSelectionModal = ({
                                             }
                                             title={
                                                 <div className="flex flex-col">
-                                                    <span className="font-bold text-gray-800 text-base group-hover:text-[#70B748] transition-colors">
+                                                    <span className="font-bold text-gray-800 text-base group-hover:text-[#00A651] transition-colors">
                                                         {item.fullname}
                                                     </span>
                                                 </div>
@@ -135,7 +135,7 @@ export const ResidentSelectionModal = ({
 
                 {isFetchingNextPage && (
                     <div className="flex justify-center py-4">
-                        <Spin size="small" indicator={<Loader2 className="animate-spin text-[#70B748]" />} />
+                        <Spin size="small" indicator={<Loader2 className="animate-spin text-[#00A651]" />} />
                     </div>
                 )}
             </div>

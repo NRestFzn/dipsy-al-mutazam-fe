@@ -51,24 +51,16 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex w-full bg-white overflow-hidden font-sans">
-      <div className="hidden lg:flex lg:w-1/2 bg-[#70B748] relative flex-col p-12 overflow-hidden h-screen">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#00A651] relative flex-col p-12 overflow-hidden h-screen">
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white via-transparent to-transparent scale-150 pointer-events-none" />
         <div className="relative z-10 flex-none">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="bg-white/20 p-3 rounded-2xl backdrop-blur-md border border-white/20 shadow-lg">
+          <div className="mb-6">
+            <div className="inline-flex items-center bg-white rounded-2xl px-4 py-2 shadow-lg">
               <img
-                src="/icon.png"
-                alt="Logo Desa"
-                className="w-10 h-10 object-contain drop-shadow-md"
+                src="/logo-al-multazam.png"
+                alt="Logo SMAIT Al-Multazam"
+                className="h-9 w-auto object-contain"
               />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-white font-bold tracking-wide uppercase text-xs opacity-90">
-                Pemerintah Desa
-              </span>
-              <span className="text-white font-bold text-lg leading-none">
-                Cibiru Wetan
-              </span>
             </div>
           </div>
 
@@ -97,15 +89,15 @@ export default function Login() {
       <div className="w-full lg:w-1/2 flex items-center justify-center p-6 md:p-12 bg-gray-50/50 h-screen overflow-y-auto">
         <div className="w-full max-w-md">
           <div className="flex flex-col items-center text-center mb-8 lg:hidden mt-8 pt-4">
-            <div className="mb-4 p-3 bg-white rounded-full shadow-sm border border-gray-100">
+            <div className="mb-4 px-4 py-2 bg-white rounded-2xl shadow-sm border border-gray-100">
               <img
-                src="/icon.png"
-                alt="Logo"
-                className="w-16 h-16 object-contain"
+                src="/logo-al-multazam.png"
+                alt="Logo SMAIT Al-Multazam"
+                className="h-10 w-auto object-contain"
               />
             </div>
 
-            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#70B748]/10 border border-[#70B748]/20 text-[#70B748] text-xs font-bold uppercase tracking-wider mb-3">
+            <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#00A651]/10 border border-[#00A651]/20 text-[#00A651] text-xs font-bold uppercase tracking-wider mb-3">
               <ShieldCheck size={14} />
               <span>Admin Access</span>
             </div>
@@ -161,7 +153,7 @@ export default function Login() {
               <Input
                 prefix={<Mail className="text-gray-400 mr-2" size={20} />}
                 placeholder="admin@cibiruwetan.desa.id"
-                className="rounded-xl py-2.5 border-gray-300 hover:border-[#70B748] focus:border-[#70B748] transition-colors"
+                className="rounded-xl py-2.5 border-gray-300 hover:border-[#00A651] focus:border-[#00A651] transition-colors"
               />
             </Form.Item>
 
@@ -175,7 +167,7 @@ export default function Login() {
               <Input.Password
                 prefix={<Lock className="text-gray-400 mr-2" size={20} />}
                 placeholder="••••••••"
-                className="rounded-xl py-2.5 border-gray-300 hover:border-[#70B748] focus:border-[#70B748] transition-colors"
+                className="rounded-xl py-2.5 border-gray-300 hover:border-[#00A651] focus:border-[#00A651] transition-colors"
               />
             </Form.Item>
 
@@ -189,7 +181,7 @@ export default function Login() {
                 className={`
                   !h-12 !text-base !font-bold !rounded-xl transition-all duration-300
                   ${isFormFilled
-                    ? "!bg-[#70B748] hover:!bg-[#5a9639] shadow-lg shadow-[#70B748]/20 hover:scale-[1.02] active:scale-95"
+                    ? "!bg-[#00A651] hover:!bg-[#009245] shadow-lg shadow-[#00A651]/20 hover:scale-[1.02] active:scale-95"
                     : "!bg-gray-200 !text-gray-400 !border-gray-200 cursor-not-allowed shadow-none"
                   }
                 `}

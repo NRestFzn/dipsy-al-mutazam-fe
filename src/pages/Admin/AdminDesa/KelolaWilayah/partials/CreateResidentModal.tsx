@@ -85,7 +85,7 @@ export default function CreateResidentModal({ open, onCancel }: CreateResidentMo
             confirmLoading={isLoading || isPending}
             okText="Simpan"
             cancelText="Batal"
-            okButtonProps={{ className: "!bg-[#70B748] !hover:bg-[#5a9639]" }}
+            okButtonProps={{ className: "!bg-[#00A651] !hover:bg-[#009245]" }}
             destroyOnHidden
             centered
         >

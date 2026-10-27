@@ -85,13 +85,10 @@ export const HomeHeader = ({ fullname, onLogout, profileUrl, activeRole, user }:
       <div className={`max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between`}>
         <div className="flex items-center gap-3">
           <img
-            className="w-10 h-10 object-contain"
-            src="/icon.png"
-            alt="Logo"
+            className="h-9 w-auto object-contain"
+            src="/logo-al-multazam.png"
+            alt="Logo SMAIT Al-Multazam"
           />
-          <span className="text-lg font-bold text-[#70B748] hidden sm:block">
-            Desa Cibiru Wetan
-          </span>
         </div>
 
         <div className="flex items-center gap-4">

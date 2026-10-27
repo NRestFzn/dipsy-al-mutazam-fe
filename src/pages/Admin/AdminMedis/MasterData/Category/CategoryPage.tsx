@@ -95,7 +95,7 @@ export default function CategoryPage() {
                 <Button
                     type="primary"
                     icon={<Plus size={18} />}
-                    className="self-end md:self-auto !bg-[#70B748] !hover:bg-[#5a9639]"
+                    className="self-end md:self-auto !bg-[#00A651] !hover:bg-[#009245]"
                     onClick={handleOpenCreate}
                 >
                     Tambah Kategori
