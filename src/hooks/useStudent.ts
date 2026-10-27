@@ -1,23 +1,23 @@
 import { useInfiniteQuery, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { residentService } from "../service/residentService";
+import { studentService } from "../service/studentService";
 import { message } from "antd";
-import type { UpdateProfileResidentPayload } from "../types/Resident/residentType";
+import type { UpdateProfileStudentPayload } from "../types/Student/studentType";
 
-export const useResident = () => {
+export const useStudent = () => {
   return useQuery({
     queryKey: ["resident", "me"],
-    queryFn: residentService.getResidentProfile,
+    queryFn: studentService.getResidentProfile,
     staleTime: 1000 * 60 * 5,
     retry: 1,
   });
 };
 
-export const useInfiniteResidents = (search: string = "") => {
+export const useInfiniteStudents = (search: string = "") => {
   return useInfiniteQuery({
     queryKey: ["residents", "list", search],
     initialPageParam: 1,
     queryFn: async ({ pageParam = 1 }) => {
-      return await residentService.getAllResidents({
+      return await studentService.getAllResidents({
         page: pageParam as number,
         pageSize: 10,
         fullname: search,
@@ -42,7 +42,7 @@ export const useUpdateProfile = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (payload: UpdateProfileResidentPayload) => residentService.updateProfile(payload),
+    mutationFn: (payload: UpdateProfileStudentPayload) => studentService.updateProfile(payload),
     onSuccess: () => {
       message.success("Profil berhasil diperbarui!");
       queryClient.invalidateQueries({ queryKey: ["resident", "me"] });
@@ -58,7 +58,7 @@ export const useUpdateProfilePicture = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: (file: File) => residentService.updateProfilePicture(file),
+    mutationFn: (file: File) => studentService.updateProfilePicture(file),
     onSuccess: () => {
       message.success("Foto profil berhasil diperbarui!");
       queryClient.invalidateQueries({ queryKey: ["resident", "me"] });

@@ -1,8 +1,8 @@
 import type { ResponseData } from "../types/commons";
-import type { GetResidentsParams, ResidentMe, UpdateProfileResidentPayload } from "../types/Resident/residentType";
+import type { GetResidentsParams, StudentMe, UpdateProfileStudentPayload } from "../types/Student/studentType";
 import { api } from "./api";
 
-export const residentService = {
+export const studentService = {
   getAllResidents: async (params: GetResidentsParams) => {
     const cleanParams = Object.fromEntries(
       Object.entries(params).filter(([_, v]) => v != null && v !== "")
@@ -13,11 +13,11 @@ export const residentService = {
   },
 
   getResidentProfile: async () => {
-    const response = await api.get<ResponseData<ResidentMe>>("/v1/student/me");
+    const response = await api.get<ResponseData<StudentMe>>("/v1/student/me");
     return response.data;
   },
 
-  updateProfile: async (payload: UpdateProfileResidentPayload) => {
+  updateProfile: async (payload: UpdateProfileStudentPayload) => {
     const response = await api.put("/v1/student/me", payload);
     return response.data;
   },

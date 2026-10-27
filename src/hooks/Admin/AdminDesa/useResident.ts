@@ -1,6 +1,6 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { residentService } from "../../../service/Admin/AdminDesa/residentServices";
-import type { GetResidentsParams } from "../../../types/Resident/residentType";
+import type { GetResidentsParams } from "../../../types/Student/studentType";
 
 export const useResident = () => {
     const queryClient = useQueryClient();

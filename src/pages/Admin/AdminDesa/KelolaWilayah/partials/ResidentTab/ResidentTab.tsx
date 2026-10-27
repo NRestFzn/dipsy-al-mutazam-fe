@@ -18,7 +18,7 @@ import { useMasterData } from "../../../../../../hooks/useMasterData";
 import { SearchFilter } from "./partials/SearchFilter";
 import type { SorterResult } from "antd/es/table/interface";
 import { useResident } from "../../../../../../hooks/Admin/AdminDesa/useResident";
-import type { ResidentData } from "../../../../../../types/Resident/residentType";
+import type { ResidentData } from "../../../../../../types/Student/studentType";
 import { useInfiniteSelectOptions } from "../../../../../../hooks/Common/useInfiniteSelectOptions";
 
 export default function ResidentTab() {

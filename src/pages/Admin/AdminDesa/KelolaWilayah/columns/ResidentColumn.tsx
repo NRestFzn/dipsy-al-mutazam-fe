@@ -2,7 +2,7 @@ import { Button, Dropdown, Tag, type MenuProps } from "antd";
 import type { HookAPI } from "antd/es/modal/useModal";
 import { Edit, Eye, MoreVertical, Trash2 } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
-import type { ResidentData } from "../../../../../types/Resident/residentType";
+import type { ResidentData } from "../../../../../types/Student/studentType";
 
 
 interface ResidentColumnProps {
@@ -56,9 +56,9 @@ export const getResidentColumns = ({
             },
         },
         {
-            title: 'NIK',
-            key: 'nik',
-            render: (_, record) => record.userDetail?.nik || "-",
+            title: 'NISN',
+            key: 'nisn',
+            render: (_, record) => record.userDetail?.nisn || "-",
         },
         {
             title: 'Aksi',

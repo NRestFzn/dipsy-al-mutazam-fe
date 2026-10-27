@@ -1,4 +1,4 @@
-import type { UserDetail } from "../Resident/residentType";
+import type { UserDetail } from "../Student/studentType";
 
 export interface UserHasRoles {
   id: string;
