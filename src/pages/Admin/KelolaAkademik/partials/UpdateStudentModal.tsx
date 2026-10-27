@@ -179,7 +179,7 @@ export default function UpdateStudentModal({ open, onCancel, student }: UpdateSt
           </Col>
           <Col xs={24} md={12}>
             <Form.Item
-              label="Kelas / Rombel"
+              label="Kelas"
               name="classroomId"
               rules={[{ required: true, message: "Pilih kelas" }]}
             >

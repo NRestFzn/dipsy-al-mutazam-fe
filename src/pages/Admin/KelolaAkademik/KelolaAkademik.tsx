@@ -54,7 +54,7 @@ export default function KelolaAkademik() {
           Kelola Akademik
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-          Pengelolaan struktur akademik jenjang tingkat, rombongan belajar kelas, dan data induk siswa SMAIT Al-Multazam.
+          Pengelolaan data tingkat, kelas, dan siswa SMAIT Al-Multazam.
         </p>
       </div>
 

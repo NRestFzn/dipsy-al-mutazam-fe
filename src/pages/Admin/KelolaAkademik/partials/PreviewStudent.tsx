@@ -145,7 +145,7 @@ export default function PreviewStudent() {
           <Descriptions.Item
             label={
               <span className="flex items-center gap-2 text-xs font-semibold text-slate-600">
-                <ShieldCheck size={15} /> Rombel / Kelas
+                <ShieldCheck size={15} /> Kelas
               </span>
             }
           >
