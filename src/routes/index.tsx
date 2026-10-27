@@ -109,15 +109,15 @@ const router = createBrowserRouter([
             ],
           },
           {
-            path: "kelola-wilayah",
+            path: "kelola-akademik",
             children: [
               {
                 index: true,
-                element: <Loadable Component={Pages.KelolaWilayah} />,
+                element: <Loadable Component={Pages.KelolaAkademik} />,
               },
               {
-                path: "preview-warga/:residentId",
-                element: <Loadable Component={Pages.PreviewResident} />,
+                path: "preview-siswa/:studentId",
+                element: <Loadable Component={Pages.PreviewStudent} />,
               },
             ],
           },
