@@ -28,7 +28,7 @@ export const useSummaryClass = (params: SummaryClassParams) => {
     const targetGradeId = params.gradeId || params.rwId;
     const targetClassId = params.classId || params.rtId;
     return useQuery<ClassSummaryResponse, Error>({
-        queryKey: ['summary-class', params.questionnaireId, targetGradeId, targetClassId, params.startDate, params.endDate],
+        queryKey: ['summary-class', params.questionnaireId, targetGradeId, targetClassId, params.startDate, params.endDate, params.academicYear],
         queryFn: () => submissionService.getSummaryClass(params),
         placeholderData: keepPreviousData,
         enabled: !!params.questionnaireId && !!targetClassId,

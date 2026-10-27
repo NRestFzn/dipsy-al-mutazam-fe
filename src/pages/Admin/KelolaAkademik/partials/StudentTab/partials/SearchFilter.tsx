@@ -9,6 +9,8 @@ interface SearchFilterProps {
   onGradeChange: (value: string | null) => void;
   selectedClass: string | null;
   onClassChange: (value: string | null) => void;
+  selectedStatus?: string;
+  onStatusChange?: (value: string) => void;
   grades: GradeItem[];
   classes: ClassItem[];
   loadingGrades?: boolean;
@@ -22,6 +24,8 @@ export function SearchFilter({
   onGradeChange,
   selectedClass,
   onClassChange,
+  selectedStatus = "aktif",
+  onStatusChange,
   grades,
   classes,
   loadingGrades,
@@ -64,6 +68,21 @@ export function SearchFilter({
         options={classes.map((c) => ({ label: c.name, value: c.id }))}
         className="w-full sm:w-44 !rounded-lg"
       />
+
+      {/* Filter Status */}
+      {onStatusChange && (
+        <Select
+          value={selectedStatus}
+          onChange={onStatusChange}
+          className="w-full sm:w-36 !rounded-lg"
+          options={[
+            { label: "Aktif", value: "aktif" },
+            { label: "Lulus", value: "lulus" },
+            { label: "Pindah", value: "pindah" },
+            { label: "Semua Status", value: "semua" },
+          ]}
+        />
+      )}
     </div>
   );
 }

@@ -21,6 +21,7 @@ import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 import { useAcademic } from "../../../../hooks/Admin/useAcademic";
+import type { AcademicHistoryItem } from "../../../../types/Academic/academicTypes";
 
 const { useBreakpoint } = Grid;
 
@@ -57,7 +58,7 @@ export default function PreviewStudent() {
             <Button
               type="primary"
               onClick={() => navigate("/admin/kelola-akademik")}
-              className="!bg-[#70B748] hover:!bg-[#5e9e3b] !rounded-lg"
+              className="!bg-[#00A651] hover:!bg-[#009245] !rounded-lg"
             >
               Kembali ke Kelola Akademik
             </Button>
@@ -108,9 +109,19 @@ export default function PreviewStudent() {
                 {isMale ? <BsGenderMale /> : <BsGenderFemale />}
                 {isMale ? "Laki-laki" : "Perempuan"}
               </Tag>
-              <Tag color="emerald" className="!rounded-md text-xs font-semibold">
-                Siswa Aktif
-              </Tag>
+              {student.studentStatus === "lulus" ? (
+                <Tag color="purple" className="!rounded-md text-xs font-semibold">
+                  Lulus {student.graduationYear ? `(${student.graduationYear})` : ""}
+                </Tag>
+              ) : student.studentStatus === "pindah" ? (
+                <Tag color="orange" className="!rounded-md text-xs font-semibold">
+                  Pindah
+                </Tag>
+              ) : (
+                <Tag color="emerald" className="!rounded-md text-xs font-semibold">
+                  Siswa Aktif
+                </Tag>
+              )}
             </div>
 
             <p className="text-xs text-slate-500 font-mono">
@@ -189,6 +200,74 @@ export default function PreviewStudent() {
           </Descriptions.Item>
         </Descriptions>
       </Card>
+
+      {/* Riwayat Akademik Card */}
+      <AcademicHistorySection studentId={studentId || null} />
     </div>
+  );
+}
+
+function AcademicHistorySection({ studentId }: { studentId: string | null }) {
+  const { useStudentAcademicHistory } = useAcademic();
+  const { data: historyRes, isLoading } = useStudentAcademicHistory(studentId);
+  const histories = historyRes?.data || [];
+
+  return (
+    <Card
+      className="!rounded-xl border-slate-200 shadow-sm overflow-hidden"
+      title={
+        <div className="flex items-center gap-2">
+          <GraduationCap size={18} className="text-emerald-700" />
+          <span className="text-base font-bold text-slate-900">
+            Riwayat Kelas & Akademik Siswa
+          </span>
+        </div>
+      }
+    >
+      {isLoading ? (
+        <Skeleton active paragraph={{ rows: 3 }} />
+      ) : histories.length === 0 ? (
+        <div className="py-8 text-center text-slate-400 text-xs">
+          Belum ada riwayat kelas yang tercatat untuk siswa ini.
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs sm:text-sm">
+            <thead>
+              <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/70">
+                <th className="py-2.5 px-3">Tahun Ajaran</th>
+                <th className="py-2.5 px-3">Tingkat</th>
+                <th className="py-2.5 px-3">Kelas</th>
+                <th className="py-2.5 px-3">Wali Kelas</th>
+                <th className="py-2.5 px-3">Catatan</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100">
+              {histories.map((h: AcademicHistoryItem, idx: number) => (
+                <tr key={h.id || idx} className="hover:bg-slate-50/50">
+                  <td className="py-2.5 px-3 font-semibold font-mono text-slate-800">
+                    {h.academicYear}
+                  </td>
+                  <td className="py-2.5 px-3 text-slate-700">
+                    {h.grade?.name || "-"}
+                  </td>
+                  <td className="py-2.5 px-3">
+                    <Tag color="cyan" className="!rounded-md font-medium text-xs">
+                      {h.class?.name || "-"}
+                    </Tag>
+                  </td>
+                  <td className="py-2.5 px-3 text-slate-700">
+                    {h.homeroomTeacher?.fullname || "-"}
+                  </td>
+                  <td className="py-2.5 px-3 text-slate-500 italic text-xs">
+                    {h.notes || "-"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Card>
   );
 }

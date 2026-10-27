@@ -86,6 +86,34 @@ export const getStudentColumns = ({
     ),
   },
   {
+    title: "Status",
+    dataIndex: "studentStatus",
+    key: "studentStatus",
+    width: 100,
+    align: "center",
+    render: (status?: string) => {
+      if (status === "lulus") {
+        return (
+          <Tag color="purple" className="!rounded-md text-[11px] font-semibold">
+            Lulus
+          </Tag>
+        );
+      }
+      if (status === "pindah") {
+        return (
+          <Tag color="orange" className="!rounded-md text-[11px] font-semibold">
+            Pindah
+          </Tag>
+        );
+      }
+      return (
+        <Tag color="emerald" className="!rounded-md text-[11px] font-semibold">
+          Aktif
+        </Tag>
+      );
+    },
+  },
+  {
     title: "No. HP / WA",
     dataIndex: "phoneNumber",
     key: "phoneNumber",

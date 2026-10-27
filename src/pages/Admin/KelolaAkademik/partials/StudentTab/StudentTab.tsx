@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Table, Button, Modal, message } from "antd";
-import { Plus } from "lucide-react";
+import { Plus, GraduationCap } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { getStudentColumns } from "../../columns/StudentColumn";
 import { SearchFilter } from "./partials/SearchFilter";
 import CreateStudentModal from "../CreateStudentModal";
 import UpdateStudentModal from "../UpdateStudentModal";
+import PromotionModal from "../PromotionModal";
 import { useAcademic } from "../../../../../hooks/Admin/useAcademic";
 import type { SorterResult } from "antd/es/table/interface";
 import type { StudentAdminItem } from "../../../../../types/Academic/academicTypes";
@@ -19,7 +20,9 @@ export default function StudentTab() {
 
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null);
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string>("aktif");
 
+  const [isPromotionOpen, setIsPromotionOpen] = useState(false);
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentAdminItem | null>(null);
@@ -49,6 +52,7 @@ export default function StudentTab() {
     fullname: debouncedSearch || undefined,
     gradeLevelId: selectedGrade || undefined,
     classroomId: selectedClass || undefined,
+    status: selectedStatus,
     order: filters.order,
   });
 
@@ -130,16 +134,30 @@ export default function StudentTab() {
           classes={classesList}
           loadingGrades={loadingGrades}
           loadingClasses={loadingClasses}
+          selectedStatus={selectedStatus}
+          onStatusChange={(val) => {
+            setSelectedStatus(val);
+            setPagination((prev) => ({ ...prev, page: 1 }));
+          }}
         />
 
-        <Button
-          type="primary"
-          icon={<Plus size={16} />}
-          onClick={() => setIsCreateOpen(true)}
-          className="w-full sm:w-auto !bg-[#70B748] hover:!bg-[#5e9e3b] !rounded-lg text-sm font-semibold !border-none"
-        >
-          Tambah Siswa
-        </Button>
+        <div className="flex items-center gap-2 w-full sm:w-auto">
+          <Button
+            icon={<GraduationCap size={16} />}
+            onClick={() => setIsPromotionOpen(true)}
+            className="w-full sm:w-auto !border-[#00A651] !text-[#00A651] hover:!border-[#009245] hover:!text-[#009245] !rounded-lg text-sm font-semibold"
+          >
+            Kenaikan Kelas
+          </Button>
+          <Button
+            type="primary"
+            icon={<Plus size={16} />}
+            onClick={() => setIsCreateOpen(true)}
+            className="w-full sm:w-auto !bg-[#00A651] hover:!bg-[#009245] !rounded-lg text-sm font-semibold !border-none"
+          >
+            Tambah Siswa
+          </Button>
+        </div>
       </div>
 
       {/* Table */}
@@ -175,6 +193,13 @@ export default function StudentTab() {
           setSelectedStudent(null);
         }}
         student={selectedStudent}
+      />
+
+      <PromotionModal
+        open={isPromotionOpen}
+        onCancel={() => setIsPromotionOpen(false)}
+        initialGradeId={selectedGrade}
+        initialClassId={selectedClass}
       />
     </div>
   );

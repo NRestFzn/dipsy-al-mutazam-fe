@@ -129,12 +129,28 @@ export default function Profile() {
               </h2>
               <p className="text-gray-500 mb-4 font-medium">{profile.email}</p>
 
-              <Tag
-                color="green"
-                className="px-4 py-1 rounded-full text-sm border-0 bg-green-100 text-green-700 font-semibold"
-              >
-                Siswa Aktif
-              </Tag>
+              {userDetail.studentStatus === "lulus" ? (
+                <Tag
+                  color="purple"
+                  className="px-4 py-1 rounded-full text-sm border-0 bg-purple-100 text-purple-700 font-semibold"
+                >
+                  Lulus {userDetail.graduationYear ? `(${userDetail.graduationYear})` : ""}
+                </Tag>
+              ) : userDetail.studentStatus === "pindah" ? (
+                <Tag
+                  color="orange"
+                  className="px-4 py-1 rounded-full text-sm border-0 bg-orange-100 text-orange-700 font-semibold"
+                >
+                  Pindah
+                </Tag>
+              ) : (
+                <Tag
+                  color="green"
+                  className="px-4 py-1 rounded-full text-sm border-0 bg-green-100 text-green-700 font-semibold"
+                >
+                  Siswa Aktif
+                </Tag>
+              )}
             </div>
 
             <Divider className="my-0" />
