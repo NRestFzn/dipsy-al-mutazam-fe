@@ -28,8 +28,8 @@ export default function Login() {
       const roles = userData.roles || [];
 
       const getRedirectPath = (userRoles: Role[]) => {
-        if (userRoles.some(r => r.id === ROLE_ID.ADMIN_DESA)) return "/admin/responden";
-        if (userRoles.some(r => r.id === ROLE_ID.ADMIN_MEDIS)) return "/admin-medis/responden";
+        if (userRoles.some(r => r.id === ROLE_ID.WALI_KELAS)) return "/admin/responden";
+        if (userRoles.some(r => r.id === ROLE_ID.GURU_BK)) return "/admin-medis/responden";
 
         return "/";
       };
