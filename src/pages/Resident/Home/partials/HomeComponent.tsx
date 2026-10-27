@@ -21,7 +21,7 @@ export const WelcomeHeader = ({ fullname }: WelcomeHeaderProps) => {
   const firstName = fullname?.split(" ")[0] || "Warga";
 
   return (
-    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#70B748] to-[#5a9e36] text-white shadow-lg mb-10 transition-all hover:shadow-xl">
+    <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#00A651] to-[#009245] text-white shadow-lg mb-10 transition-all hover:shadow-xl">
       <div className="absolute -top-10 -right-10 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl pointer-events-none"></div>
       <div className="absolute top-20 left-10 w-32 h-32 bg-yellow-300 opacity-20 rounded-full blur-2xl pointer-events-none"></div>
 
@@ -58,7 +58,7 @@ const AttentionModal = (props: AttentionModalProps) => {
   return (
     <Modal
       title={
-        <div className="flex items-center gap-2 text-[#70B748]">
+        <div className="flex items-center gap-2 text-[#00A651]">
           <Info size={24} />
           <span className="text-xl font-bold">Sebelum Memulai...</span>
         </div>
@@ -72,7 +72,7 @@ const AttentionModal = (props: AttentionModalProps) => {
         <Button
           key="submit"
           type="primary"
-          className="!bg-[#70B748] !hover:bg-[#5a9639]"
+          className="!bg-[#00A651] !hover:bg-[#009245]"
           size="large"
           onClick={onConfirm}
         >
@@ -200,7 +200,7 @@ export const QuestionnaireCard = ({
     <>
       <Card
         hoverable
-        className={`h-full flex flex-col border border-gray-200 rounded-2xl transition-all duration-300 group overflow-hidden ${disabled ? "hover:border-[#70B748] hover:shadow-md bg-white" : "bg-gray-50/80"
+        className={`h-full flex flex-col border border-gray-200 rounded-2xl transition-all duration-300 group overflow-hidden ${disabled ? "hover:border-[#00A651] hover:shadow-md bg-white" : "bg-gray-50/80"
           }`}
         styles={{
           body: {
@@ -239,7 +239,7 @@ export const QuestionnaireCard = ({
 
         <div className="flex-1 mb-5">
           <h3
-            className={`text-lg font-bold mb-2 line-clamp-2 leading-snug transition-colors ${disabled ? "text-gray-800 group-hover:text-[#70B748]" : "text-gray-500"
+            className={`text-lg font-bold mb-2 line-clamp-2 leading-snug transition-colors ${disabled ? "text-gray-800 group-hover:text-[#00A651]" : "text-gray-500"
               }`}
           >
             {title}
@@ -255,7 +255,7 @@ export const QuestionnaireCard = ({
           disabled={!disabled}
           onClick={handleCardClick}
           className={`!w-full h-11 font-semibold rounded-xl border-none shadow-none transition-all duration-300 !flex !items-center !justify-center gap-2 ${disabled
-            ? "bg-[#70B748] hover:!bg-[#5a9639] hover:shadow-lg hover:shadow-green-200 hover:-translate-y-0.5"
+            ? "bg-[#00A651] hover:!bg-[#009245] hover:shadow-lg hover:shadow-green-200 hover:-translate-y-0.5"
             : "bg-gray-200 text-gray-400 cursor-not-allowed"
             }`}
         >

@@ -77,7 +77,7 @@ export const getDesaRwDashboardColumn = ({
             <Button 
                 type="primary" 
                 size="small"
-                className="!bg-[#70B748] !hover:bg-[#5a9639] border-none"
+                className="!bg-[#00A651] !hover:bg-[#009245] border-none"
                 onClick={() => onSeeDetail(record.rwId)}
             >
                 Lihat

@@ -77,7 +77,7 @@ export const getSubmissionsColumns = ({
             <Button 
                 type="primary"
                 size="small"
-                className="!bg-[#70B748] !hover:bg-[#5a9639] border-none flex items-center gap-1 mx-auto"
+                className="!bg-[#00A651] !hover:bg-[#009245] border-none flex items-center gap-1 mx-auto"
                 onClick={() => onViewDetail(record.submissionId)}
             >
                 <Eye size={14} /> Detail

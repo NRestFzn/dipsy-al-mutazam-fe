@@ -89,7 +89,7 @@ export const getHistoryColumn = ({ onSee, pagination }: HistoryColumnsProps): Co
         render: (_, record) => (
             <Button
                 size="small"
-                className="bg-[#70B748] hover:bg-[#5a9639] text-white border-none"
+                className="bg-[#00A651] hover:bg-[#009245] text-white border-none"
                 onClick={() => onSee(record.id)}
             >
                 Lihat Hasil

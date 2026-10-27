@@ -12,14 +12,14 @@ export const QuizProgressBar = ({ current, total, percent }: QuizProgressBarProp
             <div className="max-w-2xl mx-auto">
                 <div className="flex justify-between text-sm font-medium text-gray-600 mb-2">
                     <span className="flex items-center gap-2">
-                        <CheckCircle size={16} className="text-[#70B748]" />
+                        <CheckCircle size={16} className="text-[#00A651]" />
                         Terjawab: <span className="text-gray-900">{current}</span> / {total}
                     </span>
-                    <span className="text-[#70B748]">{Math.round(percent)}%</span>
+                    <span className="text-[#00A651]">{Math.round(percent)}%</span>
                 </div>
                 <div className="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
                     <div
-                        className="bg-[#70B748] h-2.5 rounded-full transition-all duration-500 ease-out relative"
+                        className="bg-[#00A651] h-2.5 rounded-full transition-all duration-500 ease-out relative"
                         style={{ width: `${percent}%` }}
                     >
                         <div className="absolute top-0 left-0 bottom-0 right-0 bg-gradient-to-r from-transparent via-white/30 to-transparent w-full -translate-x-full animate-shimmer"></div>

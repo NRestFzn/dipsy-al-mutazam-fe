@@ -84,7 +84,7 @@ export default function PreviewResident() {
                             type="primary"
                             onClick={() => refetch()}
                             key="retry"
-                            className="bg-[#70B748]"
+                            className="bg-[#00A651]"
                         >
                             Coba Lagi
                         </Button>,
@@ -122,7 +122,7 @@ export default function PreviewResident() {
                                 <Avatar
                                     size={128}
                                     src={profilePictureUrl}
-                                    className="bg-gradient-to-br from-[#70B748] to-[#5a9639] text-white shadow-xl text-5xl font-bold border-4 border-white"
+                                    className="bg-gradient-to-br from-[#00A651] to-[#009245] text-white shadow-xl text-5xl font-bold border-4 border-white"
                                 >
                                     {!profilePictureUrl && profile.fullname.charAt(0).toUpperCase()}
                                 </Avatar>
@@ -176,7 +176,7 @@ export default function PreviewResident() {
                     <Card
                         title={
                             <div className="flex items-center gap-2">
-                                <div className="w-1 h-5 bg-[#70B748] rounded-full"></div>
+                                <div className="w-1 h-5 bg-[#00A651] rounded-full"></div>
                                 <span className="text-gray-800 font-bold text-base">Informasi Pribadi</span>
                             </div>
                         }
@@ -194,19 +194,19 @@ export default function PreviewResident() {
                             </Descriptions.Item>
                             <Descriptions.Item label="Tanggal Lahir">
                                 <div className="flex items-center gap-2">
-                                    <Calendar size={16} className="text-[#70B748] shrink-0" />
+                                    <Calendar size={16} className="text-[#00A651] shrink-0" />
                                     {dayjs(profile.birthDate).locale("id").format("DD MMMM YYYY")}
                                 </div>
                             </Descriptions.Item>
                             <Descriptions.Item label="Nomor Telepon">
                                 <div className="flex items-center gap-2">
-                                    <Phone size={16} className="text-[#70B748] shrink-0" />
+                                    <Phone size={16} className="text-[#00A651] shrink-0" />
                                     {profile.userDetail?.phoneNumber || "-"}
                                 </div>
                             </Descriptions.Item>
                             <Descriptions.Item label="Status Pernikahan">
                                 <div className="flex items-center gap-2">
-                                    <Heart size={16} className="text-[#70B748] shrink-0" />
+                                    <Heart size={16} className="text-[#00A651] shrink-0" />
                                     {profile.userDetail?.marriageStatus?.name || "-"}
                                 </div>
                             </Descriptions.Item>

@@ -123,7 +123,7 @@ const AddQuestionForm = ({ questionnaire, onAdd, disabled }: AddQuestionFormProp
                     </div>
                     <Button
                         type="primary"
-                        className="flex items-center justify-center gap-x-2 !bg-[#70B748] !hover:bg-[#5a9639] w-full md:w-auto"
+                        className="flex items-center justify-center gap-x-2 !bg-[#00A651] !hover:bg-[#009245] w-full md:w-auto"
                         onClick={handleSubmit}
                         loading={isAdding}
                         disabled={disabled}
@@ -237,7 +237,7 @@ const EditQuestionModal = ({ open, question, onCancel, onSave, loading, question
             confirmLoading={loading}
             okText="Simpan"
             cancelText="Batal"
-            okButtonProps={{ className: "!bg-[#70B748] !hover:bg-[#5a9639]" }}
+            okButtonProps={{ className: "!bg-[#00A651] !hover:bg-[#009245]" }}
             destroyOnClose
             width={600}
         >
@@ -611,7 +611,7 @@ export default function QuestionManager({ questionnaire }: QuestionManagerProps)
                                     onDragEnd={handleDragEnd}
                                     className={`
                                             group relative flex items-start gap-3 p-3 bg-white border rounded-lg transition-all
-                                            ${draggedItem === globalIndex ? 'border-[#70B748] bg-green-50 shadow-md z-10' : 'border-gray-200 hover:border-gray-300'}
+                                            ${draggedItem === globalIndex ? 'border-[#00A651] bg-green-50 shadow-md z-10' : 'border-gray-200 hover:border-gray-300'}
                                             ${isSavingOrder ? 'opacity-50 cursor-not-allowed' : 'cursor-default'}
                                         `}
                                 >
@@ -730,7 +730,7 @@ export default function QuestionManager({ questionnaire }: QuestionManagerProps)
                         </span>
                         <Button
                             type="primary"
-                            className="!bg-[#70B748] !hover:bg-[#5a9639] h-9 w-full sm:w-auto"
+                            className="!bg-[#00A651] !hover:bg-[#009245] h-9 w-full sm:w-auto"
                             icon={<Save size={16} />}
                             loading={isSavingOrder}
                             onClick={handleSaveOrder}

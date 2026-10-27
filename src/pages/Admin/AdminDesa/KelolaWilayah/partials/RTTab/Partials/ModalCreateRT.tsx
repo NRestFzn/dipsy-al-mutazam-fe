@@ -40,7 +40,7 @@ export default function ModalCreateRt({ open, onClose, selectedRWId, selectedRWL
             confirmLoading={masterData.createRTMutation.isPending}
             okText="Simpan"
             cancelText="Batal"
-            okButtonProps={{ className: "!bg-[#70B748] !hover:bg-[#5a9639]" }}
+            okButtonProps={{ className: "!bg-[#00A651] !hover:bg-[#009245]" }}
             centered
             destroyOnHidden
         >

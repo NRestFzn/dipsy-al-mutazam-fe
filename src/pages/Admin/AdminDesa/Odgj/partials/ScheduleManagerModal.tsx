@@ -64,7 +64,7 @@ export default function ScheduleManagerModal({
           <Button
             type="primary"
             icon={<Plus size={16} />}
-            className="!bg-[#70B748]"
+            className="!bg-[#00A651]"
             onClick={() => {
               setEditingSchedule(null);
               setScheduleFormOpen(true);

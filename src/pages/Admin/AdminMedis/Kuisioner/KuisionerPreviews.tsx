@@ -78,7 +78,7 @@ export default function KuisionerPreview() {
             </div>
 
             <div className="max-w-3xl mx-auto pt-8 relative z-10">
-                <div className="bg-[#70B748] rounded-t-2xl p-8 text-white shadow-lg">
+                <div className="bg-[#00A651] rounded-t-2xl p-8 text-white shadow-lg">
                     <div className="flex items-start justify-between">
                         <div>
                             <div className="flex items-center gap-2 mb-2 opacity-90">
@@ -104,7 +104,7 @@ export default function KuisionerPreview() {
                             {questions.map((q, index) => (
                                 <div key={q.id} className="p-4 rounded-lg border border-gray-100 hover:border-green-200 hover:bg-green-50/30 transition-colors">
                                     <h3 className="text-lg font-medium text-gray-800 mb-4 flex gap-3">
-                                        <span className="flex-shrink-0 w-8 h-8 bg-green-100 text-[#70B748] rounded-full flex items-center justify-center text-sm font-bold">
+                                        <span className="flex-shrink-0 w-8 h-8 bg-green-100 text-[#00A651] rounded-full flex items-center justify-center text-sm font-bold">
                                             {index + 1}
                                         </span>
                                         <span className="pt-1">{q.questionText}</span>

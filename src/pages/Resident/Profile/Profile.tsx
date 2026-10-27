@@ -93,7 +93,7 @@ export default function Profile() {
           <Button
             icon={<Edit size={16} />}
             onClick={() => setIsEditModalOpen(true)}
-            className="border-[#70B748] text-[#70B748] hover:bg-green-50"
+            className="border-[#00A651] text-[#00A651] hover:bg-green-50"
           >
             Edit Profil
           </Button>
@@ -109,7 +109,7 @@ export default function Profile() {
                 <Avatar
                   size={128}
                   src={profilePictureUrl}
-                  className="bg-gradient-to-br from-[#70B748] to-[#5a9639] text-white shadow-xl text-5xl font-bold border-4 border-white"
+                  className="bg-gradient-to-br from-[#00A651] to-[#009245] text-white shadow-xl text-5xl font-bold border-4 border-white"
                 >
                   {profile.fullname.charAt(0).toUpperCase()}
                 </Avatar>
@@ -172,7 +172,7 @@ export default function Profile() {
           <Card
             title={
               <div className="flex items-center gap-2">
-                <div className="w-1 h-5 bg-[#70B748] rounded-full"></div>{" "}
+                <div className="w-1 h-5 bg-[#00A651] rounded-full"></div>{" "}
                 Informasi Pribadi
               </div>
             }

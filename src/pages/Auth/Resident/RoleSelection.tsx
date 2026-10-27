@@ -43,7 +43,7 @@ export default function RoleSelection() {
     return (
         <div className="min-h-screen w-full flex flex-col justify-center items-center p-4 sm:p-6 lg:p-8 relative overflow-hidden bg-gray-50 font-sans">
             <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-                <div className="absolute top-[-10%] left-[-5%] w-[60%] h-[60%] rounded-full bg-gradient-to-br from-[#70B748]/20 to-transparent blur-[120px] animate-pulse" />
+                <div className="absolute top-[-10%] left-[-5%] w-[60%] h-[60%] rounded-full bg-gradient-to-br from-[#00A651]/20 to-transparent blur-[120px] animate-pulse" />
                 <div className="absolute bottom-[-10%] right-[-5%] w-[60%] h-[60%] rounded-full bg-gradient-to-tl from-blue-400/20 to-transparent blur-[120px]" />
             </div>
 
@@ -58,7 +58,7 @@ export default function RoleSelection() {
                     </div>
 
                     <Title level={1} className="!text-gray-800 !mb-0 !font-extrabold tracking-tight text-3xl sm:text-4xl">
-                        Selamat Datang, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#70B748] to-green-600">{user.fullname}</span>
+                        Selamat Datang, <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#00A651] to-green-600">{user.fullname}</span>
                     </Title>
                     <Text className="text-gray-500 text-base sm:text-lg max-w-xl mx-auto block leading-relaxed">
                         Silakan pilih peran aktif Anda untuk mengakses fitur yang sesuai dengan kebutuhan Anda saat ini.
@@ -76,7 +76,7 @@ export default function RoleSelection() {
 
                             <div className="relative z-10 flex flex-col h-full items-center text-center">
                                 <div className="mb-6 p-5 rounded-2xl bg-gradient-to-br from-green-50 to-white shadow-inner border border-green-100 group-hover:scale-110 transition-transform duration-300">
-                                    <User size={48} className="text-[#70B748]" />
+                                    <User size={48} className="text-[#00A651]" />
                                 </div>
 
                                 <Title level={3} className="!mb-3 !text-gray-800 !font-bold">Warga Desa</Title>
@@ -94,7 +94,7 @@ export default function RoleSelection() {
                                 <Button
                                     type="primary"
                                     size="large"
-                                    className="!h-12 !rounded-xl !text-base !font-bold !bg-gradient-to-r !from-[#70B748] !to-green-600 !border-none !shadow-lg !shadow-green-500/30 group-hover:!shadow-green-500/50 w-full flex items-center justify-center gap-2 transition-all duration-300 transform group-hover:scale-[1.02]"
+                                    className="!h-12 !rounded-xl !text-base !font-bold !bg-gradient-to-r !from-[#00A651] !to-green-600 !border-none !shadow-lg !shadow-green-500/30 group-hover:!shadow-green-500/50 w-full flex items-center justify-center gap-2 transition-all duration-300 transform group-hover:scale-[1.02]"
                                 >
                                     Masuk Dashboard Warga <ChevronRight size={18} strokeWidth={3} />
                                 </Button>

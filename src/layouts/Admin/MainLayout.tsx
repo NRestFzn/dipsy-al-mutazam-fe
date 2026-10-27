@@ -61,7 +61,7 @@ const ProfileComponent = (props: ProfileComponentProps) => {
         >
           <div className="flex items-center gap-3 cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200 group">
             <div className="text-right hidden md:block">
-              <div className="text-sm font-semibold text-gray-700 group-hover:text-[#70B748] transition-colors">
+              <div className="text-sm font-semibold text-gray-700 group-hover:text-[#00A651] transition-colors">
                 {fullname || "User"}
               </div>
               <div className="text-xs text-gray-500 capitalize">
@@ -72,14 +72,14 @@ const ProfileComponent = (props: ProfileComponentProps) => {
             <Avatar
               size="large"
               src={profileUrl}
-              className="bg-gray-200 text-gray-600 group-hover:bg-[#70B748] group-hover:text-white transition-colors"
+              className="bg-gray-200 text-gray-600 group-hover:bg-[#00A651] group-hover:text-white transition-colors"
             >
               {fullname?.charAt(0)?.toUpperCase() || <User />}
             </Avatar>
 
             <ChevronDown
               size={16}
-              className="text-gray-400 group-hover:text-[#70B748] transition-colors"
+              className="text-gray-400 group-hover:text-[#00A651] transition-colors"
             />
           </div>
         </Dropdown>
@@ -117,13 +117,10 @@ function MainLayout(props: MainLayoutProps) {
             >
               <div className="flex items-center gap-3">
                 <img
-                  className="w-10 h-10 object-contain"
-                  src="/icon.png"
-                  alt="Logo"
+                  className="h-9 w-auto object-contain"
+                  src="/logo-al-multazam.png"
+                  alt="Logo SMAIT Al-Multazam"
                 />
-                <span className="text-lg font-bold text-[#70B748] hidden sm:block">
-                  Desa Cibiru Wetan
-                </span>
               </div>
             </a>
           )}
