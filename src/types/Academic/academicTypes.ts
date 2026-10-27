@@ -16,6 +16,7 @@ export interface ClassItem {
   gradeId?: string;
   grade?: GradeItem;
   homeroomTeacherId?: string | null;
+  homeroomTeacher?: { id: string; fullname: string } | null;
   studentCount?: number;
   createdAt?: string;
   updatedAt?: string;
@@ -126,6 +127,29 @@ export interface PromoteStudentsPayload {
 export interface GraduateStudentsPayload {
   studentIds: string[];
   graduationYear: string;
+}
+
+export interface TaughtStudentItem {
+  id: string;
+  fullname: string;
+  email?: string;
+  userDetail?: {
+    nisn?: string | null;
+    nis?: string | null;
+    studentStatus?: "aktif" | "lulus" | "pindah" | null;
+    graduationYear?: string | null;
+  } | null;
+}
+
+export interface TaughtHistoryItem {
+  id: string;
+  academicYear: string;
+  GradeId?: string | null;
+  ClassId?: string | null;
+  homeroomTeacherId?: string | null;
+  student?: TaughtStudentItem | null;
+  grade?: { id: string; name: string } | null;
+  class?: { id: string; name: string } | null;
 }
 
 export interface AcademicHistoryItem {

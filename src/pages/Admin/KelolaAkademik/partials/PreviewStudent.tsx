@@ -29,6 +29,10 @@ export default function PreviewStudent() {
   const navigate = useNavigate();
   const { studentId } = useParams<{ studentId: string }>();
 
+  const backPath = window.location.pathname.startsWith("/admin/siswa-saya")
+    ? "/admin/siswa-saya"
+    : "/admin-medis/kelola-akademik";
+
   const screens = useBreakpoint();
   const descriptionLayout = screens.md ? "horizontal" : "vertical";
   const labelStyle = screens.md ? { width: "200px", color: "#64748b" } : { color: "#64748b" };
@@ -57,7 +61,7 @@ export default function PreviewStudent() {
           extra={
             <Button
               type="primary"
-              onClick={() => navigate("/admin-medis/kelola-akademik")}
+              onClick={() => navigate(backPath)}
               className="!bg-[#00A651] hover:!bg-[#009245] !rounded-lg"
             >
               Kembali ke Kelola Akademik
@@ -77,7 +81,7 @@ export default function PreviewStudent() {
         <Button
           type="text"
           icon={<ArrowLeft size={18} />}
-          onClick={() => navigate("/admin-medis/kelola-akademik")}
+          onClick={() => navigate(backPath)}
           className="hover:!bg-slate-100 !rounded-lg text-slate-600"
         >
           Kembali

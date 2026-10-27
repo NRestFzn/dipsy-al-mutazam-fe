@@ -34,11 +34,10 @@ export const getClassColumns = ({
   },
   {
     title: "Wali Kelas",
-    dataIndex: "homeroomTeacher",
     key: "homeroomTeacher",
-    render: (teacher: string) => (
+    render: (_, record) => (
       <span className="text-slate-600 text-xs">
-        {teacher || "Belum ditentukan"}
+        {record.homeroomTeacher?.fullname || "Belum ditentukan"}
       </span>
     ),
   },

@@ -108,6 +108,13 @@ export const useAcademic = () => {
     });
   };
 
+  const useTaughtHistory = () => {
+    return useQuery({
+      queryKey: ["academic", "taught-history"],
+      queryFn: () => academicService.getTaughtHistory(),
+    });
+  };
+
   const promoteStudentsMutation = useMutation({
     mutationFn: (payload: PromoteStudentsPayload) => academicService.promoteStudents(payload),
     onSuccess: () => {
@@ -137,6 +144,7 @@ export const useAcademic = () => {
     useStudentsAdmin,
     useStudentDetail,
     useStudentAcademicHistory,
+    useTaughtHistory,
     createStudentMutation,
     updateStudentMutation,
     deleteStudentMutation,

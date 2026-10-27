@@ -7,7 +7,8 @@ import {
     GraduationCap,
     Database,
     Tags,
-    UserCog
+    UserCog,
+    Users
 } from "lucide-react";
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -39,6 +40,7 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
 
     const itemsAdminDesa: MenuItem[] = [
         getItem('Responden', '/admin/responden', <FileHeartIcon size={20} />),
+        getItem('Siswa Saya', '/admin/siswa-saya', <Users size={20} />),
     ];
 
     const itemsAdminMedis: MenuItem[] = [
