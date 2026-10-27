@@ -275,3 +275,26 @@ export interface UpdateAdminProfilePayload {
   newPassword?: string;
   confirmNewPassword?: string;
 }
+
+
+// Academic Domain Aliases
+export interface GradeSectionData extends RWSectionData {
+  gradeId?: string;
+  gradeName?: string | number;
+  classCount?: number;
+  studentCount?: number;
+}
+
+export interface ClassData extends RTData {
+  classId?: string;
+  className?: string | number;
+  studentCount?: number;
+}
+
+export interface GradeSummary extends RWSummary {
+  perClass?: ClassData[];
+}
+
+export interface ClassSummary extends RTSummary {
+  students?: RTSummary['users'];
+}

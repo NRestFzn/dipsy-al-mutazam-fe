@@ -75,10 +75,26 @@ export const adminMedisService = {
 	async getQuestionnaireSummary(
 		questionnaireId: string
 	): Promise<QuestionnaireSummary> {
-		const response = await api.get<ApiResponse<QuestionnaireSummary>>(
+		const response = await api.get<any>(
 			`/v1/questionnaire-submission/summary/${questionnaireId}`
 		);
-		return response.data.data;
+
+		const payload = response.data.data ?? {};
+		const perGrade = payload.perGrade ?? [];
+
+		return {
+			...payload,
+			perRw: perGrade.map((item: any) => ({
+				rwId: String(item.gradeId),
+				rwName: item.gradeName,
+				classCount: item.classCount ?? 0,
+				userCount: item.userCount ?? 0,
+				submitCount: item.submitCount ?? 0,
+				stableMentalCount: item.stableMentalCount ?? 0,
+				unStableMentalCount: item.unStableMentalCount ?? 0,
+				unStableMentalPercentage: item.unStableMentalPercentage ?? 0,
+			})),
+		} as QuestionnaireSummary;
 	},
 
 	async getSummaryUser(
@@ -90,7 +106,7 @@ export const adminMedisService = {
 		endDate?: string
 	): Promise<UserSummaryResponse> {
 		const response = await api.get<ApiResponse<UserSummaryResponse>>(
-			`/v1/questionnaire-submission/summary-user/${questionnaireId}`,
+			`/v1/questionnaire-submission/summary-student/${questionnaireId}`,
 			{
 				params: { UserId: userId, RukunTetanggaId: RukunTetanggaId, RukunWargaId: RukunWargaId, startDate, endDate }
 			}
@@ -263,12 +279,30 @@ export const adminMedisService = {
 		if (startDate) params.startDate = startDate;
 		if (endDate) params.endDate = endDate;
 
-		const response = await api.get<SummarizeAllResponse>(
+		const response = await api.get<any>(
 			`/v1/questionnaire-submission/summary/${questionnaireId}`,
 			{ params }
 		);
 
-		return response.data;
+		const payload = response.data.data ?? {};
+		const perGrade = payload.perGrade ?? [];
+
+		return {
+			...response.data,
+			data: {
+				summarize: payload.summarize,
+				perRw: perGrade.map((item: any) => ({
+					rwId: String(item.gradeId),
+					rwName: item.gradeName,
+					classCount: item.classCount ?? 0,
+					userCount: item.userCount ?? 0,
+					submitCount: item.submitCount ?? 0,
+					stableMentalCount: item.stableMentalCount ?? 0,
+					unStableMentalCount: item.unStableMentalCount ?? 0,
+					unStableMentalPercentage: item.unStableMentalPercentage ?? 0,
+				})),
+			},
+		} as SummarizeAllResponse;
 	},
 
 	async summaryRw(
@@ -306,6 +340,62 @@ export const adminMedisService = {
 		);
 
 		return response.data.data;
+	},
+
+	async summaryGrade(
+		questionnaireId: string,
+		gradeId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<RWSummary> {
+		const params: Record<string, any> = { GradeId: gradeId };
+		if (startDate) params.startDate = startDate;
+		if (endDate) params.endDate = endDate;
+
+		const response = await api.get<any>(
+			`/v1/questionnaire-submission/summary-grade/${questionnaireId}`,
+			{ params }
+		);
+
+		const payload = response.data.data ?? {};
+		const perClass = payload.perClass ?? [];
+
+		return {
+			...payload,
+			perRt: perClass.map((item: any) => ({
+				rtId: String(item.classId),
+				rtName: item.className,
+				userCount: item.userCount ?? 0,
+				submitCount: item.submitCount ?? 0,
+				stableMentalCount: item.stableMentalCount ?? 0,
+				unStableMentalCount: item.unStableMentalCount ?? 0,
+				unStableMentalPercentage: item.unStableMentalPercentage ?? 0,
+			})),
+		} as RWSummary;
+	},
+
+	async summaryClass(
+		questionnaireId: string,
+		_gradeId: string,
+		classId: string,
+		startDate?: string,
+		endDate?: string
+	): Promise<RTSummary> {
+		const params: Record<string, any> = { ClassId: classId };
+		if (startDate) params.startDate = startDate;
+		if (endDate) params.endDate = endDate;
+
+		const response = await api.get<any>(
+			`/v1/questionnaire-submission/summary-class/${questionnaireId}`,
+			{ params }
+		);
+
+		const payload = response.data.data ?? {};
+
+		return {
+			...payload,
+			users: payload.students ?? [],
+		} as RTSummary;
 	},
 
 	async updateProfilePicture(file: File) {

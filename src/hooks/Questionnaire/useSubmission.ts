@@ -1,30 +1,45 @@
 import { useQuery, keepPreviousData } from "@tanstack/react-query";
-import { submissionService, type RTSummaryResponse } from "../../service/Questionnaire/submissionService";
-import type { SummaryRtParams, SummaryRwParams } from "../../types/Questionnaire/submissionTypes";
+import {
+    submissionService,
+    type ClassSummaryResponse,
+    type GradeSummaryResponse,
+    type RTSummaryResponse,
+    type RWSummaryResponse
+} from "../../service/Questionnaire/submissionService";
+import type {
+    SummaryClassParams,
+    SummaryGradeParams,
+    SummaryRtParams,
+    SummaryRwParams
+} from "../../types/Questionnaire/submissionTypes";
 
-export const useSummaryRw = (params: SummaryRwParams) => {
-    return useQuery({
-        queryKey: ["summary-rw", params],
-        queryFn: () => submissionService.getSummaryRw(params),
+export const useSummaryGrade = (params: SummaryGradeParams) => {
+    const targetGradeId = params.gradeId || params.RukunWargaId;
+    return useQuery<GradeSummaryResponse, Error>({
+        queryKey: ["summary-grade", params.questionnaireId, targetGradeId, params.startDate, params.endDate],
+        queryFn: () => submissionService.getSummaryGrade(params),
         placeholderData: keepPreviousData,
-        enabled: !!params.questionnaireId && !!params.RukunWargaId,
+        enabled: !!params.questionnaireId && !!targetGradeId,
         staleTime: 1000 * 60 * 5,
     });
 };
 
-export const useSummaryRt = ({
-    questionnaireId,
-    rwId,
-    rtId,
-    startDate,
-    endDate
-}: SummaryRtParams) => {
-    return useQuery<RTSummaryResponse, Error>({
-        queryKey: ['summary-rt', questionnaireId, rwId, rtId, startDate, endDate],
-        queryFn: async () => {
-            return await submissionService.getSummaryRt({ questionnaireId: questionnaireId!, rwId: rwId!, rtId: rtId!, startDate, endDate });
-        },
-        enabled: !!questionnaireId && !!rtId,
-        placeholderData: (previousData) => previousData,
+export const useSummaryClass = (params: SummaryClassParams) => {
+    const targetGradeId = params.gradeId || params.rwId;
+    const targetClassId = params.classId || params.rtId;
+    return useQuery<ClassSummaryResponse, Error>({
+        queryKey: ['summary-class', params.questionnaireId, targetGradeId, targetClassId, params.startDate, params.endDate],
+        queryFn: () => submissionService.getSummaryClass(params),
+        placeholderData: keepPreviousData,
+        enabled: !!params.questionnaireId && !!targetClassId,
+        staleTime: 1000 * 60 * 5,
     });
+};
+
+export const useSummaryRw = (params: SummaryRwParams) => {
+    return useSummaryGrade(params) as unknown as ReturnType<typeof useQuery<RWSummaryResponse, Error>>;
+};
+
+export const useSummaryRt = (params: SummaryRtParams) => {
+    return useSummaryClass(params) as unknown as ReturnType<typeof useQuery<RTSummaryResponse, Error>>;
 };
