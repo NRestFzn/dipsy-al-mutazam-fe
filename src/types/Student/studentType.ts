@@ -40,7 +40,7 @@ export interface UserDetail {
 }
 
 export interface StudentMe extends UserMe {
-    userDetail: UserDetail;
+    userDetail: UserDetail
 }
 
 export interface UpdateProfileStudentPayload {
