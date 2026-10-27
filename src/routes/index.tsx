@@ -133,6 +133,10 @@ const router = createBrowserRouter([
             element: <Loadable Component={Pages.KuisionerPreview} />,
           },
           {
+            path: "kelola-guru",
+            element: <Loadable Component={Pages.KelolaGuru} />,
+          },
+          {
             path: "master-data",
             children: [
               {
