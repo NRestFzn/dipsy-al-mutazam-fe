@@ -2,7 +2,7 @@ import { createBrowserRouter, Navigate } from "react-router";
 import { Suspense, type ComponentType, type LazyExoticComponent, } from "react";
 import Loading from "../pages/Loading";
 import ProtectedLayout from "../layouts/ProtectedLayout";
-import ResidentLayout from "../layouts/Resident/MainLayout";
+import ResidentLayout from "../layouts/Student/MainLayout";
 import AdminDesaLayout from "../layouts/Admin/AdminDesa/AdminDesaLayout";
 import AdminMediLayout from "../layouts/Admin/AdminMedis/AdminMedisLayout";
 import { RoleGuard } from "../components/RoleGuard";

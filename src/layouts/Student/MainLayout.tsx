@@ -1,7 +1,7 @@
 import { Outlet, useNavigate, Navigate, useLocation } from "react-router";
 import { App, Spin } from "antd";
 import { Loader2 } from "lucide-react";
-import { useResident } from "../../hooks/useResident";
+import { useStudent } from "../../hooks/useStudent";
 import { useAuth } from "../../context/AuthContext";
 import { getImageUrl } from "../../utils/imageHelper";
 import { HomeHeader } from "./Partials/Header";
@@ -13,7 +13,7 @@ export default function ResidentLayout() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { data: response, isLoading } = useResident();
+  const { data: response, isLoading } = useStudent();
 
   const isCleanLayout =
     location.pathname.includes("/quiz") ||
