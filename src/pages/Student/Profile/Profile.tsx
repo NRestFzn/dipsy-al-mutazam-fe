@@ -6,8 +6,9 @@ import {
   Button,
   Skeleton,
   Result,
+  Timeline,
 } from "antd";
-import { ArrowLeft, Edit, Camera, GraduationCap, User as UserIcon } from "lucide-react";
+import { ArrowLeft, Edit, Camera, GraduationCap, User as UserIcon, History } from "lucide-react";
 import dayjs from "dayjs";
 import "dayjs/locale/id";
 
@@ -16,6 +17,7 @@ import EditProfileModal from "./Partials/EditModal";
 import UpdatePhotoModal from "./Partials/UpdatePhotoProfile";
 import { useStudent } from "../../../hooks/useStudent";
 import { getImageUrl } from "../../../utils/imageHelper";
+import type { AcademicHistoryItem } from "../../../types/Academic/academicTypes";
 
 export default function Profile() {
   const navigate = useNavigate();
@@ -70,6 +72,7 @@ export default function Profile() {
   const profile = response.data;
   const profilePictureUrl = getImageUrl(profile.profilePicture);
   const userDetail = profile.userDetail;
+  const isLulus = userDetail?.status === "Lulus";
 
   return (
     <div className="min-h-screen bg-slate-50 pb-16 font-sans text-slate-800">
@@ -118,8 +121,14 @@ export default function Profile() {
                   <h1 className="text-xl font-bold text-slate-900 leading-snug">
                     {profile.fullname}
                   </h1>
-                  <Tag className="!m-0 !w-fit mx-auto sm:mx-0 !bg-emerald-50 !text-emerald-700 !border-emerald-200 !text-[11px] !font-semibold !rounded">
-                    Siswa Aktif
+                  <Tag
+                    className={`!m-0 !w-fit mx-auto sm:mx-0 !text-[11px] !font-semibold !rounded ${
+                      isLulus
+                        ? "!bg-slate-100 !text-slate-700 !border-slate-300"
+                        : "!bg-emerald-50 !text-emerald-700 !border-emerald-200"
+                    }`}
+                  >
+                    {isLulus ? "Alumni (Lulus)" : "Siswa Aktif"}
                   </Tag>
                 </div>
                 <p className="text-xs text-slate-500 font-medium mb-4">
@@ -169,12 +178,12 @@ export default function Profile() {
               >
                 <Descriptions.Item label="Jenjang / Tingkat">
                   {userDetail?.grade?.name
-                    ? (userDetail.grade.name.startsWith("Tingkat") ? userDetail.grade.name : `Tingkat ${userDetail.grade.name}`)
+                    ? (userDetail.grade.name.startsWith("Tingkat") || userDetail.grade.name.startsWith("Kelas") ? userDetail.grade.name : `Kelas ${userDetail.grade.name}`)
                     : (userDetail?.gradeLevel?.name || "-")}
                 </Descriptions.Item>
                 <Descriptions.Item label="Rombongan Belajar (Kelas)">
                   {userDetail?.class?.name
-                    ? (userDetail.class.name.startsWith("Kelas") ? userDetail.class.name : `Kelas ${userDetail.class.name}`)
+                    ? (userDetail.class.name.startsWith("Kelas") || userDetail.class.name.includes("-") ? userDetail.class.name : `Kelas ${userDetail.class.name}`)
                     : (userDetail?.classroom?.name || "-")}
                 </Descriptions.Item>
               </Descriptions>
@@ -211,6 +220,60 @@ export default function Profile() {
               </Descriptions>
             </div>
           </div>
+
+          {/* Academic History Timeline */}
+          {userDetail?.academicHistory && userDetail.academicHistory.length > 0 && (
+            <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+              <div className="px-5 py-3.5 border-b border-slate-100 flex items-center gap-2">
+                <History size={16} className="text-emerald-600" />
+                <h2 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                  Riwayat Perjalanan Kelas & Kenaikan
+                </h2>
+              </div>
+              <div className="p-5">
+                <Timeline
+                  className="pt-1 !pl-2"
+                  items={userDetail.academicHistory.map((h: AcademicHistoryItem) => ({
+                    color: h.status === "Lulus" ? "purple" : h.status === "Naik Kelas" ? "#00A651" : "#1890ff",
+                    children: (
+                      <div className="pb-2 space-y-1">
+                        <div className="flex flex-wrap items-center gap-2">
+                          <span className="font-bold text-slate-900 text-sm">{h.academicYear}</span>
+                          <Tag color="cyan" className="!rounded font-medium text-xs">
+                            {h.gradeName} - {h.className}
+                          </Tag>
+                          <Tag
+                            color={
+                              h.status === "Lulus"
+                                ? "purple"
+                                : h.status === "Naik Kelas"
+                                ? "success"
+                                : h.status === "Tinggal Kelas"
+                                ? "warning"
+                                : "blue"
+                            }
+                            className="!rounded text-[11px] font-semibold"
+                          >
+                            {h.status}
+                          </Tag>
+                        </div>
+                        {h.homeroomTeacherName && (
+                          <p className="text-xs text-slate-500">
+                            Wali Kelas: <span className="text-slate-700 font-medium">{h.homeroomTeacherName}</span>
+                          </p>
+                        )}
+                        {h.note && (
+                          <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100 italic">
+                            "{h.note}"
+                          </p>
+                        )}
+                      </div>
+                    ),
+                  }))}
+                />
+              </div>
+            </div>
+          )}
         </div>
 
         <EditProfileModal

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { Table, Button, Modal, message } from "antd";
-import { Plus } from "lucide-react";
+import { Plus, GraduationCap } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { getStudentColumns } from "../../columns/StudentColumn";
 import { SearchFilter } from "./partials/SearchFilter";
 import CreateStudentModal from "../CreateStudentModal";
 import UpdateStudentModal from "../UpdateStudentModal";
+import ClassPromotionModal from "../ClassPromotionModal";
 import { useAcademic } from "../../../../../hooks/Admin/useAcademic";
 import type { SorterResult } from "antd/es/table/interface";
 import type { StudentAdminItem } from "../../../../../types/Academic/academicTypes";
@@ -19,9 +20,11 @@ export default function StudentTab() {
 
   const [selectedGrade, setSelectedGrade] = useState<string | null>(null);
   const [selectedClass, setSelectedClass] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string>("Aktif");
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
+  const [isPromotionOpen, setIsPromotionOpen] = useState(false);
   const [selectedStudent, setSelectedStudent] = useState<StudentAdminItem | null>(null);
 
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10 });
@@ -43,12 +46,17 @@ export default function StudentTab() {
   });
   const classesList = classesRes?.data || [];
 
+  // Fetch all classes for promotion modal dropdowns
+  const { data: allClassesRes } = useClasses({ pageSize: 100 });
+  const allClassesList = allClassesRes?.data || classesList;
+
   const { data: studentsRes, isLoading: loadingStudents } = useStudentsAdmin({
     page: pagination.page,
     pageSize: pagination.pageSize,
     search: debouncedSearch || undefined,
     gradeLevelId: selectedGrade || undefined,
     classroomId: selectedClass || undefined,
+    status: selectedStatus,
     order: filters.order,
   });
 
@@ -109,11 +117,16 @@ export default function StudentTab() {
   return (
     <div className="space-y-4">
       {/* Top Filter and Actions */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
+      <div className="flex flex-col xl:flex-row justify-between items-start xl:items-center gap-3">
         <SearchFilter
           searchTerm={searchTerm}
           onSearchChange={(val) => {
             setSearchTerm(val);
+            setPagination((prev) => ({ ...prev, page: 1 }));
+          }}
+          selectedStatus={selectedStatus}
+          onStatusChange={(val) => {
+            setSelectedStatus(val);
             setPagination((prev) => ({ ...prev, page: 1 }));
           }}
           selectedGrade={selectedGrade}
@@ -132,14 +145,24 @@ export default function StudentTab() {
           loadingClasses={loadingClasses}
         />
 
-        <Button
-          type="primary"
-          icon={<Plus size={16} />}
-          onClick={() => setIsCreateOpen(true)}
-          className="w-full sm:w-auto !bg-[#00A651] hover:!bg-[#009245] !rounded-lg text-sm font-semibold !border-none"
-        >
-          Tambah Siswa
-        </Button>
+        <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
+          <Button
+            icon={<GraduationCap size={16} />}
+            onClick={() => setIsPromotionOpen(true)}
+            className="w-full sm:w-auto !border-emerald-600 !text-emerald-700 hover:!bg-emerald-50 !rounded-lg text-sm font-semibold"
+          >
+            Proses Kenaikan Kelas
+          </Button>
+
+          <Button
+            type="primary"
+            icon={<Plus size={16} />}
+            onClick={() => setIsCreateOpen(true)}
+            className="w-full sm:w-auto !bg-[#00A651] hover:!bg-[#009245] !rounded-lg text-sm font-semibold !border-none"
+          >
+            Tambah Siswa
+          </Button>
+        </div>
       </div>
 
       {/* Table */}
@@ -176,7 +199,13 @@ export default function StudentTab() {
         }}
         student={selectedStudent}
       />
+
+      <ClassPromotionModal
+        open={isPromotionOpen}
+        onCancel={() => setIsPromotionOpen(false)}
+        classes={allClassesList}
+        grades={gradesList}
+      />
     </div>
   );
 }
-

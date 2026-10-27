@@ -8,6 +8,7 @@ import {
   Skeleton,
   Result,
   Grid,
+  Timeline,
 } from "antd";
 import {
   ArrowLeft,
@@ -16,6 +17,7 @@ import {
   Calendar,
   Mail,
   ShieldCheck,
+  History,
 } from "lucide-react";
 import { BsGenderFemale, BsGenderMale } from "react-icons/bs";
 import dayjs from "dayjs";
@@ -68,6 +70,7 @@ export default function PreviewStudent() {
   }
 
   const isMale = student.gender === "m";
+  const isLulus = student.status === "Lulus";
 
   return (
     <div className="p-4 sm:p-6 max-w-4xl mx-auto space-y-6 font-sans">
@@ -108,8 +111,14 @@ export default function PreviewStudent() {
                 {isMale ? <BsGenderMale /> : <BsGenderFemale />}
                 {isMale ? "Laki-laki" : "Perempuan"}
               </Tag>
-              <Tag color="emerald" className="!rounded-md text-xs font-semibold">
-                Siswa Aktif
+              <Tag
+                className={`!rounded-md text-xs font-semibold ${
+                  isLulus
+                    ? "!bg-slate-100 !text-slate-700 !border-slate-300"
+                    : "!bg-emerald-50 !text-emerald-700 !border-emerald-200"
+                }`}
+              >
+                {isLulus ? "Alumni (Lulus)" : "Siswa Aktif"}
               </Tag>
             </div>
 
@@ -188,6 +197,64 @@ export default function PreviewStudent() {
             <span className="text-slate-800">{student.email || "-"}</span>
           </Descriptions.Item>
         </Descriptions>
+      </Card>
+
+      {/* Academic History Timeline Card */}
+      <Card
+        className="!rounded-xl border-slate-200 shadow-sm overflow-hidden"
+        title={
+          <div className="flex items-center gap-2">
+            <History size={17} className="text-emerald-700" />
+            <span className="text-sm font-bold text-slate-900">Riwayat Perjalanan Kelas & Evaluasi Akademik</span>
+          </div>
+        }
+      >
+        {student.academicHistory && student.academicHistory.length > 0 ? (
+          <Timeline
+            className="pt-2 !pl-2"
+            items={student.academicHistory.map((h) => ({
+              color: h.status === "Lulus" ? "purple" : h.status === "Naik Kelas" ? "#00A651" : "#1890ff",
+              children: (
+                <div className="pb-3 space-y-1">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-bold text-slate-900 text-sm">{h.academicYear}</span>
+                    <Tag color="cyan" className="!rounded font-medium text-xs">
+                      {h.gradeName} - {h.className}
+                    </Tag>
+                    <Tag
+                      color={
+                        h.status === "Lulus"
+                          ? "purple"
+                          : h.status === "Naik Kelas"
+                          ? "success"
+                          : h.status === "Tinggal Kelas"
+                          ? "warning"
+                          : "blue"
+                      }
+                      className="!rounded text-[11px] font-semibold"
+                    >
+                      {h.status}
+                    </Tag>
+                  </div>
+                  {h.homeroomTeacherName && (
+                    <p className="text-xs text-slate-500">
+                      Wali Kelas: <span className="text-slate-700 font-medium">{h.homeroomTeacherName}</span>
+                    </p>
+                  )}
+                  {h.note && (
+                    <p className="text-xs text-slate-600 bg-slate-50 p-2.5 rounded-lg border border-slate-100 italic">
+                      "{h.note}"
+                    </p>
+                  )}
+                </div>
+              ),
+            }))}
+          />
+        ) : (
+          <div className="text-xs text-slate-400 py-4 text-center">
+            Belum ada catatan riwayat kelas tersimpan untuk siswa ini.
+          </div>
+        )}
       </Card>
     </div>
   );

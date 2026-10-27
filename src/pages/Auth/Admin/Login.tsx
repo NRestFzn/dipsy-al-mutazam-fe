@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router";
 import { Form, Input, Button, Alert } from "antd";
-import { Mail, Lock} from "lucide-react";
+import { Mail, Lock, UserCheck } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import { getErrorMessage } from "../../../utils/getErrorMessage";
 import { ROLE_ID } from "../../../constants";
@@ -136,6 +136,17 @@ export default function Login() {
               </Form.Item>
             </Form>
 
+            {/* Demo Account Helper */}
+            <div className="mt-4 p-2.5 bg-slate-50 border border-slate-200 rounded-lg text-left text-[11px] text-slate-600 space-y-1">
+              <span className="font-semibold text-slate-800 block mb-0.5">Akun Demo Pengajar:</span>
+              <div>
+                <strong>Guru BK:</strong> <code className="bg-white px-1 py-0.5 rounded border border-slate-200 font-mono text-emerald-800">guru.bk@almultazam.sch.id</code> (sandi: <code className="bg-white px-1 py-0.5 rounded border border-slate-200">guru123</code>)
+              </div>
+              <div>
+                <strong>Wali Kelas:</strong> <code className="bg-white px-1 py-0.5 rounded border border-slate-200 font-mono text-emerald-800">wali.kelas@almultazam.sch.id</code> (sandi: <code className="bg-white px-1 py-0.5 rounded border border-slate-200">walikelas123</code>)
+              </div>
+            </div>
+
             {/* Footer Navigation */}
             <div className="mt-5 pt-4 border-t border-slate-100 flex flex-col gap-2.5 text-xs text-center">
               <div className="text-slate-500">
@@ -144,7 +155,7 @@ export default function Login() {
                   to="/masuk"
                   className="text-emerald-700 font-semibold hover:underline inline-flex items-center gap-1"
                 >
-                
+                  <UserCheck size={13} />
                   Portal Siswa (NISN)
                 </Link>
               </div>

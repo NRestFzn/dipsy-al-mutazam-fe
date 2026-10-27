@@ -1,5 +1,6 @@
 import type { Education, MarriageStatus, RukunTetangga, RukunWarga, SalaryRange } from "../masterDataTypes";
-import type { UserMe } from "../profileTypes"
+import type { UserMe } from "../profileTypes";
+import type { AcademicHistoryItem } from "../Academic/academicTypes";
 
 export interface UserDetail {
     id: string;
@@ -17,6 +18,8 @@ export interface UserDetail {
     RukunTetanggaId?: string;
     gradeLevelId?: string;
     classroomId?: string;
+    status?: "Aktif" | "Lulus";
+    academicHistory?: AcademicHistoryItem[];
     MarriageStatusId?: string;
     EducationId?: string;
     SalaryRangeId?: string;
@@ -55,20 +58,9 @@ export interface GetResidentsParams {
     nik?: string;
     nisn?: string;
     RukunWargaId?: string;
-    gradeLevelId?: string;
     RukunTetanggaId?: string;
-    classroomId?: string;
-    statusSubmit?: "hasSubmitted" | "hasNotSubmitted";
+    GradeId?: string;
+    ClassId?: string;
     order?: string;
-}
-
-export interface PaginatedResidents {
-    statusCode: number;
-    message: string;
-    data: ResidentData[];
-    metadata: {
-        page: number;
-        pageSize: number;
-        total: number;
-    };
+    status?: string;
 }

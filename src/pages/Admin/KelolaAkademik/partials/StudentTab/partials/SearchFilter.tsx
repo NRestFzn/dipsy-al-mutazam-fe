@@ -9,6 +9,8 @@ interface SearchFilterProps {
   onGradeChange: (value: string | null) => void;
   selectedClass: string | null;
   onClassChange: (value: string | null) => void;
+  selectedStatus: string;
+  onStatusChange: (value: string) => void;
   grades: GradeItem[];
   classes: ClassItem[];
   loadingGrades?: boolean;
@@ -22,21 +24,35 @@ export function SearchFilter({
   onGradeChange,
   selectedClass,
   onClassChange,
+  selectedStatus,
+  onStatusChange,
   grades,
   classes,
   loadingGrades,
   loadingClasses,
 }: SearchFilterProps) {
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
+    <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto">
       {/* Search Input */}
       <Input
-        placeholder="Cari siswa (Nama atau NISN)..."
-        prefix={<Search className="text-slate-400 mr-1" size={16} />}
+        placeholder="Cari siswa (Nama / NISN)..."
+        prefix={<Search className="text-slate-400 mr-1" size={15} />}
         value={searchTerm}
         onChange={(e) => onSearchChange(e.target.value)}
         allowClear
-        className="w-full sm:w-64 !rounded-lg text-sm"
+        className="w-full sm:w-56 !rounded-lg text-sm"
+      />
+
+      {/* Filter Status Siswa */}
+      <Select
+        value={selectedStatus}
+        onChange={onStatusChange}
+        options={[
+          { label: "Siswa Aktif", value: "Aktif" },
+          { label: "Alumni (Lulus)", value: "Lulus" },
+          { label: "Semua Status", value: "Semua" },
+        ]}
+        className="w-full sm:w-36 !rounded-lg"
       />
 
       {/* Filter Tingkat */}
@@ -50,19 +66,19 @@ export function SearchFilter({
         allowClear
         loading={loadingGrades}
         options={grades.map((g) => ({ label: g.name, value: g.id }))}
-        className="w-full sm:w-44 !rounded-lg"
+        className="w-full sm:w-36 !rounded-lg"
       />
 
       {/* Filter Kelas (Dependent) */}
       <Select
-        placeholder={!selectedGrade ? "Pilih Tingkat Dulu" : "Semua Kelas"}
+        placeholder={!selectedGrade ? "Pilih Tingkat" : "Semua Kelas"}
         value={selectedClass}
         onChange={onClassChange}
         disabled={!selectedGrade}
         allowClear
         loading={loadingClasses}
         options={classes.map((c) => ({ label: c.name, value: c.id }))}
-        className="w-full sm:w-44 !rounded-lg"
+        className="w-full sm:w-36 !rounded-lg"
       />
     </div>
   );

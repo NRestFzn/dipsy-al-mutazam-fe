@@ -19,7 +19,7 @@ export const getStudentColumns = ({
   {
     title: "No",
     key: "index",
-    width: 65,
+    width: 60,
     align: "center",
     render: (_, __, index) => (pagination.page - 1) * pagination.pageSize + index + 1,
   },
@@ -27,7 +27,7 @@ export const getStudentColumns = ({
     title: "NISN",
     dataIndex: "nisn",
     key: "nisn",
-    width: 130,
+    width: 120,
     render: (nisn: string) => (
       <span className="font-mono font-medium text-xs text-slate-700 bg-slate-100 px-2 py-0.5 rounded">
         {nisn || "-"}
@@ -68,7 +68,7 @@ export const getStudentColumns = ({
   {
     title: "Tingkat",
     key: "grade",
-    width: 110,
+    width: 100,
     render: (_, record) => (
       <span className="text-xs text-slate-700 font-medium">
         {record.gradeLevel?.name || "-"}
@@ -78,7 +78,7 @@ export const getStudentColumns = ({
   {
     title: "Kelas",
     key: "class",
-    width: 120,
+    width: 110,
     render: (_, record) => (
       <Tag color="geekblue" className="!rounded-md text-xs font-medium">
         {record.classroom?.name || "-"}
@@ -86,10 +86,30 @@ export const getStudentColumns = ({
     ),
   },
   {
+    title: "Status",
+    key: "status",
+    width: 95,
+    align: "center",
+    render: (_, record) => {
+      const isLulus = record.status === "Lulus";
+      return (
+        <Tag
+          className={`!rounded-md text-[11px] font-semibold ${
+            isLulus
+              ? "!bg-slate-100 !text-slate-600 !border-slate-300"
+              : "!bg-emerald-50 !text-emerald-700 !border-emerald-200"
+          }`}
+        >
+          {record.status || "Aktif"}
+        </Tag>
+      );
+    },
+  },
+  {
     title: "No. HP / WA",
     dataIndex: "phoneNumber",
     key: "phoneNumber",
-    width: 140,
+    width: 130,
     render: (phone: string) => (
       <span className="text-xs text-slate-600">{phone || "-"}</span>
     ),
@@ -98,10 +118,10 @@ export const getStudentColumns = ({
     title: "Aksi",
     key: "action",
     align: "center",
-    width: 130,
+    width: 120,
     render: (_, record) => (
       <div className="flex items-center justify-center gap-1">
-        <Tooltip title="Lihat Profil Siswa">
+        <Tooltip title="Lihat Profil Siswa & Riwayat">
           <Button
             type="text"
             size="small"
@@ -130,4 +150,3 @@ export const getStudentColumns = ({
     ),
   },
 ];
-
