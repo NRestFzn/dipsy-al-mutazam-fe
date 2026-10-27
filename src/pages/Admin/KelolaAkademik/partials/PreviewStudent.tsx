@@ -220,7 +220,7 @@ function AcademicHistorySection({ studentId }: { studentId: string | null }) {
 
   return (
     <Card
-      className="!rounded-xl border-slate-200 shadow-sm overflow-hidden"
+      className="!rounded-xl border-slate-200 shadow-sm overflow-hidden !mt-6"
       title={
         <div className="flex items-center gap-2">
           <GraduationCap size={18} className="text-emerald-700" />
