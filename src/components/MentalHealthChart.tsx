@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { Select, Progress } from "antd";
 import {
 	BarChart,
@@ -100,6 +100,13 @@ export default function MentalHealthChart({
 	}, [submissionsData, perClassData, perRtData, usersData]);
 
 	const [chartView, setChartView] = useState<string>("health_distribution");
+	const viewPickedByUser = useRef(false);
+
+	// Jika belum ada pengisian, tampilkan partisipasi siswa agar grafik tidak kosong
+	useEffect(() => {
+		if (viewPickedByUser.current) return;
+		setChartView(totalSubmit > 0 ? "health_distribution" : "participation");
+	}, [totalSubmit]);
 
 	const healthyMentalPercentage = 100 - overallDepressionRate;
 
@@ -236,10 +243,10 @@ export default function MentalHealthChart({
 					<YAxis dataKey="name" type="category" width={170} tick={{ fontSize: 14, fill: '#4B5563' }} axisLine={false} tickLine={false} />
 					<Tooltip cursor={{ fill: 'transparent' }} />
 					<Legend />
-					<Bar dataKey="Mental Berisiko" fill="#EF4444" radius={[0, 4, 4, 0]} barSize={40}>
+					<Bar dataKey="Mental Berisiko" fill="#EF4444" radius={[0, 4, 4, 0]} barSize={40} isAnimationActive={false}>
 						<Cell fill="#EF4444" />
 					</Bar>
-					<Bar dataKey="Mental Stabil" fill="#10B981" radius={[0, 4, 4, 0]} barSize={40}>
+					<Bar dataKey="Mental Stabil" fill="#10B981" radius={[0, 4, 4, 0]} barSize={40} isAnimationActive={false}>
 						<Cell fill="#10B981" />
 					</Bar>
 				</BarChart>
@@ -255,8 +262,8 @@ export default function MentalHealthChart({
 						<YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 12 }} />
 						<Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
 						<Legend verticalAlign="top" height={36} iconType="circle" />
-						<Bar dataKey="Mental Berisiko" stackId="a" fill="#EF4444" radius={[0, 0, 4, 4]} barSize={32} />
-						<Bar dataKey="Mental Stabil" stackId="a" fill="#10B981" radius={[4, 4, 0, 0]} barSize={32} />
+						<Bar dataKey="Mental Berisiko" stackId="a" fill="#EF4444" radius={[0, 0, 4, 4]} barSize={32} isAnimationActive={false} />
+						<Bar dataKey="Mental Stabil" stackId="a" fill="#10B981" radius={[4, 4, 0, 0]} barSize={32} isAnimationActive={false} />
 					</BarChart>
 				);
 			case "risk_percentage":
@@ -266,7 +273,7 @@ export default function MentalHealthChart({
 						<XAxis dataKey="name" axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 12 }} dy={10} />
 						<YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 12 }} unit="%" />
 						<Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
-						<Bar dataKey="Resiko (%)" fill="#F59E0B" radius={[4, 4, 4, 4]} barSize={32}>
+						<Bar dataKey="Resiko (%)" fill="#F59E0B" radius={[4, 4, 4, 4]} barSize={32} isAnimationActive={false}>
 							{formattedChartData.map((entry, index) => (
 								<Cell key={`cell-${index}`} fill={(entry as any)["Resiko (%)"] > 50 ? '#EF4444' : '#F59E0B'} />
 							))}
@@ -281,8 +288,8 @@ export default function MentalHealthChart({
 						<YAxis axisLine={false} tickLine={false} tick={{ fill: '#6B7280', fontSize: 12 }} />
 						<Tooltip content={<CustomTooltip />} cursor={{ fill: '#F3F4F6' }} />
 						<Legend verticalAlign="top" height={36} iconType="circle" />
-						<Bar dataKey="Jumlah Siswa" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={20} />
-						<Bar dataKey="Jumlah Pengerjaan" fill="#06B6D4" radius={[4, 4, 0, 0]} barSize={20} />
+						<Bar dataKey="Jumlah Siswa" fill="#3B82F6" radius={[4, 4, 0, 0]} barSize={20} isAnimationActive={false} />
+						<Bar dataKey="Jumlah Pengerjaan" fill="#06B6D4" radius={[4, 4, 0, 0]} barSize={20} isAnimationActive={false} />
 					</BarChart>
 				);
 			default:
@@ -411,9 +418,12 @@ export default function MentalHealthChart({
 
 					{mode !== "USER_HISTORY" && mode !== "STUDENT_LIST" && (
 						<Select
-							defaultValue="health_distribution"
+							value={chartView}
 							style={{ width: 240 }}
-							onChange={setChartView}
+							onChange={(value) => {
+								viewPickedByUser.current = true;
+								setChartView(value);
+							}}
 							options={[
 								{ value: 'health_distribution', label: 'Distribusi Stabil vs Berisiko' },
 								{ value: 'risk_percentage', label: 'Persentase Risiko (%)' },
