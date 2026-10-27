@@ -25,6 +25,7 @@ const Loadable = ({ Component }: LoadableProps) => {
 const router = createBrowserRouter([
   { path: "/masuk-admin", element: <Loadable Component={Pages.Login} /> },
   { path: "/masuk", element: <Loadable Component={Pages.LoginStudent} /> },
+  { path: "/daftar", element: <Loadable Component={Pages.Register} /> },
   {
     path: "/unauthorized",
     element: <Loadable Component={Pages.Unauthorized} />,

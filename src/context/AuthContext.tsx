@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect, useCallback } fr
 import { authService } from "../service/authService";
 import type { APIError } from "../types/ErrorFallbackType";
 import { useQueryClient } from "@tanstack/react-query";
-import type { LoginPayload, LoginStudentPayload, Role, UserMeResponse } from "../types/AuthTypes/authTypes";
+import type { LoginPayload, LoginStudentPayload, RegisterPayload, Role, UserMeResponse } from "../types/AuthTypes/authTypes";
 import { ROLE_ID } from "../constants";
 import { studentService } from "../service/studentService";
 
@@ -12,6 +12,7 @@ interface AuthContextType {
 	isAuthenticated: boolean;
 	login: (data: LoginPayload) => Promise<any>;
 	loginStudent: (data: LoginStudentPayload) => Promise<any>;
+	register: (data: RegisterPayload) => Promise<void>;
 	logout: () => void;
 	switchRole: (role: Role) => void;
 	isLoadingUser: boolean;
@@ -176,6 +177,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}
 
+	const register = async (registerData: RegisterPayload): Promise<void> => {
+		setIsLoading((prev) => ({ ...prev, loadingBtn: true }));
+		setError(null);
+		try {
+			const response = await authService.register(registerData);
+			if (response.statusCode === 200 || response.statusCode === 201) {
+				await loginStudent({ nisn: registerData.nisn, password: registerData.password });
+			} else {
+				throw new Error(response.message || "Registration failed");
+			}
+		} catch (err: any) {
+			setError(err as APIError);
+			throw err;
+		} finally {
+			setIsLoading((prev) => ({ ...prev, loadingBtn: false }));
+		}
+	};
+
 	const handleLoginSuccess = async (response: any, isResidentLogin: boolean) => {
 		if (response?.statusCode === 200 && response?.data) {
 			const loginResponseData = response.data;
@@ -206,6 +225,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 				activeRole,
 				login,
 				loginStudent,
+				register,
 				logout,
 				switchRole,
 				isLoading: isLoading.loadingBtn,
