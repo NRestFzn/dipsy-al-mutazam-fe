@@ -31,9 +31,9 @@ export interface UserDetail {
     /** @deprecated */
     RukunTetanggaId?: string | null;
 
-    /** relasi dari BE (include tanpa alias) */
-    Grade?: GradeRef | null;
-    Class?: ClassRef | null;
+    /** relasi dari BE, alias mengikuti asosiasi model (lowercase) */
+    grade?: GradeRef | null;
+    class?: ClassRef | null;
 
     createdAt: string;
     updatedAt: string;
