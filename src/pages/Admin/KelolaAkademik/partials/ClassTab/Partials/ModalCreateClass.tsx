@@ -1,5 +1,7 @@
 import { Modal, Form, Input, Select, message } from "antd";
+import { useQuery } from "@tanstack/react-query";
 import { useAcademic } from "../../../../../../hooks/Admin/useAcademic";
+import { teacherService } from "../../../../../../service/Admin/teacherService";
 import type { GradeItem } from "../../../../../../types/Academic/academicTypes";
 
 interface ModalCreateClassProps {
@@ -18,10 +20,19 @@ export default function ModalCreateClass({
   const [form] = Form.useForm();
   const { createClassMutation } = useAcademic();
 
+  const { data: teachersRes } = useQuery({
+    queryKey: ["teachers", "options"],
+    queryFn: () => teacherService.getTeachers({ pageSize: 100 }),
+  });
+  const teacherOptions = (teachersRes?.data || []).map((teacher) => ({
+    label: teacher.fullname,
+    value: teacher.id,
+  }));
+
   const handleFinish = async (values: {
     name: string;
     gradeId: string;
-    homeroomTeacher?: string;
+    homeroomTeacherId?: string | null;
   }) => {
     try {
       await createClassMutation.mutateAsync(values);
@@ -79,9 +90,15 @@ export default function ModalCreateClass({
 
         <Form.Item
           label="Wali Kelas (Opsional)"
-          name="homeroomTeacher"
+          name="homeroomTeacherId"
         >
-          <Input placeholder="Contoh: Ustadz Ahmad Fauzi, S.Pd" />
+          <Select
+            placeholder="Pilih guru wali kelas"
+            allowClear
+            showSearch
+            optionFilterProp="label"
+            options={teacherOptions}
+          />
         </Form.Item>
       </Form>
     </Modal>

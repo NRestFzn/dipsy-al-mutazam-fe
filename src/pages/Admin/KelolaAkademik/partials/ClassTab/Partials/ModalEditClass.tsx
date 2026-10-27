@@ -1,6 +1,8 @@
 import { Modal, Form, Input, Select, message } from "antd";
 import { useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import { useAcademic } from "../../../../../../hooks/Admin/useAcademic";
+import { teacherService } from "../../../../../../service/Admin/teacherService";
 import type { ClassItem, GradeItem } from "../../../../../../types/Academic/academicTypes";
 
 interface ModalEditClassProps {
@@ -19,12 +21,21 @@ export default function ModalEditClass({
   const [form] = Form.useForm();
   const { updateClassMutation } = useAcademic();
 
+  const { data: teachersRes } = useQuery({
+    queryKey: ["teachers", "options"],
+    queryFn: () => teacherService.getTeachers({ pageSize: 100 }),
+  });
+  const teacherOptions = (teachersRes?.data || []).map((teacher) => ({
+    label: teacher.fullname,
+    value: teacher.id,
+  }));
+
   useEffect(() => {
     if (classData) {
       form.setFieldsValue({
         name: classData.name,
         gradeId: classData.gradeId,
-        homeroomTeacher: classData.homeroomTeacherId || "",
+        homeroomTeacherId: classData.homeroomTeacherId || undefined,
       });
     }
   }, [classData, form]);
@@ -32,7 +43,7 @@ export default function ModalEditClass({
   const handleFinish = async (values: {
     name: string;
     gradeId: string;
-    homeroomTeacher?: string;
+    homeroomTeacherId?: string | null;
   }) => {
     if (!classData) return;
     try {
@@ -41,7 +52,7 @@ export default function ModalEditClass({
         payload: {
           name: values.name,
           gradeId: values.gradeId,
-          homeroomTeacherId: values.homeroomTeacher || null,
+          homeroomTeacherId: values.homeroomTeacherId || null,
         },
       });
       message.success("Data kelas berhasil diperbarui!");
@@ -86,8 +97,14 @@ export default function ModalEditClass({
           <Input placeholder="Contoh: X MIPA 1" />
         </Form.Item>
 
-        <Form.Item label="Wali Kelas" name="homeroomTeacher">
-          <Input placeholder="Contoh: Ustadz Ahmad Fauzi, S.Pd" />
+        <Form.Item label="Wali Kelas" name="homeroomTeacherId">
+          <Select
+            placeholder="Pilih guru wali kelas"
+            allowClear
+            showSearch
+            optionFilterProp="label"
+            options={teacherOptions}
+          />
         </Form.Item>
       </Form>
     </Modal>

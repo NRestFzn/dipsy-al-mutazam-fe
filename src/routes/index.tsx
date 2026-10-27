@@ -75,6 +75,19 @@ const router = createBrowserRouter([
             element: <Loadable Component={Pages.AdminDesaProfile} />,
           },
           {
+            path: "siswa-saya",
+            children: [
+              {
+                index: true,
+                element: <Loadable Component={Pages.MyStudents} />,
+              },
+              {
+                path: "preview-siswa/:studentId",
+                element: <Loadable Component={Pages.PreviewStudent} />,
+              },
+            ],
+          },
+          {
             path: "responden",
             children: [
               {

@@ -1,4 +1,5 @@
 import { api } from "../api";
+import type { ResponseData } from "../../types/commons";
 import type {
   AcademicHistoryItem,
   ClassItem,
@@ -13,6 +14,7 @@ import type {
   GradeResponse,
   StudentAdminItem,
   StudentAdminResponse,
+  TaughtHistoryItem,
   PromoteStudentsPayload,
   UpdateClassPayload,
   UpdateStudentAdminPayload,
@@ -33,6 +35,9 @@ const mapClass = (item: any): ClassItem => ({
   name: item.name,
   gradeId: item.GradeId ?? item.gradeId ?? undefined,
   homeroomTeacherId: item.homeroomTeacherId ?? null,
+  homeroomTeacher: item.homeroomTeacher
+    ? { id: String(item.homeroomTeacher.id), fullname: item.homeroomTeacher.fullname }
+    : undefined,
   studentCount: item.studentCount ?? 0,
   grade: item.grade ? mapGrade(item.grade) : undefined,
   createdAt: item.createdAt,
@@ -190,6 +195,14 @@ export const academicService = {
 
   graduateStudents: async (payload: GraduateStudentsPayload) => {
     const response = await api.post("/v1/student/graduation", payload);
+
+    return response.data;
+  },
+
+  getTaughtHistory: async () => {
+    const response = await api.get<ResponseData<TaughtHistoryItem[]>>(
+      "/v1/student/taught-history"
+    );
 
     return response.data;
   },
