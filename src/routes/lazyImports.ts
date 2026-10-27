@@ -9,7 +9,6 @@ export const NotFound = lazy(() => import("../pages/Fallbacks/NotFound"));
 // Auth
 export const Login = lazy(() => import("../pages/Auth/Admin/Login"));
 export const LoginStudent = lazy(() => import("../pages/Auth/Student/LoginStudent"))
-export const Register = lazy(() => import("../pages/Auth/Student/Register"));
 
 // Student
 export const Home = lazy(() => import("../pages/Student/Home/Home"));
