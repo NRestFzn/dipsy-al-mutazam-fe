@@ -8,11 +8,10 @@ export const NotFound = lazy(() => import("../pages/Fallbacks/NotFound"));
 
 // Auth
 export const Login = lazy(() => import("../pages/Auth/Admin/Login"));
-export const LoginResident = lazy(() => import("../pages/Auth/Resident/LoginResident"))
-export const Register = lazy(() => import("../pages/Auth/Resident/Register"));
+export const LoginStudent = lazy(() => import("../pages/Auth/Student/LoginStudent"))
+export const Register = lazy(() => import("../pages/Auth/Student/Register"));
 
 // Resident
-export const RoleSelection = lazy(() => import("../pages/Auth/Resident/RoleSelection"));
 export const HomeKader = lazy(() => import("../pages/Student/Kader/HomeKader"));
 export const Home = lazy(() => import("../pages/Student/Home/Home"));
 export const Profile = lazy(() => import("../pages/Student/Profile/Profile"));

@@ -1,4 +1,4 @@
-import type { LoginPayload, RegisterPayload, AuthResponse, UserMeResponse, LoginResidentPayload } from "../types/AuthTypes/authTypes";
+import type { LoginPayload, RegisterPayload, AuthResponse, UserMeResponse, LoginStudentPayload } from "../types/AuthTypes/authTypes";
 import type { ResponseData } from "../types/commons";
 import { api } from "./api";
 
@@ -9,7 +9,7 @@ export const authService = {
 		return data;
 	},
 
-	loginResident: async (loginData: LoginResidentPayload): Promise<ResponseData<AuthResponse>> => {
+	loginStudent: async (loginData: LoginStudentPayload): Promise<ResponseData<AuthResponse>> => {
 		const { data } = await api.post<ResponseData<AuthResponse>>("/v1/auth/signin/student", loginData);
 		return data;
 	},

@@ -9,7 +9,7 @@ import { HomeFooter } from "./Partials/Footer";
 
 export default function ResidentLayout() {
   const { modal } = App.useApp();
-  const { logout, activeRole, user, switchRole } = useAuth();
+  const { logout, activeRole, user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -50,7 +50,7 @@ export default function ResidentLayout() {
   }
 
   if (!user) {
-    return <Navigate to="/masuk-masuk" state={{ from: location }} replace />;
+    return <Navigate to="/masuk" state={{ from: location }} replace />;
   }
 
   const profile = response?.data;
@@ -65,7 +65,6 @@ export default function ResidentLayout() {
           activeRole={activeRole!}
           onLogout={handleLogout}
           user={user}
-          switchRole={switchRole}
         />
       }
 
