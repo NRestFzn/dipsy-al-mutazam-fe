@@ -1,6 +1,7 @@
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { academicService } from "../../service/Admin/academicService";
 import type {
+  ClassPromotionPayload,
   CreateClassPayload,
   CreateGradePayload,
   CreateStudentAdminPayload,
@@ -123,6 +124,15 @@ export const useAcademic = () => {
     },
   });
 
+  const promoteStudentsMutation = useMutation({
+    mutationFn: (payload: ClassPromotionPayload) => academicService.promoteStudents(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["academic", "students"] });
+      queryClient.invalidateQueries({ queryKey: ["academic", "classes"] });
+      queryClient.invalidateQueries({ queryKey: ["academic", "grades"] });
+    },
+  });
+
   return {
     useGrades,
     createGradeMutation,
@@ -139,6 +149,6 @@ export const useAcademic = () => {
     createStudentMutation,
     updateStudentMutation,
     deleteStudentMutation,
+    promoteStudentsMutation,
   };
 };
-

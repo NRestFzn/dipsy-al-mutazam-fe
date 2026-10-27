@@ -24,6 +24,16 @@ export interface ClassItem {
   updatedAt?: string;
 }
 
+export interface AcademicHistoryItem {
+  id: string;
+  academicYear: string;
+  gradeName: string;
+  className: string;
+  homeroomTeacherName?: string;
+  status: "Naik Kelas" | "Tinggal Kelas" | "Lulus" | "Aktif";
+  note?: string;
+}
+
 export interface StudentAdminItem {
   id: string;
   fullname: string;
@@ -37,6 +47,10 @@ export interface StudentAdminItem {
   classroomId?: string;
   gradeLevel?: { id: string; name: string };
   classroom?: { id: string; name: string };
+  status?: "Aktif" | "Lulus";
+  entryYear?: string;
+  academicYear?: string;
+  academicHistory?: AcademicHistoryItem[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -107,6 +121,20 @@ export interface UpdateStudentAdminPayload {
   confirmPassword?: string;
 }
 
+export interface ClassPromotionStudentPayload {
+  studentId: string;
+  action: "promote" | "retain" | "graduate";
+  targetClassId?: string;
+  targetGradeId?: string;
+  note?: string;
+}
+
+export interface ClassPromotionPayload {
+  sourceClassId: string;
+  targetAcademicYear: string;
+  promotions: ClassPromotionStudentPayload[];
+}
+
 export interface GetGradesParams {
   name?: string;
   level?: string;
@@ -136,6 +164,7 @@ export interface GetStudentsAdminParams {
   classroomId?: string;
   ClassId?: string;
   RukunTetanggaId?: string;
+  status?: string;
   page?: number;
   pageSize?: number;
   order?: string;
