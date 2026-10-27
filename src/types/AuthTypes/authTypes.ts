@@ -52,3 +52,19 @@ export interface LoginStudentPayload {
   nik?: string,
   password: string
 }
+
+export interface RegisterPayload {
+  fullname: string;
+  nisn: string;
+  email?: string | null;
+  phoneNumber?: string | null;
+  password: string;
+  confirmPassword: string;
+  gender: "m" | "f";
+  birthDate: string;
+  GradeId: string;
+  ClassId: string;
+  nis?: string | null;
+  entryYear?: string | null;
+  academicYear?: string | null;
+}
