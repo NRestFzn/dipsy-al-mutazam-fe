@@ -10,7 +10,7 @@ export const authService = {
 	},
 
 	loginResident: async (loginData: LoginResidentPayload): Promise<ResponseData<AuthResponse>> => {
-		const { data } = await api.post<ResponseData<AuthResponse>>("/v1/auth/signin/resident", loginData);
+		const { data } = await api.post<ResponseData<AuthResponse>>("/v1/auth/signin/student", loginData);
 		return data;
 	},
 

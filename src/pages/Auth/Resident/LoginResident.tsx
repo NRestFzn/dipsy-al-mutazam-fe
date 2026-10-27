@@ -18,7 +18,7 @@ export default function LoginResident() {
     setFormError(null);
     try {
       const response = await loginResident({
-        nik: values.nik,
+        nisn: values.nisn,
         password: values.password,
       });
 
@@ -89,20 +89,20 @@ export default function LoginResident() {
             className="!space-y-5"
           >
             <Form.Item
-              name="nik"
-              label={<span className="font-semibold !text-gray-600 !ml-1">NIK (Nomor Induk Kependudukan)</span>}
+              name="nisn"
+              label={<span className="font-semibold !text-gray-600 !ml-1">NISN</span>}
               rules={[
-                { required: true, message: "Mohon masukkan NIK Anda" },
-                { len: 16, message: "NIK harus 16 digit angka" },
-                { pattern: /^[0-9]+$/, message: "NIK harus berupa angka" },
+                { required: true, message: "Mohon masukkan NISN Anda" },
+                { len: 10, message: "NISN harus 10 digit angka" },
+                { pattern: /^[0-9]+$/, message: "NISN harus berupa angka" },
               ]}
               className="mb-0"
             >
               <Input
                 prefix={<SquareUserRound className="!text-gray-400 !mr-2 transition-colors !group-focus-within:text-[#00A651]" size={20} />}
-                placeholder="Masukkan 16 digit NIK"
+                placeholder="Masukkan 10 digit NISN"
                 className="!bg-gray-50 !border-gray-200 hover:!border-green-300 focus:!border-[#00A651] focus:!shadow-[0_0_0_4px_rgba(0,166,81,0.12)] !rounded-xl !py-3 !text-gray-700 !text-base !font-medium transition-all duration-300"
-                maxLength={16}
+                maxLength={10}
                 inputMode="numeric"
               />
             </Form.Item>
