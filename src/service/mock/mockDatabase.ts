@@ -14,6 +14,12 @@ import type {
   UpdateClassPayload,
   UpdateStudentAdminPayload,
 } from "../../types/Academic/academicTypes";
+import type {
+  Questionnaire,
+  QuestionnaireDetail,
+  Question,
+  QuestionnaireHistoryResponse,
+} from "../../types/Questionnaire/questionnaireTypes";
 
 export interface AcademicHistoryItem {
   id: string;
@@ -49,6 +55,7 @@ export interface QuestionnaireSubmissionRecord {
   status: "NORMAL" | "BORDERLINE" | "ABNORMAL";
   submittedAt: string;
   answers: Record<string, any>;
+  scoringResult?: any;
 }
 
 interface MockDatabaseSchema {
@@ -56,9 +63,10 @@ interface MockDatabaseSchema {
   classes: ClassItem[];
   students: StudentRecord[];
   submissions: QuestionnaireSubmissionRecord[];
+  questionnaires: QuestionnaireDetail[];
 }
 
-const STORAGE_KEY = "dipsy_mock_database_v2";
+const STORAGE_KEY = "dipsy_mock_database_v3";
 
 const INITIAL_CLASSES: ClassItem[] = [
   { id: "cls-vii-a", name: "VII-A", gradeId: "grade-vii", homeroomTeacher: "Ustadz Abdullah Al-Hafidz, S.Pd.", homeroomTeacherId: "guru-1", studentCount: 4 },
@@ -75,7 +83,6 @@ const INITIAL_CLASSES: ClassItem[] = [
 ];
 
 const INITIAL_STUDENTS: StudentRecord[] = [
-  // Demo Student: Ahmad Fauzi (NISN 0081234567)
   {
     id: "std-001",
     nisn: "0081234567",
@@ -129,17 +136,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     academicYear: "2024/2025",
     status: "Aktif",
     password: "almultazam123",
-    academicHistory: [
-      {
-        id: "ah-002-1",
-        academicYear: "2024/2025",
-        gradeName: "Kelas X",
-        className: "X-A",
-        homeroomTeacherName: "Ustadz Salman Al-Farisi, S.Pd.",
-        status: "Aktif",
-        note: "Aktif di kelompok studi sains keputrian.",
-      },
-    ],
   },
   {
     id: "std-003",
@@ -157,17 +153,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     academicYear: "2024/2025",
     status: "Aktif",
     password: "almultazam123",
-    academicHistory: [
-      {
-        id: "ah-003-1",
-        academicYear: "2024/2025",
-        gradeName: "Kelas X",
-        className: "X-A",
-        homeroomTeacherName: "Ustadz Salman Al-Farisi, S.Pd.",
-        status: "Aktif",
-        note: "Menunjukkan peningkatan konsentrasi belajar yang baik.",
-      },
-    ],
   },
   {
     id: "std-004",
@@ -203,7 +188,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     status: "Aktif",
     password: "almultazam123",
   },
-  // Kelas X-B
   {
     id: "std-006",
     nisn: "0081234572",
@@ -249,7 +233,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     status: "Aktif",
     password: "almultazam123",
   },
-  // Kelas VII-A (SMP)
   {
     id: "std-009",
     nisn: "0112345671",
@@ -310,7 +293,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     status: "Aktif",
     password: "almultazam123",
   },
-  // Kelas VII-B
   {
     id: "std-013",
     nisn: "0112345675",
@@ -371,7 +353,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     status: "Aktif",
     password: "almultazam123",
   },
-  // Kelas VIII-A
   {
     id: "std-017",
     nisn: "0102345671",
@@ -432,7 +413,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     status: "Aktif",
     password: "almultazam123",
   },
-  // Kelas XI-IPA
   {
     id: "std-021",
     nisn: "0072345671",
@@ -447,26 +427,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     academicYear: "2024/2025",
     status: "Aktif",
     password: "almultazam123",
-    academicHistory: [
-      {
-        id: "ah-021-1",
-        academicYear: "2023/2024",
-        gradeName: "Kelas X",
-        className: "X-A",
-        homeroomTeacherName: "Ustadz Salman Al-Farisi, S.Pd.",
-        status: "Naik Kelas",
-        note: "Peringkat 1 kelas dan mewakili olimpiade kimia.",
-      },
-      {
-        id: "ah-021-2",
-        academicYear: "2024/2025",
-        gradeName: "Kelas XI",
-        className: "XI-IPA",
-        homeroomTeacherName: "Ustadz Khalid bin Walid, S.Si.",
-        status: "Aktif",
-        note: "Ketua Rohis SMAIT Al-Multazam.",
-      },
-    ],
   },
   {
     id: "std-022",
@@ -513,7 +473,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     status: "Aktif",
     password: "almultazam123",
   },
-  // Kelas XII-IPA (Siswa Akhir)
   {
     id: "std-025",
     nisn: "0062345671",
@@ -528,33 +487,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     academicYear: "2024/2025",
     status: "Aktif",
     password: "almultazam123",
-    academicHistory: [
-      {
-        id: "ah-025-1",
-        academicYear: "2022/2023",
-        gradeName: "Kelas X",
-        className: "X-A",
-        homeroomTeacherName: "Ustadz Salman Al-Farisi, S.Pd.",
-        status: "Naik Kelas",
-      },
-      {
-        id: "ah-025-2",
-        academicYear: "2023/2024",
-        gradeName: "Kelas XI",
-        className: "XI-IPA",
-        homeroomTeacherName: "Ustadz Khalid bin Walid, S.Si.",
-        status: "Naik Kelas",
-      },
-      {
-        id: "ah-025-3",
-        academicYear: "2024/2025",
-        gradeName: "Kelas XII",
-        className: "XII-IPA",
-        homeroomTeacherName: "Ustadz Umar Al-Khattab, M.Sc.",
-        status: "Aktif",
-        note: "Fokus persiapan UTBK dan seleksi masuk PTN.",
-      },
-    ],
   },
   {
     id: "std-026",
@@ -586,7 +518,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     status: "Aktif",
     password: "almultazam123",
   },
-  // ALUMNI LULUS (Status: Lulus)
   {
     id: "std-028",
     nisn: "0052345671",
@@ -601,31 +532,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     academicYear: "2023/2024",
     status: "Lulus",
     password: "almultazam123",
-    academicHistory: [
-      {
-        id: "ah-028-1",
-        academicYear: "2021/2022",
-        gradeName: "Kelas X",
-        className: "X-A",
-        status: "Naik Kelas",
-      },
-      {
-        id: "ah-028-2",
-        academicYear: "2022/2023",
-        gradeName: "Kelas XI",
-        className: "XI-IPA",
-        status: "Naik Kelas",
-      },
-      {
-        id: "ah-028-3",
-        academicYear: "2023/2024",
-        gradeName: "Kelas XII",
-        className: "XII-IPA",
-        homeroomTeacherName: "Ustadz Umar Al-Khattab, M.Sc.",
-        status: "Lulus",
-        note: "Lulus dengan predikat Mumtaz. Diterima di Fakultas Kedokteran.",
-      },
-    ],
   },
   {
     id: "std-029",
@@ -641,16 +547,6 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     academicYear: "2023/2024",
     status: "Lulus",
     password: "almultazam123",
-    academicHistory: [
-      {
-        id: "ah-029-1",
-        academicYear: "2023/2024",
-        gradeName: "Kelas XII",
-        className: "XII-IPA",
-        status: "Lulus",
-        note: "Lulus dan melanjutkan studi ke Timur Tengah.",
-      },
-    ],
   },
   {
     id: "std-030",
@@ -666,16 +562,78 @@ const INITIAL_STUDENTS: StudentRecord[] = [
     academicYear: "2023/2024",
     status: "Lulus",
     password: "almultazam123",
-    academicHistory: [
-      {
-        id: "ah-030-1",
-        academicYear: "2023/2024",
-        gradeName: "Kelas XII",
-        className: "XII-IPS",
-        status: "Lulus",
-        note: "Diterima di Jurusan Manajemen Bisnis Syariah.",
-      },
-    ],
+  },
+];
+
+const SRQ_QUESTIONS: Question[] = [
+  { id: "srq-q-1", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda sering merasa sakit kepala?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 1 },
+  { id: "srq-q-2", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda tidak nafsu makan?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 2 },
+  { id: "srq-q-3", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda sulit tidur nyenyak?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 3 },
+  { id: "srq-q-4", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda mudah merasa takut?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 4 },
+  { id: "srq-q-5", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa cemas, tegang, atau khawatir?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 5 },
+  { id: "srq-q-6", QuestionnaireId: "q-srq-01", questionText: "Apakah tangan Anda sering gemetar saat menghadapi ujian/tugas?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 6 },
+  { id: "srq-q-7", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda mengalami gangguan pencernaan atau sakit perut?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 7 },
+  { id: "srq-q-8", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa sulit untuk berpikir jernih?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 8 },
+  { id: "srq-q-9", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa tidak bahagia atau sedih belakangan ini?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 9 },
+  { id: "srq-q-10", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda lebih sering menangis dari biasanya?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 10 },
+  { id: "srq-q-11", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa sulit menikmati kegiatan sehari-hari di asrama/sekolah?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 11 },
+  { id: "srq-q-12", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa sulit mengambil keputusan?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 12 },
+  { id: "srq-q-13", QuestionnaireId: "q-srq-01", questionText: "Apakah aktivitas belajar Anda terganggu oleh perasaan tertekan?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 13 },
+  { id: "srq-q-14", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa tidak mampu berperan berguna dalam kehidupan?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 14 },
+  { id: "srq-q-15", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda kehilangan minat pada berbagai hal yang sebelumnya Anda sukai?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 15 },
+  { id: "srq-q-16", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa tidak berharga?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 16 },
+  { id: "srq-q-17", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa lelah sepanjang waktu?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 17 },
+  { id: "srq-q-18", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa tidak enak di ulu hati atau dada berdebar?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 18 },
+  { id: "srq-q-19", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda mudah lelah atau merasa tidak bertenaga?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 19 },
+  { id: "srq-q-20", QuestionnaireId: "q-srq-01", questionText: "Apakah Anda merasa terbebani oleh rutinitas harian?", questionType: "radio", options: ["Ya", "Tidak"], status: "publish", order: 20 },
+];
+
+const SDQ_QUESTIONS: Question[] = [
+  { id: "sdq-q-1", QuestionnaireId: "q-sdq-01", questionText: "Saya berusaha bersikap baik kepada orang lain. Saya peduli dengan perasaan mereka.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 1 },
+  { id: "sdq-q-2", QuestionnaireId: "q-sdq-01", questionText: "Saya gelisah, saya tidak dapat diam untuk waktu lama.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 2 },
+  { id: "sdq-q-3", QuestionnaireId: "q-sdq-01", questionText: "Saya sering merasa sakit kepala, sakit perut atau mual.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 3 },
+  { id: "sdq-q-4", QuestionnaireId: "q-sdq-01", questionText: "Bila saya menyukai sesuatu, saya mau berbagi dengan teman-teman.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 4 },
+  { id: "sdq-q-5", QuestionnaireId: "q-sdq-01", questionText: "Saya mudah marah dan sering kehilangan kendali emosi.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 5 },
+  { id: "sdq-q-6", QuestionnaireId: "q-sdq-01", questionText: "Saya lebih suka menyendiri daripada bersama orang-orang sebaya saya.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 6 },
+  { id: "sdq-q-7", QuestionnaireId: "q-sdq-01", questionText: "Saya biasanya melakukan apa yang diperintahkan orang tua atau guru.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 7 },
+  { id: "sdq-q-8", QuestionnaireId: "q-sdq-01", questionText: "Saya banyak merasa cemas atau khawatir terhadap banyak hal.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 8 },
+  { id: "sdq-q-9", QuestionnaireId: "q-sdq-01", questionText: "Saya suka menolong jika seseorang terluka, kecewa atau merasa sakit.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 9 },
+  { id: "sdq-q-10", QuestionnaireId: "q-sdq-01", questionText: "Saya selalu bergerak atau tidak bisa duduk tenang.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 10 },
+  { id: "sdq-q-11", QuestionnaireId: "q-sdq-01", questionText: "Saya mempunyai satu orang teman baik atau lebih di sekolah/asrama.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 11 },
+  { id: "sdq-q-12", QuestionnaireId: "q-sdq-01", questionText: "Saya sering bertengkar dengan orang lain. Saya dapat memaksa orang lain melakukan apa yang saya inginkan.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 12 },
+  { id: "sdq-q-13", QuestionnaireId: "q-sdq-01", questionText: "Saya sering merasa tidak bahagia, sedih, atau menangis.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 13 },
+  { id: "sdq-q-14", QuestionnaireId: "q-sdq-01", questionText: "Orang lain pada umumnya menyukai saya.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 14 },
+  { id: "sdq-q-15", QuestionnaireId: "q-sdq-01", questionText: "Perhatian saya mudah teralihkan, saya merasa sulit untuk berkonsentrasi.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 15 },
+  { id: "sdq-q-16", QuestionnaireId: "q-sdq-01", questionText: "Saya merasa gugup dalam situasi baru. Saya mudah kehilangan rasa percaya diri.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 16 },
+  { id: "sdq-q-17", QuestionnaireId: "q-sdq-01", questionText: "Saya bersikap ramah terhadap anak-anak yang lebih muda dari saya.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 17 },
+  { id: "sdq-q-18", QuestionnaireId: "q-sdq-01", questionText: "Saya sering dituduh berbohong atau berbuat curang.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 18 },
+  { id: "sdq-q-19", QuestionnaireId: "q-sdq-01", questionText: "Saya sering diganggu atau dipermainkan oleh teman-teman sebaya.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 19 },
+  { id: "sdq-q-20", QuestionnaireId: "q-sdq-01", questionText: "Saya sering menawarkan diri untuk membantu orang lain (orang tua, guru, teman).", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 20 },
+  { id: "sdq-q-21", QuestionnaireId: "q-sdq-01", questionText: "Saya berpikir matang-matang sebelum melakukan sesuatu.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 21 },
+  { id: "sdq-q-22", QuestionnaireId: "q-sdq-01", questionText: "Saya mengambil barang yang bukan milik saya dari rumah, sekolah, atau tempat lain.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 22 },
+  { id: "sdq-q-23", QuestionnaireId: "q-sdq-01", questionText: "Saya lebih mudah bergaul dengan orang dewasa daripada dengan orang sebaya.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 23 },
+  { id: "sdq-q-24", QuestionnaireId: "q-sdq-01", questionText: "Banyak yang saya takuti, saya mudah menjadi takut.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 24 },
+  { id: "sdq-q-25", QuestionnaireId: "q-sdq-01", questionText: "Saya menyelesaikan tugas sampai selesai. Perhatian saya dapat bertahan baik.", questionType: "radio", options: ["Tidak Benar", "Agak Benar", "Selalu Benar"], status: "publish", order: 25 },
+];
+
+const INITIAL_QUESTIONNAIRES: QuestionnaireDetail[] = [
+  {
+    id: "q-srq-01",
+    title: "Self-Reporting Questionnaire (SRQ-20)",
+    description: "Kuesioner skrining awal untuk mendeteksi indikasi stres psikologis, gejala kecemasan, dan kelelahan mental pada siswa SMAIT Al-Multazam.",
+    status: "publish",
+    scoringType: "binary_threshold",
+    scoringConfig: null,
+    questions: SRQ_QUESTIONS,
+  },
+  {
+    id: "q-sdq-01",
+    title: "Kuesioner Kekuatan dan Kesulitan (SDQ)",
+    description: "Instrumen evaluasi perilaku, emosi, relasi sosial sebaya, dan kemampuan prososial siswa dalam lingkungan asrama dan sekolah.",
+    status: "publish",
+    scoringType: "binary_threshold",
+    scoringConfig: null,
+    questions: SDQ_QUESTIONS,
   },
 ];
 
@@ -695,7 +653,24 @@ const INITIAL_SUBMISSIONS: QuestionnaireSubmissionRecord[] = [
     totalQuestions: 25,
     status: "NORMAL",
     submittedAt: "2026-10-20T08:30:00Z",
-    answers: {},
+    answers: {
+      "sdq-q-1": "Selalu Benar",
+      "sdq-q-2": "Tidak Benar",
+      "sdq-q-3": "Tidak Benar",
+      "sdq-q-4": "Selalu Benar",
+      "sdq-q-5": "Tidak Benar",
+      "sdq-q-6": "Tidak Benar",
+      "sdq-q-7": "Selalu Benar",
+      "sdq-q-8": "Tidak Benar",
+      "sdq-q-9": "Selalu Benar",
+      "sdq-q-10": "Tidak Benar",
+    },
+    scoringResult: {
+      totalScore: 8,
+      status: "NORMAL",
+      label: "Kondisi Mental Stabil (Normal)",
+      recommendation: "Pertahankan pola belajar, ibadah, dan interaksi positif Anda bersama teman sebaya.",
+    },
   },
   {
     id: "sub-002",
@@ -713,6 +688,12 @@ const INITIAL_SUBMISSIONS: QuestionnaireSubmissionRecord[] = [
     status: "BORDERLINE",
     submittedAt: "2026-10-20T09:15:00Z",
     answers: {},
+    scoringResult: {
+      totalScore: 15,
+      status: "BORDERLINE",
+      label: "Dalam Pemantauan (Borderline)",
+      recommendation: "Perhatikan tingkat stres harian dan diskusikan kesulitan dengan wali kelas.",
+    },
   },
   {
     id: "sub-003",
@@ -730,6 +711,12 @@ const INITIAL_SUBMISSIONS: QuestionnaireSubmissionRecord[] = [
     status: "ABNORMAL",
     submittedAt: "2026-10-21T10:00:00Z",
     answers: {},
+    scoringResult: {
+      totalScore: 19,
+      status: "ABNORMAL",
+      label: "Indikasi Butuh Perhatian (Abnormal)",
+      recommendation: "Sangat disarankan melakukan sesi konseling bersama Guru BK SMAIT Al-Multazam.",
+    },
   },
   {
     id: "sub-004",
@@ -846,7 +833,10 @@ class MockDatabaseService {
     try {
       const raw = localStorage.getItem(STORAGE_KEY);
       if (raw) {
-        return JSON.parse(raw);
+        const parsed = JSON.parse(raw);
+        if (parsed.questionnaires && parsed.questionnaires.length > 0) {
+          return parsed;
+        }
       }
     } catch (e) {
       console.warn("Failed to read mock db from localStorage:", e);
@@ -869,6 +859,7 @@ class MockDatabaseService {
       classes: INITIAL_CLASSES,
       students: INITIAL_STUDENTS,
       submissions: INITIAL_SUBMISSIONS,
+      questionnaires: INITIAL_QUESTIONNAIRES,
     };
 
     this.saveDatabase(initialDb);
@@ -1286,7 +1277,6 @@ class MockDatabaseService {
         };
       }
 
-      // Action: promote
       const targetCls = this.db.classes.find((c) => c.id === promo.targetClassId);
       const targetGrd = targetCls
         ? this.db.grades.find((g) => g.id === targetCls.gradeId)
@@ -1320,6 +1310,195 @@ class MockDatabaseService {
     this.saveDatabase({ ...this.db, students: updatedStudents });
     this.recalculateCounts();
     return { successCount: count };
+  }
+
+  // ====================== QUESTIONNAIRES ======================
+  public getQuestionnaires(): Questionnaire[] {
+    return this.db.questionnaires.map((q) => ({
+      id: q.id,
+      title: q.title,
+      description: q.description,
+      status: q.status,
+      riskThreshold: 10,
+      cooldownInMinutes: 0,
+      CategoryId: "cat-skrining-01",
+      scoringType: q.scoringType,
+      scoringConfig: q.scoringConfig,
+      category: { id: "cat-skrining-01", name: "Kesehatan Mental Remaja" },
+      isAvailable: false,
+      availableAt: null,
+      createdAt: "2026-10-01T00:00:00Z",
+      updatedAt: "2026-10-01T00:00:00Z",
+    }));
+  }
+
+  public getQuestionnaireById(id: string): QuestionnaireDetail {
+    const found = this.db.questionnaires.find((q) => q.id === id);
+    if (!found) {
+      return this.db.questionnaires[0];
+    }
+    return found;
+  }
+
+  public submitAnswers(
+    questionnaireId: string,
+    answers: Record<string, string>,
+    studentIdOverride?: string
+  ): any {
+    const rawUser = localStorage.getItem("userData");
+    let currentStudent: any = null;
+    if (rawUser) {
+      try {
+        const u = JSON.parse(rawUser);
+        currentStudent = this.db.students.find((s) => s.id === (studentIdOverride || u.id));
+      } catch (e) {
+        // ignore
+      }
+    }
+    if (!currentStudent) {
+      currentStudent = this.db.students[0];
+    }
+
+    const quiz = this.getQuestionnaireById(questionnaireId);
+
+    let score = 0;
+    Object.values(answers).forEach((val) => {
+      if (val === "Ya" || val === "true" || val === "Selalu Benar") {
+        score += 1;
+      } else if (val === "Agak Benar") {
+        score += 1;
+      }
+    });
+
+    const isSRQ = questionnaireId.includes("srq");
+    let status: "NORMAL" | "BORDERLINE" | "ABNORMAL" = "NORMAL";
+    let recommendation = "Pertahankan pola belajar, ibadah, dan relasi sosial positif Anda.";
+
+    if (isSRQ) {
+      if (score >= 8) {
+        status = "ABNORMAL";
+        recommendation = "Hasil skrining menunjukkan indikasi stres/tekanan mental. Disarankan berkonsultasi dengan Guru BK.";
+      } else if (score >= 6) {
+        status = "BORDERLINE";
+        recommendation = "Kondisi emosi dalam tahap pemantauan. Luangkan waktu istirahat dan ceritakan kendala pada wali kelas.";
+      }
+    } else {
+      if (score >= 17) {
+        status = "ABNORMAL";
+        recommendation = "Terdapat indikasi kesulitan penyesuaian emosi/perilaku. Konsultasikan dengan Guru BK untuk pendampingan.";
+      } else if (score >= 14) {
+        status = "BORDERLINE";
+        recommendation = "Terdapat beberapa tantangan emosional/perilaku dalam tahap observasi pendamping asrama.";
+      }
+    }
+
+    const newSub: QuestionnaireSubmissionRecord = {
+      id: `sub-${Date.now()}`,
+      studentId: currentStudent.id,
+      studentName: currentStudent.fullname,
+      nisn: currentStudent.nisn,
+      gradeId: currentStudent.gradeLevelId,
+      gradeName: currentStudent.gradeLevel?.name || "Kelas X",
+      classId: currentStudent.classroomId,
+      className: currentStudent.classroom?.name || "X-A",
+      questionnaireId: quiz.id,
+      questionnaireTitle: quiz.title,
+      score,
+      totalQuestions: quiz.questions?.length || 20,
+      status,
+      submittedAt: new Date().toISOString(),
+      answers,
+      scoringResult: {
+        totalScore: score,
+        status,
+        label: status === "NORMAL" ? "Normal (Stabil)" : status === "BORDERLINE" ? "Borderline (Pemantauan)" : "Indikasi Butuh Perhatian",
+        recommendation,
+      },
+    };
+
+    const submissions = [newSub, ...this.db.submissions];
+    this.saveDatabase({ ...this.db, submissions });
+
+    return {
+      statusCode: 201,
+      message: "Jawaban berhasil dikirim",
+      data: newSub,
+    };
+  }
+
+  public getDetailAnswer(submissionId: string): any {
+    const sub = this.db.submissions.find((s) => s.id === submissionId) || this.db.submissions[0];
+    const quiz = this.getQuestionnaireById(sub.questionnaireId);
+
+    const questionnaireAnswer = (quiz.questions || []).map((q, idx) => {
+      const userAns = sub.answers[q.id] || (idx % 3 === 0 ? "Ya" : "Tidak");
+      return {
+        answerValue: userAns,
+        answerLabel: userAns,
+        score: userAns === "Ya" || userAns === "true" || userAns === "Selalu Benar" ? 1 : 0,
+        questionnaireQuestion: {
+          questionText: q.questionText,
+          questionType: q.questionType,
+          order: q.order,
+        },
+      };
+    });
+
+    return {
+      statusCode: 200,
+      data: {
+        id: sub.id,
+        QuestionnaireId: sub.questionnaireId,
+        score: sub.score,
+        totalScore: sub.score,
+        status: sub.status,
+        submittedAt: sub.submittedAt,
+        scoringResult: sub.scoringResult || {
+          totalScore: sub.score,
+          status: sub.status,
+          label: sub.status,
+          recommendation: "Pertahankan kesehatan mental dan keseimbangan aktivitas belajar Anda.",
+        },
+        questionnaireAnswer,
+      },
+    };
+  }
+
+  public getStudentHistory(studentId?: string, questionnaireId?: string): QuestionnaireHistoryResponse[] {
+    let list = [...this.db.submissions];
+    if (studentId) {
+      list = list.filter((s) => s.studentId === studentId);
+    }
+    if (questionnaireId && questionnaireId !== "all") {
+      list = list.filter((s) => s.questionnaireId === questionnaireId);
+    }
+
+    return list.map((s) => ({
+      id: s.id,
+      UserId: s.studentId,
+      QuestionnaireId: s.questionnaireId,
+      isAssisted: false,
+      submittedBy: {
+        id: s.studentId,
+        fullname: s.studentName,
+        email: `${s.nisn}@siswa.almultazam.sch.id`,
+        profilePicture: "",
+        createdAt: s.submittedAt,
+        updatedAt: s.submittedAt,
+      },
+      user: {
+        id: s.studentId,
+        fullname: s.studentName,
+        email: `${s.nisn}@siswa.almultazam.sch.id`,
+        profilePicture: "",
+      },
+      questionnaire: {
+        id: s.questionnaireId,
+        title: s.questionnaireTitle,
+      },
+      createdAt: s.submittedAt,
+      updatedAt: s.submittedAt,
+    }));
   }
 
   // ====================== QUESTIONNAIRE SUBMISSIONS & MONITORING ======================

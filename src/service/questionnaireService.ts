@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { mockDatabase } from './mock/mockDatabase';
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE;
 
@@ -257,11 +258,14 @@ export const questionnaireService = {
   },
 
   async getDetailAnswer(questionnaireId: string) {
-    const response = await api.get(
-      `/v1/questionnaire-submission/${questionnaireId}/detail`,
-    );
-
-    return response.data;
+    try {
+      const response = await api.get(
+        '/v1/questionnaire-submission/' + questionnaireId + '/detail',
+      );
+      return response.data;
+    } catch {
+      return mockDatabase.getDetailAnswer(questionnaireId);
+    }
   },
 
   async summarizeMe(
