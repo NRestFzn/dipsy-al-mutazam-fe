@@ -31,7 +31,7 @@ export default function AdminProfile() {
     isError,
     refetch,
   } = useQuery({
-    queryKey: ["admin-desa", "me"],
+    queryKey: ["profile", "me"],
     queryFn: adminDesaService.getMe,
   });
 

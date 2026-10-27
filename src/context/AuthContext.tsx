@@ -183,7 +183,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 		try {
 			const response = await authService.register(registerData);
 			if (response.statusCode === 200 || response.statusCode === 201) {
-				await loginStudent({ nik: registerData.nik, password: registerData.password });
+				await loginStudent({ nisn: registerData.nisn, password: registerData.password });
 			} else {
 				throw new Error(response.message || "Registration failed");
 			}

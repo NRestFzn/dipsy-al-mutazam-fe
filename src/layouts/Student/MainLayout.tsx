@@ -60,7 +60,7 @@ export default function ResidentLayout() {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {!isCleanLayout &&
         <HomeHeader
-          fullname={profile?.fullname || user?.fullname || "Warga"}
+          fullname={profile?.fullname || user?.fullname || "Siswa"}
           profileUrl={profilePictureUrl}
           activeRole={activeRole!}
           onLogout={handleLogout}

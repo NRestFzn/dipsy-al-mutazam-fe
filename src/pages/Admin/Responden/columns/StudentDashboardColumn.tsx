@@ -5,7 +5,6 @@ export interface StudentDashboardRow {
     UserId: string;
     fullname: string;
     nisn?: string;
-    nik?: string;
     isMentalUnStable: boolean;
     lastSubmissionDate: string;
 }

@@ -65,10 +65,10 @@ export default function Login() {
           </div>
 
           <Title level={1} className="!text-white !font-bold !text-5xl leading-tight mb-4">
-            Kelola Data Desa <br /> & Kesehatan Warga
+            Kelola Data Siswa <br /> & Kesehatan Mental
           </Title>
           <Paragraph className="!text-white/90 text-base max-w-md leading-relaxed mb-0">
-            Platform terintegrasi untuk pemantauan, validasi, dan pengelolaan data kesehatan mental demi mewujudkan desa yang sejahtera.
+            Platform terintegrasi untuk pemantauan, validasi, dan pengelolaan data kesehatan mental siswa demi mewujudkan generasi yang sehat dan siap belajar.
           </Paragraph>
         </div>
 
@@ -106,7 +106,7 @@ export default function Login() {
               Portal Pengelola
             </Title>
             <Text className="text-gray-500 text-sm">
-              Masuk untuk mengelola data desa
+              Masuk untuk mengelola data siswa
             </Text>
           </div>
 
@@ -152,7 +152,7 @@ export default function Login() {
             >
               <Input
                 prefix={<Mail className="text-gray-400 mr-2" size={20} />}
-                placeholder="admin@cibiruwetan.desa.id"
+                placeholder="nama@al-multazam.sch.id"
                 className="rounded-xl py-2.5 border-gray-300 hover:border-[#00A651] focus:border-[#00A651] transition-colors"
               />
             </Form.Item>
@@ -199,7 +199,7 @@ export default function Login() {
               <div className="flex flex-col">
                 <span className="font-bold text-red-700 text-xs uppercase mb-1">Area Terbatas</span>
                 <Text className="text-xs text-gray-600 leading-relaxed">
-                  Akses ini dikhususkan untuk <strong>Admin Desa</strong> dan <strong>Tenaga Medis</strong>. Aktivitas login Anda tercatat demi keamanan data warga.
+                  Akses ini dikhususkan untuk <strong>Guru BK</strong> dan <strong>Wali Kelas</strong>. Aktivitas login Anda tercatat demi keamanan data siswa.
                 </Text>
               </div>
             </div>

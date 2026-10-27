@@ -24,12 +24,12 @@ export const HomeFooter = () => {
                     <div className="flex items-center gap-2.5">
                         <img src="/icon.png" alt="Logo" className="w-8 h-8 object-contain" />
                         <span className="font-bold text-gray-700 text-base tracking-tight">
-                            Desa Cibiru Wetan
+                            SMAIT Al-Multazam
                         </span>
                     </div>
                     <span className="hidden md:block w-px h-5 bg-gray-200"></span>
                     <Text className="text-gray-400 text-xs text-center md:text-left">
-                        © {currentYear} Pemerintah Desa. All rights reserved.
+                        © {currentYear} SMAIT Al-Multazam. All rights reserved.
                     </Text>
                 </div>
 
@@ -46,7 +46,7 @@ export const HomeFooter = () => {
                                 <EnvironmentOutlined className="!text-gray-400 group-hover:text-[#00A651] text-lg" />
                                 <span className="text-sm font-medium max-w-[200px] md:max-w-[300px] truncate">
                                     <Tooltip title={footerData.address} placement="top">
-                                        Lokasi Desa
+                                        Lokasi Sekolah
                                     </Tooltip>
                                 </span>
                             </a>
