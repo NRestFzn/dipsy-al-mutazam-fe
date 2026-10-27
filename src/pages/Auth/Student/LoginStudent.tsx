@@ -130,20 +130,6 @@ export default function LoginStudent() {
           </Form>
 
           <div className="mt-10 pt-6 border-t border-gray-100 flex flex-col items-center gap-4 text-center">
-            <div className="space-y-1">
-              <Text className="text-gray-500 text-sm">Belum punya akun?</Text>
-              <div>
-                <Link
-                  to="/daftar"
-                  className="inline-flex items-center !text-[#00A651] font-bold !hover:text-[#009245] transition-colors"
-                >
-                  Daftar Akun Baru
-                </Link>
-              </div>
-            </div>
-
-            <div className="w-full max-w-[200px] h-px bg-gray-100 my-1" />
-
             <div className="flex items-center justify-center gap-2">
               <Text className="text-gray-400 text-xs">Anda Guru BK atau Wali Kelas?</Text>
               <Link
