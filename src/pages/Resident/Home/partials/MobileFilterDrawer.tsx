@@ -86,7 +86,7 @@ export const MobileFilterDrawer = ({
             block
             size="large"
             onClick={onClose}
-            className="bg-[#70B748] hover:bg-[#5a9e36] border-none"
+            className="bg-[#00A651] hover:bg-[#009245] border-none"
           >
             Terapkan Filter
           </Button>

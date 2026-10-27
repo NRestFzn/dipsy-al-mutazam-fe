@@ -43,24 +43,22 @@ export default function LoginResident() {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 overflow-hidden bg-gray-50 font-sans selection:bg-[#70B748] selection:text-white">
+    <div className="relative min-h-screen w-full flex items-center justify-center p-4 sm:p-6 overflow-hidden bg-gray-50 font-sans selection:bg-[#00A651] selection:text-white">
 
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#70B748]/10 blur-[100px] animate-pulse" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#5a9639]/10 blur-[120px]" />
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[#00A651]/10 blur-[100px] animate-pulse" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[#009245]/10 blur-[120px]" />
       </div>
 
       <div className="relative w-full max-w-[540px] z-10 animate-in fade-in zoom-in duration-500 slide-in-from-bottom-4">
         <div className="bg-white/80 backdrop-blur-xl border border-white/50 shadow-2xl shadow-gray-200/50 rounded-3xl p-8 sm:p-10">
 
           <div className="text-center mb-8">
-            <div className="inline-flex justify-center items-center bg-green-50 p-4 rounded-2xl mb-6 shadow-sm border border-green-100">
-              <img
-                src="/icon.png"
-                alt="Logo Desa"
-                className="w-12 h-12 object-contain drop-shadow-sm"
-              />
-            </div>
+            <img
+              src="/logo-al-multazam.png"
+              alt="Logo SMAIT Al-Multazam"
+              className="h-20 w-auto object-contain mx-auto mb-6"
+            />
 
             <div className="space-y-2">
               <Title
@@ -104,9 +102,9 @@ export default function LoginResident() {
               className="mb-0"
             >
               <Input
-                prefix={<SquareUserRound className="!text-gray-400 !mr-2 transition-colors !group-focus-within:text-[#70B748]" size={20} />}
+                prefix={<SquareUserRound className="!text-gray-400 !mr-2 transition-colors !group-focus-within:text-[#00A651]" size={20} />}
                 placeholder="Masukkan 16 digit NIK"
-                className="!bg-gray-50 !border-gray-200 hover:!border-green-300 focus:!border-[#70B748] focus:!shadow-[0_0_0_4px_rgba(112,183,72,0.1)] !rounded-xl !py-3 !text-gray-700 !text-base !font-medium transition-all duration-300"
+                className="!bg-gray-50 !border-gray-200 hover:!border-green-300 focus:!border-[#00A651] focus:!shadow-[0_0_0_4px_rgba(0,166,81,0.12)] !rounded-xl !py-3 !text-gray-700 !text-base !font-medium transition-all duration-300"
                 maxLength={16}
                 inputMode="numeric"
               />
@@ -119,14 +117,14 @@ export default function LoginResident() {
               className="!mb-2"
             >
               <Input.Password
-                prefix={<Lock className="text-gray-400 !mr-2 transition-colors !group-focus-within:text-[#70B748]" size={20} />}
+                prefix={<Lock className="text-gray-400 !mr-2 transition-colors !group-focus-within:text-[#00A651]" size={20} />}
                 placeholder="Masukkan kata sandi"
-                className="!bg-gray-50 !border-gray-200 hover:!border-green-300 focus:!border-[#70B748] focus:!shadow-[0_0_0_4px_rgba(112,183,72,0.1)] !rounded-xl !py-3 !text-gray-700 !text-base !font-medium transition-all duration-300"
+                className="!bg-gray-50 !border-gray-200 hover:!border-green-300 focus:!border-[#00A651] focus:!shadow-[0_0_0_4px_rgba(0,166,81,0.12)] !rounded-xl !py-3 !text-gray-700 !text-base !font-medium transition-all duration-300"
               />
             </Form.Item>
 
             <div className="flex justify-end mb-4">
-              {/* <a href="#" className="text-xs font-semibold text-[#70B748] hover:underline">Lupa Kata Sandi?</a> */}
+              {/* <a href="#" className="text-xs font-semibold text-[#00A651] hover:underline">Lupa Kata Sandi?</a> */}
             </div>
 
             <Form.Item className="!mb-0 !mt-8">
@@ -135,7 +133,7 @@ export default function LoginResident() {
                 htmlType="submit"
                 block
                 loading={isLoading}
-                className="!bg-gradient-to-r !from-[#70B748] !to-[#5a9639] !border-none !h-12 !rounded-xl !text-lg !font-bold !shadow-lg !shadow-green-500/20 hover:!shadow-green-500/40 hover:!scale-[1.02] active:!scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
+                className="!bg-gradient-to-r !from-[#00A651] !to-[#009245] !border-none !h-12 !rounded-xl !text-lg !font-bold !shadow-lg !shadow-green-500/20 hover:!shadow-green-500/40 hover:!scale-[1.02] active:!scale-[0.98] transition-all duration-300 flex items-center justify-center gap-2"
               >
                 <span>Masuk Sekarang</span>
                 {!isLoading && <ChevronRight size={20} className="!stroke-[3px]" />}
@@ -149,7 +147,7 @@ export default function LoginResident() {
               <div>
                 <Link
                   to="/daftar"
-                  className="inline-flex items-center !text-[#70B748] font-bold !hover:text-[#5a9639] transition-colors"
+                  className="inline-flex items-center !text-[#00A651] font-bold !hover:text-[#009245] transition-colors"
                 >
                   Daftar Akun Baru
                 </Link>
@@ -162,7 +160,7 @@ export default function LoginResident() {
               <Text className="text-gray-400 text-xs">Anda Petugas Desa?</Text>
               <Link
                 to="/masuk-admin"
-                className="!text-gray-500 font-semibold text-xs !hover:text-[#70B748] !hover:underline transition-colors"
+                className="!text-gray-500 font-semibold text-xs !hover:text-[#00A651] !hover:underline transition-colors"
               >
                 Masuk Petugas
               </Link>

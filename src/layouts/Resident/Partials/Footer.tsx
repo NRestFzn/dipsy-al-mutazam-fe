@@ -41,9 +41,9 @@ export const HomeFooter = () => {
                                 href={googleMapsUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="group flex items-center gap-2 text-gray-500 hover:text-[#70B748] transition-colors"
+                                className="group flex items-center gap-2 text-gray-500 hover:text-[#00A651] transition-colors"
                             >
-                                <EnvironmentOutlined className="!text-gray-400 group-hover:text-[#70B748] text-lg" />
+                                <EnvironmentOutlined className="!text-gray-400 group-hover:text-[#00A651] text-lg" />
                                 <span className="text-sm font-medium max-w-[200px] md:max-w-[300px] truncate">
                                     <Tooltip title={footerData.address} placement="top">
                                         Lokasi Desa
@@ -57,9 +57,9 @@ export const HomeFooter = () => {
                                 href={gmailUrl}
                                 target='_blank'
                                 rel='noreferrer'
-                                className="group flex items-center gap-2 text-gray-500 hover:text-[#70B748] transition-colors"
+                                className="group flex items-center gap-2 text-gray-500 hover:text-[#00A651] transition-colors"
                             >
-                                <MailOutlined className="!text-gray-400 group-hover:text-[#70B748] text-lg" />
+                                <MailOutlined className="!text-gray-400 group-hover:text-[#00A651] text-lg" />
                                 <span className="text-sm font-medium">Hubungi Kami</span>
                             </a>
                         )}

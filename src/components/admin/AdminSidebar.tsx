@@ -74,10 +74,10 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
             theme={{
                 components: {
                     Menu: {
-                        itemSelectedBg: "#f0f7e9",
-                        itemSelectedColor: "#70B748",
+                        itemSelectedBg: "#E8F7EF",
+                        itemSelectedColor: "#00A651",
                         itemHoverBg: "#f9fafb",
-                        itemHoverColor: "#70B748",
+                        itemHoverColor: "#00A651",
                         itemColor: "#52525b",
                         iconSize: 20,
                     },

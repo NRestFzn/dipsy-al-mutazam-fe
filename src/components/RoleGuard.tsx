@@ -20,7 +20,7 @@ export const RoleGuard = ({ children, allowedRoleIds, loginPath = "/masuk" }: Ro
         <div className="flex flex-col items-center gap-2">
           <Spin
             indicator={
-              <Loader2 className="animate-spin text-[#70B748]" size={40} />
+              <Loader2 className="animate-spin text-[#00A651]" size={40} />
             }
           />
           <span className="text-gray-500 font-medium">

@@ -141,7 +141,7 @@ export default function RTDashboard() {
             />
             <div className="flex justify-end gap-2 pt-5">
                 <Button onClick={clearFilter} size="small">Reset</Button>
-                <Button type="primary" className="!bg-[#70B748]" onClick={applyFilter} size="small">
+                <Button type="primary" className="!bg-[#00A651]" onClick={applyFilter} size="small">
                     Terapkan
                 </Button>
             </div>

@@ -94,7 +94,7 @@ export default function AdminProfile() {
           <Button
             icon={<Edit size={16} />}
             onClick={() => setIsEditOpen(true)}
-            className="border-[#70B748] text-[#70B748] hover:bg-green-50 rounded-lg"
+            className="border-[#00A651] text-[#00A651] hover:bg-green-50 rounded-lg"
           >
             Edit Profil
           </Button>
@@ -110,7 +110,7 @@ export default function AdminProfile() {
                 <Avatar
                   size={128}
                   src={profilePictureUrl}
-                  className="bg-gradient-to-br from-[#70B748] to-[#5a9639] text-white shadow-xl text-5xl font-bold border-4 border-white"
+                  className="bg-gradient-to-br from-[#00A651] to-[#009245] text-white shadow-xl text-5xl font-bold border-4 border-white"
                 >
                   {data.fullname.charAt(0).toUpperCase()}
                 </Avatar>
@@ -140,7 +140,7 @@ export default function AdminProfile() {
                   Role Akses
                 </p>
                 <p className="font-medium text-gray-700 capitalize flex items-center justify-center gap-2">
-                  <ShieldCheck size={16} className="text-[#70B748]" />
+                  <ShieldCheck size={16} className="text-[#00A651]" />
                   {displayRoleName}
                 </p>
               </div>
@@ -158,7 +158,7 @@ export default function AdminProfile() {
           <Card
             title={
               <div className="flex items-center gap-2">
-                <div className="w-1 h-5 bg-[#70B748] rounded-full"></div>
+                <div className="w-1 h-5 bg-[#00A651] rounded-full"></div>
                 Informasi Detail
               </div>
             }

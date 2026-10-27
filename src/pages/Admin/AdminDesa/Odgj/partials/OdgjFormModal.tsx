@@ -155,7 +155,7 @@ export default function OdgjFormModal({
       width={560}
       centered
       destroyOnHidden
-      okButtonProps={{className: '!bg-[#70B748]'}}
+      okButtonProps={{className: '!bg-[#00A651]'}}
     >
       <Form form={form} layout="vertical" onFinish={handleSubmit}>
         {!editingData && (
