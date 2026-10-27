@@ -8,17 +8,17 @@ export const residentService = {
       Object.entries(params).filter(([_, v]) => v != null && v !== "")
     );
 
-    const response = await api.get("/v1/resident", { params: cleanParams });
+    const response = await api.get("/v1/student", { params: cleanParams });
     return response.data;
   },
 
   getResidentProfile: async () => {
-    const response = await api.get<ResponseData<ResidentMe>>("/v1/resident/me");
+    const response = await api.get<ResponseData<ResidentMe>>("/v1/student/me");
     return response.data;
   },
 
   updateProfile: async (payload: UpdateProfileResidentPayload) => {
-    const response = await api.put("/v1/resident/me", payload);
+    const response = await api.put("/v1/student/me", payload);
     return response.data;
   },
 

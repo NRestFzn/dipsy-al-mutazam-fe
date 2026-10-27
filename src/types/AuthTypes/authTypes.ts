@@ -47,7 +47,9 @@ export interface LoginPayload {
 }
 
 export interface LoginResidentPayload {
-  nik: string,
+  nisn?: string,
+  /** @deprecated alur register lama masih mengirim nik; BE menerima keduanya */
+  nik?: string,
   password: string
 }
 
