@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { useLocation } from "react-router";
 import { Card, Tabs } from "antd";
-import { GraduationCap, Layers, Users } from "lucide-react";
-import GradeTab from "./partials/GradeTab/GradeTab";
+import { Layers, Users } from "lucide-react";
 import ClassTab from "./partials/ClassTab/ClassTab";
 import StudentTab from "./partials/StudentTab/StudentTab";
 
@@ -15,16 +14,6 @@ export default function KelolaAkademik() {
       key: "1",
       label: (
         <span className="flex items-center gap-1.5 font-medium">
-          <GraduationCap size={16} />
-          Data Tingkat
-        </span>
-      ),
-      children: <GradeTab />,
-    },
-    {
-      key: "2",
-      label: (
-        <span className="flex items-center gap-1.5 font-medium">
           <Layers size={16} />
           Data Kelas
         </span>
@@ -32,7 +21,7 @@ export default function KelolaAkademik() {
       children: <ClassTab />,
     },
     {
-      key: "3",
+      key: "2",
       label: (
         <span className="flex items-center gap-1.5 font-medium">
           <Users size={16} />
@@ -54,7 +43,7 @@ export default function KelolaAkademik() {
           Kelola Akademik
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-2xl">
-          Pengelolaan data tingkat, kelas, dan siswa SMAIT Al-Multazam.
+          Pengelolaan data kelas dan siswa SMAIT Al-Multazam.
         </p>
       </div>
 
