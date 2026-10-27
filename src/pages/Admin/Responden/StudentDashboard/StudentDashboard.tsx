@@ -213,7 +213,6 @@ export default function StudentDashboard() {
         UserId: u.UserId || u.id,
         fullname: u.fullname || "-",
         nisn: u.nisn,
-        nik: u.nik,
         isMentalUnStable: Boolean(u.isMentalUnStable),
         lastSubmissionDate: u.lastSubmissionDate,
     }));

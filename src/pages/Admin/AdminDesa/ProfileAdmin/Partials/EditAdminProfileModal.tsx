@@ -23,7 +23,7 @@ export default function EditAdminProfileModal({
     mutationFn: adminDesaService.updateProfile,
     onSuccess: () => {
       message.success('Profil Admin berhasil diperbarui');
-      queryClient.invalidateQueries({queryKey: ['admin-desa', 'me']});
+      queryClient.invalidateQueries({queryKey: ['profile', 'me']});
       onClose();
       form.resetFields(['newPassword', 'confirmNewPassword']);
     },

@@ -31,7 +31,6 @@ const router = createBrowserRouter([
     element: <Loadable Component={Pages.Unauthorized} />,
   },
   { path: "/wali-kelas", element: <Navigate to="/admin/responden" replace /> },
-  { path: "/kader", element: <Navigate to="/admin/responden" replace /> },
   { path: "*", element: <Loadable Component={Pages.NotFound} /> },
 
   {

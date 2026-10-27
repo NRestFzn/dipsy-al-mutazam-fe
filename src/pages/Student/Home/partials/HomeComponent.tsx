@@ -18,7 +18,7 @@ export const WelcomeHeader = ({ fullname }: WelcomeHeaderProps) => {
   else if (currentHour >= 15 && currentHour < 18) greeting = "Selamat Sore";
   else if (currentHour >= 18) greeting = "Selamat Malam";
 
-  const firstName = fullname?.split(" ")[0] || "Warga";
+  const firstName = fullname?.split(" ")[0] || "Siswa";
 
   return (
     <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-[#00A651] to-[#009245] text-white shadow-lg mb-10 transition-all hover:shadow-xl">

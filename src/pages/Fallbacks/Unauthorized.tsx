@@ -46,7 +46,7 @@ export default function Unauthorized() {
       </Card>
 
       <div className="absolute bottom-6 text-center w-full text-gray-400 text-xs">
-        &copy; {new Date().getFullYear()} Desa Sehat Jiwa - Cibiru Wetan
+        &copy; {new Date().getFullYear()} SMAIT Al-Multazam
       </div>
     </div>
   );
