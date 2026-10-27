@@ -162,7 +162,7 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <Card className="w-full max-w-md shadow-lg rounded-xl">
-        <h1 className="text-2xl font-bold text-center !text-[#70B748] mb-6">
+        <h1 className="text-2xl font-bold text-center !text-[#00A651] mb-6">
           Daftarkan Diri Kamu!
         </h1>
 
@@ -303,7 +303,7 @@ export default function Register() {
               htmlType="submit"
               block
               loading={isLoading}
-              className="!bg-[#70B748] !hover:bg-green-600 h-10 font-medium"
+              className="!bg-[#00A651] !hover:bg-green-600 h-10 font-medium"
             >
               Selanjutnya
             </Button>
@@ -314,7 +314,7 @@ export default function Register() {
           <span className="text-gray-600">Sudah punya akun? </span>
           <a
             href="/masuk"
-            className="!text-[#70B748] font-medium hover:underline"
+            className="!text-[#00A651] font-medium hover:underline"
           >
             Masuk
           </a>
@@ -323,7 +323,7 @@ export default function Register() {
 
       <Modal
         title={
-          <div className="text-center !text-[#70B748] font-bold text-xl">
+          <div className="text-center !text-[#00A651] font-bold text-xl">
             Lengkapi Data Diri
           </div>
         }
@@ -452,7 +452,7 @@ export default function Register() {
               type="primary"
               htmlType="submit"
               loading={isLoading}
-              className="!bg-[#70B748] !hover:bg-green-600"
+              className="!bg-[#00A651] !hover:bg-green-600"
             >
               Simpan & Daftar
             </Button>

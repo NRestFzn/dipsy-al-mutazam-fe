@@ -387,7 +387,7 @@ export default function EditResidentModal({
                 type="primary"
                 htmlType="submit"
                 loading={updateMutation.isPending}
-                className="bg-[#70B748]"
+                className="bg-[#00A651]"
               >
                 Simpan Perubahan
               </Button>

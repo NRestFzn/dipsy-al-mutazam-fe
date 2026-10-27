@@ -3,7 +3,7 @@ import { Outlet, useLocation } from "react-router";
 import MainLayout from '../MainLayout'
 import AdminSideBar from "../../../components/admin/AdminSidebar";
 import { Button, Drawer, Grid, Layout } from "antd";
-import { Heart, Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Menu, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 
 const { Sider, Content } = Layout;
 const { useBreakpoint } = Grid;
@@ -54,7 +54,7 @@ function AdminDesaLayout() {
                         <div className={`flex items-center p-4 ${responsiveSidebar ? 'justify-center' : 'justify-end'} border-t border-gray-100`}>
                             <button
                                 onClick={() => setResponsiveSidebar(!responsiveSidebar)}
-                                className="flex items-center justify-center w-full rounded-lg py-2 text-gray-400 hover:text-[#70B748] hover:bg-green-50 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#70B748]/20"
+                                className="flex items-center justify-center w-full rounded-lg py-2 text-gray-400 hover:text-[#00A651] hover:bg-green-50 transition-all duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-[#00A651]/20"
                             >
                                 {responsiveSidebar ? <PanelLeftOpen size={20} strokeWidth={2} /> : <div className="flex gap-x-2 items-center">
                                     <p>Hide Sidebar</p>
@@ -77,10 +77,11 @@ function AdminDesaLayout() {
                 <div className="flex flex-col h-full py-4 px-4">
                     <div className="flex items-center justify-between mb-6 px-2">
                         <div className="flex items-center gap-x-2">
-                            <Heart className="fill-[#70B748] text-[#70B748] w-5 h-5 md:w-10 md:h-10 shrink-0" />
-                            <div className="text-[#70B748] text-base md:text-lg lg:text-[24px] font-bold leading-tight">
-                                {headerTitle}
-                            </div>
+                            <img
+                                src="/logo-al-multazam.png"
+                                alt="Logo SMAIT Al-Multazam"
+                                className="h-8 w-auto object-contain"
+                            />
                         </div>
                         <Button type="text" icon={<PanelLeftClose size={20} />} onClick={() => setMobileDrawerOpen(false)} />
                     </div>

@@ -156,7 +156,7 @@ export default function Result() {
     );
   }
 
-  const statusColor = isUnstable ? 'text-red-500' : 'text-[#70B748]';
+  const statusColor = isUnstable ? 'text-red-500' : 'text-[#00A651]';
   const statusBg = isUnstable
     ? 'bg-red-50 border-red-100'
     : 'bg-green-50 border-green-100';

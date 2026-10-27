@@ -134,7 +134,7 @@ export default function RwDashboard() {
             />
             <div className="flex justify-end gap-2 pt-5">
                 <Button onClick={clearFilter} size="small">Reset</Button>
-                <Button type="primary" className="!bg-[#70B748]" onClick={applyFilter} size="small">
+                <Button type="primary" className="!bg-[#00A651]" onClick={applyFilter} size="small">
                     Terapkan
                 </Button>
             </div>
@@ -151,7 +151,7 @@ export default function RwDashboard() {
         return (
             <div className="flex justify-center items-center w-full h-full">
                 <div className="flex gap-x-4 items-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#70B748]"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#00A651]"></div>
                     <p>Memuat Data...</p>
                 </div>
             </div>
