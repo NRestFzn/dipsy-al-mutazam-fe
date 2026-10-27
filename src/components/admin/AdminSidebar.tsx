@@ -6,7 +6,8 @@ import {
     FileHeartIcon,
     GraduationCap,
     Database,
-    Tags
+    Tags,
+    UserCog
 } from "lucide-react";
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -44,6 +45,7 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
     const itemsAdminMedis: MenuItem[] = [
         getItem('Responden', '/admin-medis/responden', <FileHeartIcon size={20} />),
         getItem('Kuisioner', '/admin-medis/kuisioner', <File size={20} />),
+        getItem('Kelola Guru', '/admin-medis/kelola-guru', <UserCog size={20} />),
         getItem('Master Data', 'sub-master-data', <Database size={20} />, [
             getItem('Kategori', '/admin-medis/master-data/category', <Tags size={18} />),
         ]),
