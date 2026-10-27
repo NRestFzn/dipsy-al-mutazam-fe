@@ -104,10 +104,12 @@ export default function PreviewStudent() {
               </h1>
               <Tag
                 color={isMale ? "blue" : "magenta"}
-                className="!rounded-md text-xs font-semibold inline-flex items-center gap-1"
+                className="!rounded-md text-xs font-semibold !m-0"
               >
-                {isMale ? <BsGenderMale /> : <BsGenderFemale />}
-                {isMale ? "Laki-laki" : "Perempuan"}
+                <span className="inline-flex items-center gap-1.5 leading-none">
+                  {isMale ? <BsGenderMale size={12} /> : <BsGenderFemale size={12} />}
+                  {isMale ? "Laki-laki" : "Perempuan"}
+                </span>
               </Tag>
               {student.studentStatus === "lulus" ? (
                 <Tag color="purple" className="!rounded-md text-xs font-semibold">
