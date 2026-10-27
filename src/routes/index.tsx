@@ -63,14 +63,6 @@ const router = createBrowserRouter([
               </RoleGuard>
             ),
           },
-          {
-            path: "keluarga",
-            element: (
-              <RoleGuard allowedRoleIds={[ROLE_ID.KEPALA_KELUARGA]}>
-                <Loadable Component={Pages.HomeKepalaKeluarga} />
-              </RoleGuard>
-            ),
-          },
           { path: "summary-rw/:questionnaireId/:rwId", element: <Loadable Component={Pages.SummaryRWDashboard} /> },
           { path: "summary-rt/:questionnaireId/:rwId/:rtId", element: <Loadable Component={Pages.SummaryRTDashboard} /> },
           { path: "profile", element: <Loadable Component={Pages.Profile} /> },
@@ -128,23 +120,6 @@ const router = createBrowserRouter([
                 element: <Loadable Component={Pages.PreviewResident} />,
               },
             ],
-          },
-          {
-            path: "kelola-keluarga",
-            children: [
-              {
-                index: true,
-                element: <Loadable Component={Pages.KelolaKeluarga} />,
-              },
-              {
-                path: ":familyId",
-                element: <Loadable Component={Pages.DetailKeluarga} />,
-              },
-            ],
-          },
-          {
-            path: "odgj",
-            element: <Loadable Component={Pages.AdminDesaOdgj} />,
           },
         ],
       },

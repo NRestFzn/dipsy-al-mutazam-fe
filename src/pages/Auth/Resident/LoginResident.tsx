@@ -26,12 +26,9 @@ export default function LoginResident() {
       const roles = userData?.roles || [];
       const hasMultipleRoles = roles.length > 1;
       const hasKaderRole = roles.some((role: any) => role.id === ROLE_ID.KADER);
-      const hasKepalaKeluargaRole = roles.some((role: any) => role.id === ROLE_ID.KEPALA_KELUARGA);
 
       if (hasMultipleRoles || hasKaderRole) {
         navigate("/pilih-peran", { replace: true });
-      } else if (hasKepalaKeluargaRole) {
-        navigate("/keluarga", { replace: true });
       } else {
         navigate("/", { replace: true });
       }

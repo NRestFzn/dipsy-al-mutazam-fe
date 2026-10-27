@@ -24,10 +24,6 @@ export const RootRedirect = () => {
     return <Navigate to="/kader" replace />;
   }
 
-  if (currentRoleId === ROLE_ID.KEPALA_KELUARGA) {
-    return <Navigate to="/keluarga" replace />;
-  }
-
   if (currentRoleId === ROLE_ID.WARGA) {
     return null;
   }
