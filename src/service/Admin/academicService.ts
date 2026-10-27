@@ -1,5 +1,6 @@
 import { api } from "../api";
 import type {
+  AcademicHistoryItem,
   ClassItem,
   ClassResponse,
   CreateClassPayload,
@@ -8,9 +9,11 @@ import type {
   GetGradesParams,
   GetStudentsAdminParams,
   GradeItem,
+  GraduateStudentsPayload,
   GradeResponse,
   StudentAdminItem,
   StudentAdminResponse,
+  PromoteStudentsPayload,
   UpdateClassPayload,
   UpdateStudentAdminPayload,
 } from "../../types/Academic/academicTypes";
@@ -55,6 +58,8 @@ const mapStudent = (item: any): StudentAdminItem => {
     classroom: detail.class
       ? { id: String(detail.class.id), name: detail.class.name }
       : undefined,
+    studentStatus: detail.studentStatus ?? "aktif",
+    graduationYear: detail.graduationYear ?? null,
     createdAt: item.createdAt,
     updatedAt: item.updatedAt,
   };
@@ -125,6 +130,7 @@ export const academicService = {
         nisn: params?.nisn,
         GradeId: params?.gradeLevelId,
         ClassId: params?.classroomId,
+        status: params?.status,
         page: params?.page,
         pageSize: params?.pageSize,
         order: params?.order,
@@ -170,7 +176,28 @@ export const academicService = {
       birthDate: payload.birthDate,
       GradeId: payload.gradeLevelId,
       ClassId: payload.classroomId,
+      studentStatus: payload.studentStatus ?? undefined,
     });
+
+    return response.data;
+  },
+
+  promoteStudents: async (payload: PromoteStudentsPayload) => {
+    const response = await api.post("/v1/student/promotion", payload);
+
+    return response.data;
+  },
+
+  graduateStudents: async (payload: GraduateStudentsPayload) => {
+    const response = await api.post("/v1/student/graduation", payload);
+
+    return response.data;
+  },
+
+  getAcademicHistory: async (studentId: string) => {
+    const response = await api.get<{ data: AcademicHistoryItem[] }>(
+      `/v1/student/${studentId}/academic-history`
+    );
 
     return response.data;
   },

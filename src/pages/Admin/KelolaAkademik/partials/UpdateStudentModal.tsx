@@ -39,6 +39,7 @@ export default function UpdateStudentModal({ open, onCancel, student }: UpdateSt
         birthDate: student.birthDate ? dayjs(student.birthDate) : undefined,
         gradeLevelId: initialGrade,
         classroomId: student.classroomId,
+        studentStatus: student.studentStatus === "pindah" ? "pindah" : "aktif",
       });
     }
   }, [student, form]);
@@ -66,6 +67,7 @@ export default function UpdateStudentModal({ open, onCancel, student }: UpdateSt
         birthDate: values.birthDate ? values.birthDate.format("YYYY-MM-DD") : "",
         gradeLevelId: values.gradeLevelId,
         classroomId: values.classroomId,
+        studentStatus: values.studentStatus ?? null,
       };
 
       await updateStudentMutation.mutateAsync({
@@ -90,7 +92,7 @@ export default function UpdateStudentModal({ open, onCancel, student }: UpdateSt
       cancelText="Batal"
       okButtonProps={{
         loading: updateStudentMutation.isPending,
-        className: "!bg-[#70B748] hover:!bg-[#5e9e3b]",
+        className: "!bg-[#00A651] hover:!bg-[#009245]",
       }}
       destroyOnHidden
       centered
@@ -157,6 +159,14 @@ export default function UpdateStudentModal({ open, onCancel, student }: UpdateSt
               <Select placeholder="Pilih Jenis Kelamin">
                 <Select.Option value="m">Laki-laki</Select.Option>
                 <Select.Option value="f">Perempuan</Select.Option>
+              </Select>
+            </Form.Item>
+          </Col>
+          <Col xs={24} md={12}>
+            <Form.Item label="Status Siswa" name="studentStatus">
+              <Select placeholder="Pilih status siswa">
+                <Select.Option value="aktif">Aktif</Select.Option>
+                <Select.Option value="pindah">Pindah</Select.Option>
               </Select>
             </Form.Item>
           </Col>

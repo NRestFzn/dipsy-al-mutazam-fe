@@ -1,5 +1,5 @@
 import { Button, Tooltip, Tag } from "antd";
-import { Edit2, Trash2 } from "lucide-react";
+import { Edit2, Trash2, GraduationCap } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
 import type { ClassItem } from "../../../../types/Academic/academicTypes";
 
@@ -7,12 +7,14 @@ interface ClassColumnProps {
   pagination: { page: number; pageSize: number };
   onEdit?: (record: ClassItem) => void;
   onDelete: (record: ClassItem) => void;
+  onPromote?: (record: ClassItem) => void;
 }
 
 export const getClassColumns = ({
   pagination,
   onEdit,
   onDelete,
+  onPromote,
 }: ClassColumnProps): ColumnsType<ClassItem> => [
   {
     title: "No",
@@ -56,9 +58,19 @@ export const getClassColumns = ({
     title: "Aksi",
     key: "action",
     align: "center",
-    width: 110,
+    width: 140,
     render: (_, record) => (
       <div className="flex items-center justify-center gap-1.5">
+        {onPromote && (
+          <Tooltip title="Proses Kenaikan Kelas">
+            <Button
+              type="text"
+              size="small"
+              icon={<GraduationCap size={15} className="text-slate-600 hover:text-emerald-600" />}
+              onClick={() => onPromote(record)}
+            />
+          </Tooltip>
+        )}
         {onEdit && (
           <Tooltip title="Ubah Data Kelas">
             <Button

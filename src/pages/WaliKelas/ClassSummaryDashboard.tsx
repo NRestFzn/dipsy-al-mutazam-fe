@@ -6,6 +6,7 @@ import {
     DatePicker,
     Empty,
     Popover,
+    Select,
     Spin,
     Table,
     Tag,
@@ -43,6 +44,7 @@ export default function ClassSummaryDashboard() {
     const classId = params.classId || params.rtId || myClassId;
 
     const [dateRange, setDateRange] = useState<[string, string] | null>(null);
+    const [academicYear, setAcademicYear] = useState<string | null>(null);
     const [openFilter, setOpenFilter] = useState(false);
     const [metaInfo, setMetaInfo] = useState({
         questionnaireTitle: "-",
@@ -64,6 +66,7 @@ export default function ClassSummaryDashboard() {
         classId,
         startDate: dateRange?.[0],
         endDate: dateRange?.[1],
+        academicYear: academicYear || undefined,
     });
 
     useEffect(() => {
@@ -97,14 +100,33 @@ export default function ClassSummaryDashboard() {
         refetch();
     };
 
+    const academicYearOptions = (() => {
+        const now = dayjs();
+        const startYear = now.month() >= 6 ? now.year() : now.year() - 1;
+        return Array.from({ length: 5 }, (_, index) => {
+            const year = startYear - index;
+            return { label: `${year}/${year + 1}`, value: `${year}/${year + 1}` };
+        });
+    })();
+
     const clearFilter = () => {
         setDateRange(null);
+        setAcademicYear(null);
         setOpenFilter(false);
         setTimeout(() => refetch(), 0);
     };
 
     const filterContent = (
         <div className="w-80 p-2">
+            <p className="mb-2 font-semibold text-gray-700 text-sm">Tahun Ajaran</p>
+            <Select
+                className="w-full mb-4"
+                placeholder="Tahun ajaran berjalan"
+                allowClear
+                value={academicYear}
+                onChange={(value) => setAcademicYear(value ?? null)}
+                options={academicYearOptions}
+            />
             <p className="mb-2 font-semibold text-gray-700 text-sm">Rentang Tanggal Pengisian</p>
             <RangePicker
                 className="w-full mb-4"

@@ -18,6 +18,8 @@ export interface UserDetail {
     nis?: string | null;
     entryYear?: string | null;
     academicYear?: string | null;
+    studentStatus?: "aktif" | "lulus" | "pindah" | null;
+    graduationYear?: string | null;
 
     phoneNumber?: string | null;
     gender: string;

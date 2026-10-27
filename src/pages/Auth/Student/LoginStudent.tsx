@@ -25,7 +25,7 @@ export default function LoginStudent() {
         navigate("/", { replace: true });
       }
     } catch (err) {
-      console.error("Resident Login error:", err);
+      console.error("Student login error:", err);
       setFormError(getErrorMessage(err));
     }
   };

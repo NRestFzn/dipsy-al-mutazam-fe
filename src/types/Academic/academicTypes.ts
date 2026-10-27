@@ -33,6 +33,8 @@ export interface StudentAdminItem {
   classroomId?: string;
   gradeLevel?: { id: string; name: string };
   classroom?: { id: string; name: string };
+  studentStatus?: "aktif" | "lulus" | "pindah";
+  graduationYear?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -80,6 +82,7 @@ export interface UpdateStudentAdminPayload {
   birthDate: string;
   gradeLevelId: string;
   classroomId: string;
+  studentStatus?: "aktif" | "pindah" | null;
 }
 
 export interface GetGradesParams {
@@ -102,9 +105,40 @@ export interface GetStudentsAdminParams {
   nisn?: string;
   gradeLevelId?: string;
   classroomId?: string;
+  status?: string;
   page?: number;
   pageSize?: number;
   order?: string;
+}
+
+export interface PromotionItemPayload {
+  studentId: string;
+  targetGradeId: string;
+  targetClassId: string;
+  notes?: string | null;
+}
+
+export interface PromoteStudentsPayload {
+  academicYear: string;
+  promotions: PromotionItemPayload[];
+}
+
+export interface GraduateStudentsPayload {
+  studentIds: string[];
+  graduationYear: string;
+}
+
+export interface AcademicHistoryItem {
+  id: string;
+  academicYear: string;
+  GradeId?: string | null;
+  ClassId?: string | null;
+  homeroomTeacherId?: string | null;
+  notes?: string | null;
+  grade?: { id: string; name: string } | null;
+  class?: { id: string; name: string } | null;
+  homeroomTeacher?: { id: string; fullname: string } | null;
+  createdAt?: string;
 }
 
 export type GradeResponse = ResponseData<GradeItem[]>;

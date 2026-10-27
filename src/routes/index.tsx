@@ -64,7 +64,7 @@ const router = createBrowserRouter([
       {
         path: "admin",
         element: (
-          <RoleGuard allowedRoleIds={[ROLE_ID.WALI_KELAS]} loginPath="/masuk-admin">
+          <RoleGuard allowedRoleIds={[ROLE_ID.WALI_KELAS, ROLE_ID.GURU_BK]} loginPath="/masuk-admin">
             <AdminDesaLayout />
           </RoleGuard>
         ),

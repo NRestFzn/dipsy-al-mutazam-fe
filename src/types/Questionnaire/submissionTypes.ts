@@ -66,7 +66,7 @@ export interface SummaryRtParams {
     endDate?: string;
 }
 
-export type SummaryClassParams = SummaryRtParams;
+export type SummaryClassParams = SummaryRtParams & { academicYear?: string };
 
 export interface RtUserItem {
     UserId: string;

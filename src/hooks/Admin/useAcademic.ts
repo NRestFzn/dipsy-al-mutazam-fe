@@ -6,6 +6,8 @@ import type {
   GetClassesParams,
   GetGradesParams,
   GetStudentsAdminParams,
+  GraduateStudentsPayload,
+  PromoteStudentsPayload,
   UpdateClassPayload,
   UpdateStudentAdminPayload,
 } from "../../types/Academic/academicTypes";
@@ -98,6 +100,32 @@ export const useAcademic = () => {
     },
   });
 
+  const useStudentAcademicHistory = (id: string | null) => {
+    return useQuery({
+      queryKey: ["academic", "student-history", id],
+      queryFn: () => academicService.getAcademicHistory(id!),
+      enabled: Boolean(id),
+    });
+  };
+
+  const promoteStudentsMutation = useMutation({
+    mutationFn: (payload: PromoteStudentsPayload) => academicService.promoteStudents(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["academic", "students"] });
+      queryClient.invalidateQueries({ queryKey: ["academic", "grades"] });
+      queryClient.invalidateQueries({ queryKey: ["academic", "classes"] });
+    },
+  });
+
+  const graduateStudentsMutation = useMutation({
+    mutationFn: (payload: GraduateStudentsPayload) => academicService.graduateStudents(payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["academic", "students"] });
+      queryClient.invalidateQueries({ queryKey: ["academic", "grades"] });
+      queryClient.invalidateQueries({ queryKey: ["academic", "classes"] });
+    },
+  });
+
   return {
     useGrades,
 
@@ -108,8 +136,11 @@ export const useAcademic = () => {
 
     useStudentsAdmin,
     useStudentDetail,
+    useStudentAcademicHistory,
     createStudentMutation,
     updateStudentMutation,
     deleteStudentMutation,
+    promoteStudentsMutation,
+    graduateStudentsMutation,
   };
 };
