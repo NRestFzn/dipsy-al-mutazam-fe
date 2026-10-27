@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Input, Table } from "antd";
+import { Input, Table } from "antd";
 import { Search } from "lucide-react";
 import { useDebounce } from "use-debounce";
 import { getGradeColumns } from "../../columns/GradeColumn";
@@ -46,14 +46,6 @@ export default function GradeTab() {
 
   return (
     <div className="space-y-4">
-      <Alert
-        type="info"
-        showIcon
-        title="Tingkat adalah master data"
-        description="Jenjang VII-IX (SMP) dan X-XII (SMA) dipatok dari seeder dan tidak bisa ditambah, diubah, atau dihapus dari antarmuka."
-        className="!rounded-lg"
-      />
-
       <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
         <Input
           placeholder="Cari tingkat (contoh: X)..."

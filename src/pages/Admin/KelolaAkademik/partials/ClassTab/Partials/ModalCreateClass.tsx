@@ -35,7 +35,7 @@ export default function ModalCreateClass({
 
   return (
     <Modal
-      title="Tambah Rombel / Kelas Baru"
+      title="Tambah Kelas Baru"
       open={open}
       onCancel={() => {
         form.resetFields();

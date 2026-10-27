@@ -22,7 +22,7 @@ export const getClassColumns = ({
     render: (_, __, index) => (pagination.page - 1) * pagination.pageSize + index + 1,
   },
   {
-    title: "Nama Rombel / Kelas",
+    title: "Nama Kelas",
     dataIndex: "name",
     key: "name",
     sorter: true,
