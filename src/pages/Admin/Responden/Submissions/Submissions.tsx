@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, useLocation } from "react-router";
 import {
     Breadcrumb,
     Button,
@@ -24,6 +24,8 @@ const { RangePicker } = DatePicker;
 
 export default function Submissions() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
 
     const params = useParams<{
         questionnaireId: string;
@@ -163,7 +165,7 @@ export default function Submissions() {
 
     const columns = getSubmissionsColumns({
         onViewDetail: (submissionId) => {
-            navigate(`/admin-medis/responden/result/${submissionId}`);
+            navigate(`${basePath}/responden/result/${submissionId}`);
         },
     });
 
@@ -214,14 +216,14 @@ export default function Submissions() {
                         items={[
                             {
                                 title: (
-                                    <Link to="/admin-medis/responden" className="flex items-center gap-1 text-gray-500 hover:text-green-600">
+                                    <Link to={`${basePath}/responden`} className="flex items-center gap-1 text-gray-500 hover:text-green-600">
                                         <Home size={14} /> Beranda Responden
                                     </Link>
                                 ),
                             },
                             {
                                 title: (
-                                    <Link to={`/admin-medis/responden/${questionnaireId}`} className="text-gray-500 hover:text-green-600">
+                                    <Link to={`${basePath}/responden/${questionnaireId}`} className="text-gray-500 hover:text-green-600">
                                         {questionnaireName}
                                     </Link>
                                 ),

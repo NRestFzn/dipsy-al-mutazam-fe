@@ -1,6 +1,6 @@
 import { Navigate } from "react-router";
 import { useAuth } from "../context/AuthContext";
-import { ROLE_ID } from "../constants";
+import { isGuruBkRole, isSiswaRole, isTuRole, isWaliKelasRole } from "../constants";
 import Loading from "../pages/Loading";
 
 export const RootRedirect = () => {
@@ -10,17 +10,19 @@ export const RootRedirect = () => {
 
   if (!user || !activeRole) return null;
 
-  const currentRoleId = String(activeRole.id);
+  if (isTuRole(activeRole)) {
+    return <Navigate to="/admin-tu" replace />;
+  }
 
-  if (currentRoleId === ROLE_ID.WALI_KELAS) {
+  if (isWaliKelasRole(activeRole)) {
     return <Navigate to="/admin" replace />;
   }
 
-  if (currentRoleId === ROLE_ID.GURU_BK) {
+  if (isGuruBkRole(activeRole)) {
     return <Navigate to="/admin-medis" replace />;
   }
 
-  if (currentRoleId === ROLE_ID.SISWA) {
+  if (isSiswaRole(activeRole)) {
     return null;
   }
 

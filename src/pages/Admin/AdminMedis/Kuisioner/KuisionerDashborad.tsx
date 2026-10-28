@@ -12,7 +12,7 @@ import { useDebounce } from "use-debounce";
 
 import { getKuisionerColumns } from "./columns/KuisionerColumn";
 import QuestionManager from "./Partials/QuestionManager";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useAdminQuestionnaire, useQuestionnaireMutation } from "../../../../hooks/Questionnaire/useQuestionnaire";
 import type { Questionnaire } from "../../../../types/Questionnaire/questionnaireTypes";
 import type { SorterResult } from "antd/es/table/interface";
@@ -22,6 +22,7 @@ import { getQuestionnaireStatusLabel } from "../../../../utils/questionnaireDisp
 export default function Kuisioner() {
   const { message, modal } = App.useApp();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
   const [searchText, setSearchText] = useState("");
@@ -130,8 +131,10 @@ export default function Kuisioner() {
     onEditStatus: handleToggleStatus,
     onEditData: handleOpenEdit,
     onDelete: handleDeleteQuestionnaire,
-    onPreview: (id) =>
-      navigate(`/admin-medis/kuisioner/questionnaireId=${id}/preview`),
+    onPreview: (id) => {
+      const prefix = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
+      navigate(`${prefix}/kuisioner/questionnaireId=${id}/preview`);
+    },
   });
 
   if (selectedQuestionnaire) {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, useLocation } from "react-router";
 import {
     Breadcrumb,
     Button,
@@ -26,6 +26,8 @@ const { RangePicker } = DatePicker;
 
 export default function StudentDashboard() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
 
     const params = useParams<{
         questionnaireId: string;
@@ -186,7 +188,7 @@ export default function StudentDashboard() {
     const columns = getStudentDashboardColumns({
         onSeeDetail: (userId) => {
             navigate(
-                `/admin-medis/responden/submissions/${questionnaireId}/${gradeId}/${classId}/${userId}`
+                `${basePath}/responden/submissions/${questionnaireId}/${gradeId}/${classId}/${userId}`
             );
         },
     });
@@ -249,21 +251,21 @@ export default function StudentDashboard() {
                         items={[
                             {
                                 title: (
-                                    <Link to="/admin-medis/responden" className="flex items-center gap-1 text-gray-500 hover:text-green-600">
+                                    <Link to={`${basePath}/responden`} className="flex items-center gap-1 text-gray-500 hover:text-green-600">
                                         <Home size={14} /> Beranda Responden
                                     </Link>
                                 ),
                             },
                             {
                                 title: (
-                                    <Link to={`/admin-medis/responden/${questionnaireId}`} className="text-gray-500 hover:text-green-600">
+                                    <Link to={`${basePath}/responden/${questionnaireId}`} className="text-gray-500 hover:text-green-600">
                                         {names.questionnaire}
                                     </Link>
                                 ),
                             },
                             {
                                 title: (
-                                    <Link to={`/admin-medis/responden/${questionnaireId}/${gradeId}`} className="text-gray-500 hover:text-green-600">
+                                    <Link to={`${basePath}/responden/${questionnaireId}/${gradeId}`} className="text-gray-500 hover:text-green-600">
                                         {names.grade}
                                     </Link>
                                 ),
