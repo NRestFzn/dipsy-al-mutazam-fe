@@ -73,10 +73,15 @@ export const adminMedisService = {
 	},
 
 	async getQuestionnaireSummary(
-		questionnaireId: string
+		questionnaireId: string,
+		academicYear?: string
 	): Promise<QuestionnaireSummary> {
+		const params: Record<string, any> = {};
+		if (academicYear) params.academicYear = academicYear;
+
 		const response = await api.get<any>(
-			`/v1/questionnaire-submission/summary/${questionnaireId}`
+			`/v1/questionnaire-submission/summary/${questionnaireId}`,
+			{ params }
 		);
 
 		const payload = response.data.data ?? {};
@@ -84,6 +89,8 @@ export const adminMedisService = {
 
 		return {
 			...payload,
+			hasAssignment: payload.hasAssignment,
+			academicYear: payload.academicYear || academicYear,
 			perRw: perGrade.map((item: any) => ({
 				rwId: String(item.gradeId),
 				rwName: item.gradeName,
@@ -103,13 +110,21 @@ export const adminMedisService = {
 		RukunTetanggaId: string,
 		userId: string,
 		startDate?: string,
-		endDate?: string
+		endDate?: string,
+		academicYear?: string
 	): Promise<UserSummaryResponse> {
+		const params: Record<string, any> = {
+			UserId: userId,
+			RukunTetanggaId: RukunTetanggaId,
+			RukunWargaId: RukunWargaId,
+			startDate,
+			endDate,
+		};
+		if (academicYear) params.academicYear = academicYear;
+
 		const response = await api.get<ApiResponse<UserSummaryResponse>>(
 			`/v1/questionnaire-submission/summary-student/${questionnaireId}`,
-			{
-				params: { UserId: userId, RukunTetanggaId: RukunTetanggaId, RukunWargaId: RukunWargaId, startDate, endDate }
-			}
+			{ params }
 		);
 		return response.data.data;
 	},
@@ -245,7 +260,7 @@ export const adminMedisService = {
 	},
 
 	async createQuestionnaire(
-		payload: CreateQuestionnairePayload
+		payload: CreateQuestionPayload | CreateQuestionnairePayload
 	): Promise<Questionnaire> {
 		const response = await api.post<ApiResponse<Questionnaire>>(
 			"/v1/questionnaire",
@@ -272,12 +287,14 @@ export const adminMedisService = {
 	async summarizeAll(
 		questionnaireId: string,
 		startDate?: string,
-		endDate?: string
+		endDate?: string,
+		academicYear?: string
 	): Promise<SummarizeAllResponse> {
-		const params: Partial<{ startDate: string; endDate: string }> = {};
+		const params: Partial<{ startDate: string; endDate: string; academicYear: string }> = {};
 
 		if (startDate) params.startDate = startDate;
 		if (endDate) params.endDate = endDate;
+		if (academicYear) params.academicYear = academicYear;
 
 		const response = await api.get<any>(
 			`/v1/questionnaire-submission/summary/${questionnaireId}`,
@@ -290,6 +307,8 @@ export const adminMedisService = {
 		return {
 			...response.data,
 			data: {
+				hasAssignment: payload.hasAssignment,
+				academicYear: payload.academicYear || academicYear,
 				summarize: payload.summarize,
 				perRw: perGrade.map((item: any) => ({
 					rwId: String(item.gradeId),
@@ -346,11 +365,13 @@ export const adminMedisService = {
 		questionnaireId: string,
 		gradeId: string,
 		startDate?: string,
-		endDate?: string
+		endDate?: string,
+		academicYear?: string
 	): Promise<RWSummary> {
 		const params: Record<string, any> = { GradeId: gradeId };
 		if (startDate) params.startDate = startDate;
 		if (endDate) params.endDate = endDate;
+		if (academicYear) params.academicYear = academicYear;
 
 		const response = await api.get<any>(
 			`/v1/questionnaire-submission/summary-grade/${questionnaireId}`,
@@ -362,6 +383,8 @@ export const adminMedisService = {
 
 		return {
 			...payload,
+			hasAssignment: payload.hasAssignment,
+			academicYear: payload.academicYear || academicYear,
 			perRt: perClass.map((item: any) => ({
 				rtId: String(item.classId),
 				rtName: item.className,
@@ -379,11 +402,13 @@ export const adminMedisService = {
 		_gradeId: string,
 		classId: string,
 		startDate?: string,
-		endDate?: string
+		endDate?: string,
+		academicYear?: string
 	): Promise<RTSummary> {
 		const params: Record<string, any> = { ClassId: classId };
 		if (startDate) params.startDate = startDate;
 		if (endDate) params.endDate = endDate;
+		if (academicYear) params.academicYear = academicYear;
 
 		const response = await api.get<any>(
 			`/v1/questionnaire-submission/summary-class/${questionnaireId}`,
@@ -394,6 +419,8 @@ export const adminMedisService = {
 
 		return {
 			...payload,
+			hasAssignment: payload.hasAssignment,
+			academicYear: payload.academicYear || academicYear,
 			users: payload.students ?? [],
 		} as RTSummary;
 	},
