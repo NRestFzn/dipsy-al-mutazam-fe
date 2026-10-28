@@ -34,3 +34,14 @@ export interface CounselorAssignmentMeGroup {
   classes?: CounselorAssignmentClass[];
   assignments?: CounselorAssignmentItem[];
 }
+
+export interface CounselorAssignmentQuery {
+  UserId?: string;
+  academicYear?: string;
+}
+
+export interface ReplaceCounselorAssignmentPayload {
+  UserId: string;
+  academicYear: string;
+  ClassIds: string[];
+}

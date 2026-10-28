@@ -13,9 +13,10 @@ function AdminMediLayout() {
     const screens = useBreakpoint();
     const isMobile = screens.md === false;
 
-    const hideSiderRoutes = ["/admin-medis/profile", "/admin/profile"];
+    const hideSiderRoutes = ["/admin-medis/profile", "/admin/profile", "/admin-tu/profile"];
 
-    const headerTitle = "Tes Kesehatan Mental - Medis"
+    const isTU = location.pathname.startsWith("/admin-tu");
+    const headerTitle = isTU ? "Portal Tata Usaha" : "Tes Kesehatan Mental - Medis";
 
     const [responsiveSidebar, setResponsiveSidebar] = useState(false);
     const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);

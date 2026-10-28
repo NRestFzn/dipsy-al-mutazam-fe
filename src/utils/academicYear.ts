@@ -23,7 +23,7 @@ export function getAcademicYearOptions(
     parseInt(currentStr.split("/")[0], 10) || new Date().getFullYear();
 
   const years: string[] = [];
-  for (let i = -4; i <= 2; i++) {
+  for (let i = -4; i <= 3; i++) {
     const start = baseStart + i;
     years.push(`${start}/${start + 1}`);
   }

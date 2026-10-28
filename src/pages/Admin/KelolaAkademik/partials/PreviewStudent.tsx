@@ -31,7 +31,7 @@ export default function PreviewStudent() {
 
   const backPath = window.location.pathname.startsWith("/admin/siswa-saya")
     ? "/admin/siswa-saya"
-    : "/admin-medis/kelola-akademik";
+    : "/admin-tu/kelola-akademik";
 
   const screens = useBreakpoint();
   const descriptionLayout = screens.md ? "horizontal" : "vertical";
