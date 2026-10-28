@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams, useLocation } from "react-router";
+import { Link, useNavigate, useParams, useLocation, useSearchParams } from "react-router";
 import {
     Breadcrumb,
     Button,
@@ -10,7 +10,7 @@ import {
     Table,
     Tag,
 } from "antd";
-import { ArrowLeft, Filter, Home, Users } from "lucide-react";
+import { ArrowLeft, Filter, GraduationCap, Home, Users } from "lucide-react";
 import dayjs from "dayjs";
 
 import { adminMedisService } from "../../../../service/adminMedisService";
@@ -21,13 +21,14 @@ import {
     getStudentDashboardColumns,
     type StudentDashboardRow,
 } from "../columns/StudentDashboardColumn";
+import { getCurrentAcademicYear } from "../../../../utils/academicYear";
 
 const { RangePicker } = DatePicker;
 
 export default function StudentDashboard() {
     const navigate = useNavigate();
     const location = useLocation();
-    const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
+    const [searchParams] = useSearchParams();
 
     const params = useParams<{
         questionnaireId: string;
@@ -46,6 +47,11 @@ export default function StudentDashboard() {
     const rawC = params.classId || params.rtId || "";
     const classId = rawC.includes("=") ? rawC.split("=")[1] : rawC;
 
+    const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
+
+    const urlAcademicYear = searchParams.get("academicYear");
+    const academicYear = urlAcademicYear || getCurrentAcademicYear();
+
     const [loading, setLoading] = useState({
         loading: true,
         loadingTable: false,
@@ -62,28 +68,6 @@ export default function StudentDashboard() {
     const [dateRange, setDateRange] = useState<[string, string] | null>(null);
     const [openFilter, setOpenFilter] = useState(false);
 
-    useEffect(() => {
-        if (questionnaireId && gradeId && classId) {
-            fetchInitialData();
-        } else {
-            setLoading((prev) => ({ ...prev, loading: false }));
-        }
-    }, [questionnaireId, gradeId, classId]);
-
-    const fetchInitialData = async () => {
-        setLoading((prev) => ({ ...prev, loading: true }));
-        try {
-            await Promise.allSettled([
-                fetchContextNames(),
-                fetchClassSummary(),
-            ]);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            setLoading((prev) => ({ ...prev, loading: false }));
-        }
-    };
-
     const fetchContextNames = async () => {
         if (!questionnaireId || !gradeId || !classId) return;
         try {
@@ -91,8 +75,8 @@ export default function StudentDashboard() {
             const qTitle = qRes?.data?.title || "Kuesioner";
 
             const [gradeSummary, classSummaryRes] = await Promise.all([
-                adminMedisService.getQuestionnaireSummary(questionnaireId),
-                adminMedisService.summaryGrade(questionnaireId, gradeId),
+                adminMedisService.getQuestionnaireSummary(questionnaireId, academicYear),
+                adminMedisService.summaryGrade(questionnaireId, gradeId, undefined, undefined, academicYear),
             ]);
 
             const foundGrade = gradeSummary.perRw.find((r) => r.rwId === gradeId || r.id === gradeId);
@@ -126,13 +110,36 @@ export default function StudentDashboard() {
                 gradeId,
                 classId,
                 startDate,
-                endDate
+                endDate,
+                academicYear
             );
             setSummaryData(res);
         } catch (error) {
             console.error(error);
         }
     };
+
+    const fetchInitialData = async () => {
+        setLoading((prev) => ({ ...prev, loading: true }));
+        try {
+            await Promise.allSettled([
+                fetchContextNames(),
+                fetchClassSummary(),
+            ]);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading((prev) => ({ ...prev, loading: false }));
+        }
+    };
+
+    useEffect(() => {
+        if (questionnaireId && gradeId && classId) {
+            fetchInitialData();
+        } else {
+            setLoading((prev) => ({ ...prev, loading: false }));
+        }
+    }, [questionnaireId, gradeId, classId, academicYear]);
 
     const handleDateChange = (_: any, dateStrings: [string, string]) => {
         if (dateStrings && dateStrings[0] && dateStrings[1]) {
@@ -154,7 +161,7 @@ export default function StudentDashboard() {
         setOpenFilter(false);
         setLoading((prev) => ({ ...prev, loadingTable: true }));
         try {
-            const res = await adminMedisService.summaryClass(questionnaireId, gradeId, classId);
+            const res = await adminMedisService.summaryClass(questionnaireId, gradeId, classId, undefined, undefined, academicYear);
             setSummaryData(res);
         } catch (error) {
             console.error(error);
@@ -187,8 +194,9 @@ export default function StudentDashboard() {
 
     const columns = getStudentDashboardColumns({
         onSeeDetail: (userId) => {
+            const queryStr = academicYear ? `?academicYear=${encodeURIComponent(academicYear)}` : "";
             navigate(
-                `${basePath}/responden/submissions/${questionnaireId}/${gradeId}/${classId}/${userId}`
+                `${basePath}/responden/submissions/${questionnaireId}/${gradeId}/${classId}/${userId}${queryStr}`
             );
         },
     });
@@ -211,6 +219,8 @@ export default function StudentDashboard() {
         );
     }
 
+    const hasNoAssignment = summaryData?.hasAssignment === false;
+
     const studentList: StudentDashboardRow[] = (summaryData?.users || []).map((u: any) => ({
         UserId: u.UserId || u.id,
         fullname: u.fullname || "-",
@@ -219,20 +229,23 @@ export default function StudentDashboard() {
         lastSubmissionDate: u.lastSubmissionDate,
     }));
 
+    const parentGradeUrl = `${basePath}/responden/${questionnaireId}/${gradeId}${academicYear ? `?academicYear=${encodeURIComponent(academicYear)}` : ""}`;
+    const parentQuestionnaireUrl = `${basePath}/responden/${questionnaireId}${academicYear ? `?academicYear=${encodeURIComponent(academicYear)}` : ""}`;
+
     return (
         <div className="flex flex-col w-full h-full p-6 space-y-6">
             <div>
                 <Button
                     type="default"
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate(parentGradeUrl)}
                     className="flex items-center shadow-sm border-gray-200 hover:bg-gray-100"
                 >
                     <ArrowLeft size={16} className="mr-2" />
-                    Kembali
+                    Kembali ke Rekap Kelas
                 </Button>
             </div>
 
-            {summaryData && (
+            {!hasNoAssignment && summaryData && (
                 <Spin spinning={loading.loading}>
                     <MentalHealthChart
                         overallDepressionRate={summaryData?.summarize?.unStableMentalPercentage || 0}
@@ -240,7 +253,7 @@ export default function StudentDashboard() {
                         totalUser={summaryData?.summarize?.userCount || 0}
                         usersData={studentList as any[]}
                         title={`Hasil Skrining ${names.classroom} (${names.grade})`}
-                        subtitle={`Instrumen: ${names.questionnaire}`}
+                        subtitle={`Instrumen: ${names.questionnaire} (Tahun Ajaran ${academicYear})`}
                     />
                 </Spin>
             )}
@@ -258,14 +271,14 @@ export default function StudentDashboard() {
                             },
                             {
                                 title: (
-                                    <Link to={`${basePath}/responden/${questionnaireId}`} className="text-gray-500 hover:text-green-600">
+                                    <Link to={parentQuestionnaireUrl} className="text-gray-500 hover:text-green-600">
                                         {names.questionnaire}
                                     </Link>
                                 ),
                             },
                             {
                                 title: (
-                                    <Link to={`${basePath}/responden/${questionnaireId}/${gradeId}`} className="text-gray-500 hover:text-green-600">
+                                    <Link to={parentGradeUrl} className="text-gray-500 hover:text-green-600">
                                         {names.grade}
                                     </Link>
                                 ),
@@ -276,7 +289,11 @@ export default function StudentDashboard() {
                         ]}
                     />
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                        <Tag color="blue" className="!rounded-md !px-2.5 !py-1 !text-xs font-semibold">
+                            Tahun Ajaran: {academicYear}
+                        </Tag>
+
                         {dateRange && (
                             <Tag closable onClose={clearFilter} color="green">
                                 {dateRange[0]} - {dateRange[1]}
@@ -297,38 +314,55 @@ export default function StudentDashboard() {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-gray-100 pt-4">
-                    <div className="flex items-center gap-2 text-gray-700 font-semibold">
-                        <Users size={18} className="text-[#00A651]" />
-                        <span>Daftar Siswa Kelas {names.classroom}</span>
+                {hasNoAssignment ? (
+                    <div className="py-12 px-4 flex flex-col items-center justify-center text-center space-y-3 bg-slate-50/70 border border-dashed border-slate-200 rounded-xl">
+                        <div className="w-14 h-14 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-xs">
+                            <GraduationCap size={28} />
+                        </div>
+                        <div className="max-w-md space-y-1">
+                            <h3 className="text-base font-semibold text-slate-800">
+                                Belum Ada Penugasan Kelas
+                            </h3>
+                            <p className="text-sm text-slate-600">
+                                Anda belum ditugaskan ke kelas mana pun untuk tahun ajaran ini. Hubungi Tata Usaha.
+                            </p>
+                        </div>
                     </div>
-                    <span className="text-xs text-gray-500 font-medium">
-                        Total: {studentList.length} Siswa Terdaftar
-                    </span>
-                </div>
+                ) : (
+                    <>
+                        <div className="flex items-center justify-between border-t border-gray-100 pt-4">
+                            <div className="flex items-center gap-2 text-gray-700 font-semibold">
+                                <Users size={18} className="text-[#00A651]" />
+                                <span>Daftar Siswa Kelas {names.classroom}</span>
+                            </div>
+                            <span className="text-xs text-gray-500 font-medium">
+                                Total: {studentList.length} Siswa Terdaftar
+                            </span>
+                        </div>
 
-                <Table
-                    columns={columns}
-                    dataSource={studentList}
-                    rowKey="UserId"
-                    loading={loading.loadingTable}
-                    pagination={{
-                        pageSize: 10,
-                        showTotal: (total, range) => `${range[0]}-${range[1]} dari ${total} Siswa`,
-                    }}
-                    scroll={{ x: 800 }}
-                    rowClassName="hover:bg-gray-50 transition-colors"
-                    locale={{
-                        emptyText: (
-                            <Empty
-                                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                description="Belum ada data siswa yang mengisi di kelas ini"
-                            />
-                        ),
-                    }}
-                />
+                        <Table
+                            columns={columns}
+                            dataSource={studentList}
+                            rowKey="UserId"
+                            loading={loading.loadingTable}
+                            pagination={{
+                                pageSize: 10,
+                                showTotal: (total, range) => `${range[0]}-${range[1]} dari ${total} Siswa`,
+                            }}
+                            scroll={{ x: 800 }}
+                            rowClassName="hover:bg-gray-50 transition-colors"
+                            locale={{
+                                emptyText: (
+                                    <Empty
+                                        image={Empty.PRESENTED_IMAGE_SIMPLE}
+                                        description="Belum ada data siswa yang mengisi di kelas ini"
+                                    />
+                                ),
+                            }}
+                        />
+                    </>
+                )}
             </div>
         </div>
     );
 }
-

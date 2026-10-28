@@ -28,6 +28,13 @@ export interface CounselorAssignmentItem {
   };
 }
 
+export interface CounselorAssignmentMeGroup {
+  academicYear: string;
+  ClassIds: string[];
+  classes?: CounselorAssignmentClass[];
+  assignments?: CounselorAssignmentItem[];
+}
+
 export interface CounselorAssignmentQuery {
   UserId?: string;
   academicYear?: string;

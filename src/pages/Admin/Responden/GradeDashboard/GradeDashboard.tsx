@@ -1,13 +1,15 @@
-import { ArrowLeft, Filter, Home } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams, useLocation } from "react-router";
+import { ArrowLeft, Filter, GraduationCap, Home } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate, useParams, useLocation, useSearchParams } from "react-router";
 import type { QuestionnaireSummary, SummarizeAllResponse } from "../../../../types/adminMedisService";
 import { adminDesaService } from "../../../../service/adminDesaService";
 import { adminMedisService } from "../../../../service/adminMedisService";
+import { counselorAssignmentService } from "../../../../service/Admin/counselorAssignmentService";
 import MentalHealthChart from "../../../../components/MentalHealthChart";
-import { Breadcrumb, Button, DatePicker, Empty, Popover, Spin, Table, Tag } from "antd";
+import { Breadcrumb, Button, DatePicker, Empty, Popover, Select, Spin, Table, Tag } from "antd";
 import dayjs from "dayjs";
 import { getGradeDashboardColumn } from "../columns/GradeDashboardColumn";
+import { getAcademicYearOptions, getCurrentAcademicYear } from "../../../../utils/academicYear";
 
 const { RangePicker } = DatePicker;
 
@@ -18,7 +20,16 @@ export default function GradeDashboard() {
 
     const navigate = useNavigate();
     const location = useLocation();
+    const [searchParams, setSearchParams] = useSearchParams();
+
     const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
+    const isBK = basePath === "/admin-medis";
+
+    const urlAcademicYear = searchParams.get("academicYear");
+    const [academicYear, setAcademicYear] = useState<string>(
+        urlAcademicYear || getCurrentAcademicYear()
+    );
+    const [assignedYears, setAssignedYears] = useState<string[]>([]);
 
     const [loading, setLoading] = useState({
         loading: true,
@@ -39,26 +50,28 @@ export default function GradeDashboard() {
     const [dateRange, setDateRange] = useState<[string, string] | null>(null);
     const [openFilter, setOpenFilter] = useState(false);
 
+    // Fetch counselor's assigned academic years if in BK context
     useEffect(() => {
-        if (questionnaireId) {
-            fetchInitialData();
+        if (isBK) {
+            counselorAssignmentService.getMyAssignments()
+                .then((groups) => {
+                    const years = groups.map((g) => g.academicYear);
+                    setAssignedYears(years);
+                })
+                .catch(() => {});
         }
-    }, [questionnaireId]);
+    }, [isBK]);
 
-    const fetchInitialData = async () => {
-        setLoading((prev) => ({ ...prev, loading: true }));
-        try {
-            await Promise.all([
-                fetchQuestionnaireName(),
-                fetchQuestionnaireSummary(),
-                fetchSummarizeAll(),
-            ]);
-        } catch (error) {
-            console.error("Error fetching data:", error);
-        } finally {
-            setLoading((prev) => ({ ...prev, loading: false }));
-        }
-    };
+    const academicYearOptions = useMemo(() => {
+        const baseOptions = getAcademicYearOptions(academicYear);
+        const combined = [...baseOptions];
+        assignedYears.forEach((yr) => {
+            if (!combined.some((opt) => opt.value === yr)) {
+                combined.push({ label: yr, value: yr });
+            }
+        });
+        return combined.sort((a, b) => b.value.localeCompare(a.value));
+    }, [academicYear, assignedYears]);
 
     const fetchQuestionnaireName = async () => {
         if (!questionnaireId) return;
@@ -70,25 +83,65 @@ export default function GradeDashboard() {
         }
     };
 
-    const fetchQuestionnaireSummary = async () => {
+    const fetchQuestionnaireSummary = async (targetYear: string = academicYear) => {
         if (!questionnaireId) return;
         try {
-            const data = await adminMedisService.getQuestionnaireSummary(questionnaireId);
+            const data = await adminMedisService.getQuestionnaireSummary(questionnaireId, targetYear);
             setSummaryData(data);
         } catch (err) {
             console.error(err);
         }
     };
 
-    const fetchSummarizeAll = async () => {
+    const fetchSummarizeAll = async (targetYear: string = academicYear) => {
         if (!questionnaireId) return;
         try {
             const startDate = dateRange ? dateRange[0] : undefined;
             const endDate = dateRange ? dateRange[1] : undefined;
-            const data = await adminMedisService.summarizeAll(questionnaireId, startDate, endDate);
+            const data = await adminMedisService.summarizeAll(questionnaireId, startDate, endDate, targetYear);
             setSummarizeData(data.data);
         } catch (err) {
             console.error(err);
+        }
+    };
+
+    const fetchInitialData = async () => {
+        setLoading((prev) => ({ ...prev, loading: true }));
+        try {
+            await Promise.all([
+                fetchQuestionnaireName(),
+                fetchQuestionnaireSummary(academicYear),
+                fetchSummarizeAll(academicYear),
+            ]);
+        } catch (error) {
+            console.error("Error fetching data:", error);
+        } finally {
+            setLoading((prev) => ({ ...prev, loading: false }));
+        }
+    };
+
+    useEffect(() => {
+        if (questionnaireId) {
+            fetchInitialData();
+        }
+    }, [questionnaireId]);
+
+    const handleAcademicYearChange = async (newYear: string) => {
+        setAcademicYear(newYear);
+        setSearchParams((prev) => {
+            const next = new URLSearchParams(prev);
+            next.set("academicYear", newYear);
+            return next;
+        });
+
+        setLoading((prev) => ({ ...prev, loadingTable: true }));
+        try {
+            await Promise.all([
+                fetchQuestionnaireSummary(newYear),
+                fetchSummarizeAll(newYear),
+            ]);
+        } finally {
+            setLoading((prev) => ({ ...prev, loadingTable: false }));
         }
     };
 
@@ -103,7 +156,7 @@ export default function GradeDashboard() {
     const applyFilter = async () => {
         setOpenFilter(false);
         setLoading((prev) => ({ ...prev, loadingTable: true }));
-        await fetchSummarizeAll();
+        await fetchSummarizeAll(academicYear);
         setLoading((prev) => ({ ...prev, loadingTable: false }));
     };
 
@@ -112,7 +165,7 @@ export default function GradeDashboard() {
         setOpenFilter(false);
         setLoading((prev) => ({ ...prev, loadingTable: true }));
         try {
-            const res = await adminMedisService.summarizeAll(questionnaireId);
+            const res = await adminMedisService.summarizeAll(questionnaireId, undefined, undefined, academicYear);
             setSummarizeData(res.data);
         } catch (error) {
             console.error(error);
@@ -145,7 +198,8 @@ export default function GradeDashboard() {
 
     const columns = getGradeDashboardColumn({
         onSeeDetail: (gradeId) => {
-            navigate(`${basePath}/responden/${questionnaireId}/${gradeId}`);
+            const queryStr = academicYear ? `?academicYear=${encodeURIComponent(academicYear)}` : "";
+            navigate(`${basePath}/responden/${questionnaireId}/${gradeId}${queryStr}`);
         },
     });
 
@@ -168,6 +222,10 @@ export default function GradeDashboard() {
         );
     }
 
+    // Check if counselor has assignment for this academic year
+    const hasNoAssignment =
+        summarizeData?.hasAssignment === false || summaryData?.hasAssignment === false;
+
     const gradeListData = summarizeData.perRw || summaryData?.perRw || [];
 
     return (
@@ -183,15 +241,16 @@ export default function GradeDashboard() {
                 </Button>
             </div>
 
-            {summaryData && (
-                <Spin spinning={loading.loading}>
+            {/* If counselor has assignments, display the mental health chart */}
+            {!hasNoAssignment && summaryData && (
+                <Spin spinning={loading.loadingTable}>
                     <MentalHealthChart
                         overallDepressionRate={summaryData.summarize.unStableMentalPercentage || 0}
                         totalSubmit={summaryData.summarize.submitCount || 0}
                         totalUser={summaryData.summarize.userCount || 0}
                         perGradeData={gradeListData as any[]}
                         title="Rekapitulasi Kesehatan Mental Seluruh Tingkat"
-                        subtitle={`Instrumen: ${questionnaireName}`}
+                        subtitle={`Instrumen: ${questionnaireName} (Tahun Ajaran ${academicYear})`}
                     />
                 </Spin>
             )}
@@ -213,7 +272,20 @@ export default function GradeDashboard() {
                         ]}
                     />
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2.5">
+                        {/* Filter Tahun Ajaran */}
+                        <div className="flex items-center gap-1.5">
+                            <span className="text-xs sm:text-sm font-medium text-slate-600 whitespace-nowrap">
+                                Tahun Ajaran:
+                            </span>
+                            <Select
+                                value={academicYear}
+                                onChange={handleAcademicYearChange}
+                                options={academicYearOptions}
+                                className="w-36 sm:w-40 !rounded-lg"
+                            />
+                        </div>
+
                         {dateRange && (
                             <Tag closable onClose={clearFilter} color="green">
                                 {dateRange[0]} - {dateRange[1]}
@@ -234,18 +306,35 @@ export default function GradeDashboard() {
                     </div>
                 </div>
 
-                <Table
-                    columns={columns}
-                    dataSource={gradeListData}
-                    rowKey={(record) => (record as any).gradeId || record.rwId || record.id}
-                    loading={loading.loadingTable}
-                    pagination={{
-                        pageSize: 10,
-                        showTotal: (total, range) => `${range[0]}-${range[1]} dari ${total} Tingkat`,
-                    }}
-                    scroll={{ x: 800 }}
-                    rowClassName="hover:bg-gray-50 transition-colors"
-                />
+                {/* Empty State when Guru BK has no assignments in the selected academic year */}
+                {hasNoAssignment ? (
+                    <div className="py-12 px-4 flex flex-col items-center justify-center text-center space-y-3 bg-slate-50/70 border border-dashed border-slate-200 rounded-xl">
+                        <div className="w-14 h-14 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center shadow-xs">
+                            <GraduationCap size={28} />
+                        </div>
+                        <div className="max-w-md space-y-1">
+                            <h3 className="text-base font-semibold text-slate-800">
+                                Belum Ada Penugasan Kelas
+                            </h3>
+                            <p className="text-sm text-slate-600">
+                                Anda belum ditugaskan ke kelas mana pun untuk tahun ajaran ini. Hubungi Tata Usaha.
+                            </p>
+                        </div>
+                    </div>
+                ) : (
+                    <Table
+                        columns={columns}
+                        dataSource={gradeListData}
+                        rowKey={(record) => (record as any).gradeId || record.rwId || record.id}
+                        loading={loading.loadingTable}
+                        pagination={{
+                            pageSize: 10,
+                            showTotal: (total, range) => `${range[0]}-${range[1]} dari ${total} Tingkat`,
+                        }}
+                        scroll={{ x: 800 }}
+                        rowClassName="hover:bg-gray-50 transition-colors"
+                    />
+                )}
             </div>
         </div>
     );

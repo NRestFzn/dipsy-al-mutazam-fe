@@ -38,6 +38,8 @@ export interface RTData {
 }
 
 export interface RWSummary {
+  hasAssignment?: boolean;
+  academicYear?: string;
   summarize: {
     userCount: number;
     submitCount: number;
@@ -49,6 +51,8 @@ export interface RWSummary {
 }
 
 export interface QuestionnaireSummary {
+  hasAssignment?: boolean;
+  academicYear?: string;
   summarize: {
     userCount: number;
     submitCount: number;
@@ -207,6 +211,8 @@ export interface UpdateQuestionnairePayload {
 }
 
 export interface RTSummary {
+  hasAssignment?: boolean;
+  academicYear?: string;
   summarize: {
     userCount: number;
     submitCount: number;
@@ -227,12 +233,15 @@ export interface QueryParams {
   RukunTetanggaId?: string;
   startDate?: string;
   endDate?: string;
+  academicYear?: string;
 }
 
 export interface SummarizeAllResponse {
   statusCode: number;
   message: string;
   data: {
+    hasAssignment?: boolean;
+    academicYear?: string;
     summarize: {
       userCount: number;
       submitCount: number;
