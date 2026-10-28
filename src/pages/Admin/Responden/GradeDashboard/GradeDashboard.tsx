@@ -1,6 +1,6 @@
 import { ArrowLeft, Filter, Home } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, useLocation } from "react-router";
 import type { QuestionnaireSummary, SummarizeAllResponse } from "../../../../types/adminMedisService";
 import { adminDesaService } from "../../../../service/adminDesaService";
 import { adminMedisService } from "../../../../service/adminMedisService";
@@ -17,6 +17,8 @@ export default function GradeDashboard() {
     const questionnaireId = rawParam.includes("=") ? rawParam.split("=")[1] : rawParam;
 
     const navigate = useNavigate();
+    const location = useLocation();
+    const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
 
     const [loading, setLoading] = useState({
         loading: true,
@@ -143,7 +145,7 @@ export default function GradeDashboard() {
 
     const columns = getGradeDashboardColumn({
         onSeeDetail: (gradeId) => {
-            navigate(`/admin-medis/responden/${questionnaireId}/${gradeId}`);
+            navigate(`${basePath}/responden/${questionnaireId}/${gradeId}`);
         },
     });
 
@@ -160,7 +162,7 @@ export default function GradeDashboard() {
         return (
             <div className="h-[70vh] flex items-center justify-center">
                 <Empty description="Data rekapitulasi tidak ditemukan">
-                    <Button onClick={() => navigate("/admin-medis/responden")}>Kembali</Button>
+                    <Button onClick={() => navigate(`${basePath}/responden`)}>Kembali</Button>
                 </Empty>
             </div>
         );
@@ -173,7 +175,7 @@ export default function GradeDashboard() {
             <div>
                 <Button
                     type="default"
-                    onClick={() => navigate("/admin-medis/responden")}
+                    onClick={() => navigate(`${basePath}/responden`)}
                     className="flex items-center shadow-sm border-gray-200 hover:bg-gray-100"
                 >
                     <ArrowLeft size={16} className="mr-2" />
@@ -200,7 +202,7 @@ export default function GradeDashboard() {
                         items={[
                             {
                                 title: (
-                                    <Link to="/admin-medis/responden" className="flex items-center gap-1 text-gray-500 hover:text-green-600">
+                                    <Link to={`${basePath}/responden`} className="flex items-center gap-1 text-gray-500 hover:text-green-600">
                                         <Home size={14} /> Beranda Responden
                                     </Link>
                                 ),

@@ -4,7 +4,7 @@ import { Form, Input, Button, Alert, Typography } from "antd";
 import { Mail, Lock, ShieldCheck } from "lucide-react";
 import { useAuth } from "../../../context/AuthContext";
 import { getErrorMessage } from "../../../utils/getErrorMessage";
-import { ROLE_ID } from "../../../constants";
+import { isGuruBkRole, isTuRole, isWaliKelasRole } from "../../../constants";
 import type { LoginPayload, Role } from "../../../types/AuthTypes/authTypes";
 
 const { Title, Text, Paragraph } = Typography;
@@ -28,8 +28,9 @@ export default function Login() {
       const roles = userData.roles || [];
 
       const getRedirectPath = (userRoles: Role[]) => {
-        if (userRoles.some(r => r.id === ROLE_ID.WALI_KELAS)) return "/admin/responden";
-        if (userRoles.some(r => r.id === ROLE_ID.GURU_BK)) return "/admin-medis/responden";
+        if (userRoles.some(r => isTuRole(r))) return "/admin-tu";
+        if (userRoles.some(r => isWaliKelasRole(r))) return "/admin/responden";
+        if (userRoles.some(r => isGuruBkRole(r))) return "/admin-medis/responden";
 
         return "/";
       };

@@ -1,5 +1,5 @@
 import { memo, useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { useDebounce } from "use-debounce";
 import { Empty, Input, Pagination, Table } from "antd";
 import { Search } from "lucide-react";
@@ -35,6 +35,8 @@ const SearchInput = memo(({ onSearch }: SearchInputProps) => {
 
 export default function Responden() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
 
     const [pagination, setPagination] = useState({
         current: 1,
@@ -83,7 +85,7 @@ export default function Responden() {
     const columns = getAdminRespondenColumns({
         pagination,
         onSeeDetail(id) {
-            navigate(`/admin-medis/responden/${id}`);
+            navigate(`${basePath}/responden/${id}`);
         },
     });
 

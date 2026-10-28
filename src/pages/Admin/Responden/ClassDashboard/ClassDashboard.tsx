@@ -1,6 +1,6 @@
 import { ArrowLeft, Filter, Home } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, useLocation } from "react-router";
 import type { RWSummary } from "../../../../types/adminMedisService";
 import { adminDesaService } from "../../../../service/adminDesaService";
 import { adminMedisService } from "../../../../service/adminMedisService";
@@ -13,6 +13,8 @@ const { RangePicker } = DatePicker;
 
 export default function ClassDashboard() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
 
     const params = useParams<{ questionnaireId: string; gradeId?: string; rwId?: string }>();
     const rawQ = params.questionnaireId || "";
@@ -152,7 +154,7 @@ export default function ClassDashboard() {
 
     const columns = getClassDashboardColumns({
         onSeeDetail: (classId) => {
-            navigate(`/admin-medis/responden/${questionnaireId}/${gradeId}/${classId}`);
+            navigate(`${basePath}/responden/${questionnaireId}/${gradeId}/${classId}`);
         },
     });
 
@@ -208,14 +210,14 @@ export default function ClassDashboard() {
                         items={[
                             {
                                 title: (
-                                    <Link to="/admin-medis/responden" className="flex items-center gap-1 text-gray-500 hover:text-green-600">
+                                    <Link to={`${basePath}/responden`} className="flex items-center gap-1 text-gray-500 hover:text-green-600">
                                         <Home size={14} /> Beranda Responden
                                     </Link>
                                 ),
                             },
                             {
                                 title: (
-                                    <Link to={`/admin-medis/responden/${questionnaireId}`} className="text-gray-500 hover:text-green-600">
+                                    <Link to={`${basePath}/responden/${questionnaireId}`} className="text-gray-500 hover:text-green-600">
                                         {questionnaireName}
                                     </Link>
                                 ),

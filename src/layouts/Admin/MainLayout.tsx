@@ -6,6 +6,8 @@ import { useNavigate } from "react-router";
 import { RiLogoutCircleRLine } from "react-icons/ri";
 import { useAdminMedisProfile } from "../../hooks/useAdminMedis";
 import { getImageUrl } from "../../utils/imageHelper";
+import { isGuruBkRole, isTuRole, isWaliKelasRole } from "../../constants";
+import type { Role } from "../../types/AuthTypes/authTypes";
 
 const { Header } = Layout;
 
@@ -28,13 +30,14 @@ const items: MenuProps["items"] = [
 
 interface ProfileComponentProps {
   role?: string | undefined;
+  activeRole?: Role | null;
   fullname?: string;
   profileUrl?: string;
-  logout: () => void
+  logout: () => void;
 }
 
 const ProfileComponent = (props: ProfileComponentProps) => {
-  const { role, fullname, profileUrl, logout } = props
+  const { role, activeRole, fullname, profileUrl, logout } = props;
 
   const navigate = useNavigate();
 
@@ -47,7 +50,14 @@ const ProfileComponent = (props: ProfileComponentProps) => {
     if (e.key === "logout-btn") {
       handleLogout();
     } else if (e.key === "profile-key") {
-      navigate(`/${role === "admin medis" ? "admin-medis" : "admin"}/profile`);
+      const isTU = isTuRole(activeRole) || window.location.pathname.startsWith("/admin-tu");
+      if (isTU) {
+        navigate("/admin-tu/profile");
+      } else if (role === "admin medis" || isGuruBkRole(activeRole)) {
+        navigate("/admin-medis/profile");
+      } else {
+        navigate("/admin/profile");
+      }
     }
   };
 
@@ -65,7 +75,13 @@ const ProfileComponent = (props: ProfileComponentProps) => {
                 {fullname || "User"}
               </div>
               <div className="text-xs text-gray-500 capitalize">
-                {role || "Role"}
+                {isTuRole(activeRole)
+                  ? "Tata Usaha"
+                  : isGuruBkRole(activeRole)
+                  ? "Guru BK"
+                  : isWaliKelasRole(activeRole)
+                  ? "Wali Kelas"
+                  : (role || "Role")}
               </div>
             </div>
 
@@ -113,7 +129,13 @@ function MainLayout(props: MainLayoutProps) {
           {!startAction && (
             <a
               className="flex items-center space-x-2 md:space-x-4 cursor-pointer"
-              href={`${roleName === "admin medis" ? "/admin-medis/responden" : "/admin/responden"}`}
+              href={`${
+                isTuRole(activeRole) || window.location.pathname.startsWith("/admin-tu")
+                  ? "/admin-tu"
+                  : (roleName === "admin medis" || isGuruBkRole(activeRole))
+                  ? "/admin-medis/responden"
+                  : "/admin/responden"
+              }`}
             >
               <div className="flex items-center gap-3">
                 <img
@@ -125,7 +147,13 @@ function MainLayout(props: MainLayoutProps) {
             </a>
           )}
         </section>
-        <ProfileComponent logout={logout} role={roleName} fullname={fullname} profileUrl={profileUrl} />
+        <ProfileComponent
+          logout={logout}
+          role={roleName}
+          activeRole={activeRole}
+          fullname={fullname}
+          profileUrl={profileUrl}
+        />
       </Header>
       <Layout className="h-full overflow-hidden">{children}</Layout>
     </Layout>
