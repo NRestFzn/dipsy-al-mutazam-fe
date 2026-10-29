@@ -63,7 +63,7 @@ export default function KelolaGuru() {
 
 
   const { data, isLoading } = useQuery({
-    queryKey: ["teachers", debouncedSearch, pagination, selectedAcademicYear],
+    queryKey: ["teachers", debouncedSearch, pagination, selectedAcademicYear, filters.order],
     queryFn: () =>
       teacherService.getTeachers({
         search: debouncedSearch || undefined,
