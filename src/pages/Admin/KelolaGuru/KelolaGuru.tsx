@@ -2,9 +2,11 @@ import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
+  Empty,
   Form,
   Input,
   Modal,
+  Pagination,
   Popconfirm,
   Select,
   Table,
@@ -12,6 +14,7 @@ import {
   Tooltip,
   message,
 } from "antd";
+import type { SorterResult } from "antd/es/table/interface";
 import {
   GraduationCap,
   Pencil,
@@ -37,8 +40,10 @@ export default function KelolaGuru() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 400);
-  const [pagination, setPagination] = useState({ page: 1, pageSize: 10 });
-  const [filters, setFilters] = useState({ order: '[["fullname", "asc"]]' });
+  const [pagination, setPagination] = useState({ current: 1, pageSize: 10 });
+  const [filters, setFilters] = useState({
+    order: '[["createdAt", "desc"]]',
+  });
   const { academicYear: serverAcademicYear } = useCurrentAcademicYear();
   const [selectedAcademicYear, setSelectedAcademicYear] = useState<string>(
     serverAcademicYear
@@ -62,12 +67,19 @@ export default function KelolaGuru() {
   const [form] = Form.useForm();
 
 
-  const { data, isLoading } = useQuery({
-    queryKey: ["teachers", debouncedSearch, pagination, selectedAcademicYear, filters.order],
+  const { data, isLoading, isFetching } = useQuery({
+    queryKey: [
+      "teachers",
+      debouncedSearch,
+      pagination.current,
+      pagination.pageSize,
+      selectedAcademicYear,
+      filters.order,
+    ],
     queryFn: () =>
       teacherService.getTeachers({
         search: debouncedSearch || undefined,
-        page: pagination.page,
+        page: pagination.current,
         pageSize: pagination.pageSize,
         order: filters.order,
         academicYear: selectedAcademicYear,
@@ -77,19 +89,23 @@ export default function KelolaGuru() {
   const handleTableChange = (
     _: any,
     __: any,
-    sorter: any,
-    extra?: { action?: string }
+    sorter: SorterResult<TeacherItem> | SorterResult<TeacherItem>[]
   ) => {
-    if (extra?.action !== "sort") return;
-
     if (!Array.isArray(sorter)) {
       const { field, order } = sorter;
-      setFilters({
-        order: order
-          ? `[["${field}", "${order === "ascend" ? "asc" : "desc"}"]]`
-          : '[["fullname", "asc"]]',
-      });
-      setPagination((prev) => ({ ...prev, page: 1 }));
+      if (order) {
+        const apiOrder = order === "ascend" ? "asc" : "desc";
+        setFilters((prev) => ({
+          ...prev,
+          order: `[["${field}", "${apiOrder}"]]`,
+        }));
+      } else {
+        setFilters((prev) => ({
+          ...prev,
+          order: '[["createdAt", "desc"]]',
+        }));
+      }
+      setPagination((prev) => ({ ...prev, current: 1 }));
     }
   };
 
@@ -384,7 +400,7 @@ export default function KelolaGuru() {
             value={search}
             onChange={(event) => {
               setSearch(event.target.value);
-              setPagination((prev) => ({ ...prev, page: 1 }));
+              setPagination((prev) => ({ ...prev, current: 1 }));
             }}
             allowClear
             className="w-full sm:w-72 !rounded-lg"
@@ -397,7 +413,7 @@ export default function KelolaGuru() {
               value={selectedAcademicYear}
               onChange={(val) => {
                 setSelectedAcademicYear(val);
-                setPagination((prev) => ({ ...prev, page: 1 }));
+                setPagination((prev) => ({ ...prev, current: 1 }));
               }}
               options={academicYearOptions}
               className="w-36 sm:w-44 !rounded-lg"
@@ -418,18 +434,35 @@ export default function KelolaGuru() {
       <div className="bg-white border border-slate-200 rounded-xl overflow-hidden shadow-sm">
         <Table<TeacherItem>
           rowKey="id"
-          loading={isLoading}
+          loading={isLoading || isFetching}
           dataSource={data?.data ?? []}
           columns={columns}
+          pagination={false}
           onChange={handleTableChange}
-          pagination={{
-            current: pagination.page,
-            pageSize: pagination.pageSize,
-            total: data?.meta?.pagination?.total ?? 0,
-            onChange: (page, pageSize) => setPagination({ page, pageSize }),
-            className: "!px-4 !mb-4",
+          scroll={{ x: 900 }}
+          rowClassName="hover:bg-slate-50 transition-colors"
+          locale={{
+            emptyText: (
+              <Empty
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                description="Belum ada data guru yang ditemukan"
+              />
+            ),
           }}
         />
+
+        <div className="p-4 border-t border-slate-100 flex justify-end bg-white">
+          <Pagination
+            current={pagination.current}
+            pageSize={pagination.pageSize}
+            total={data?.meta?.pagination?.total ?? 0}
+            showSizeChanger
+            onChange={(page, pageSize) =>
+              setPagination({ current: page, pageSize })
+            }
+            size="small"
+          />
+        </div>
       </div>
 
       {/* Modal Tambah / Ubah Guru */}
