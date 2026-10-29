@@ -38,6 +38,7 @@ export default function KelolaGuru() {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 400);
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10 });
+  const [filters, setFilters] = useState({ order: '[["fullname", "asc"]]' });
   const { academicYear: serverAcademicYear } = useCurrentAcademicYear();
   const [selectedAcademicYear, setSelectedAcademicYear] = useState<string>(
     serverAcademicYear
@@ -68,9 +69,29 @@ export default function KelolaGuru() {
         search: debouncedSearch || undefined,
         page: pagination.page,
         pageSize: pagination.pageSize,
+        order: filters.order,
         academicYear: selectedAcademicYear,
       }),
   });
+
+  const handleTableChange = (
+    _: any,
+    __: any,
+    sorter: any,
+    extra?: { action?: string }
+  ) => {
+    if (extra?.action !== "sort") return;
+
+    if (!Array.isArray(sorter)) {
+      const { field, order } = sorter;
+      setFilters({
+        order: order
+          ? `[["${field}", "${order === "ascend" ? "asc" : "desc"}"]]`
+          : '[["fullname", "asc"]]',
+      });
+      setPagination((prev) => ({ ...prev, page: 1 }));
+    }
+  };
 
   const refresh = () => {
     queryClient.invalidateQueries({ queryKey: ["teachers"] });
@@ -143,6 +164,7 @@ export default function KelolaGuru() {
       title: "Nama",
       dataIndex: "fullname",
       key: "fullname",
+      sorter: true,
       render: (text: string) => (
         <span className="font-semibold text-slate-900">{text}</span>
       ),
@@ -151,6 +173,7 @@ export default function KelolaGuru() {
       title: "Email",
       dataIndex: "email",
       key: "email",
+      sorter: true,
       render: (text: string) => (
         <span className="text-slate-600">{text}</span>
       ),
@@ -398,6 +421,7 @@ export default function KelolaGuru() {
           loading={isLoading}
           dataSource={data?.data ?? []}
           columns={columns}
+          onChange={handleTableChange}
           pagination={{
             current: pagination.page,
             pageSize: pagination.pageSize,

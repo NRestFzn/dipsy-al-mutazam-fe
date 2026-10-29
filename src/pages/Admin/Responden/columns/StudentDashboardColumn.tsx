@@ -27,6 +27,7 @@ export const getStudentDashboardColumns = ({
         title: "Nama Siswa",
         dataIndex: "fullname",
         key: "fullname",
+        sorter: (a, b) => a.fullname.localeCompare(b.fullname),
         render: (text, record) => (
             <div className="flex flex-col">
                 <span className="font-semibold text-gray-800">{text}</span>
@@ -40,6 +41,7 @@ export const getStudentDashboardColumns = ({
         title: "Status Skrining",
         dataIndex: "isMentalUnStable",
         key: "isMentalUnStable",
+        sorter: (a, b) => Number(a.isMentalUnStable) - Number(b.isMentalUnStable),
         align: "center",
         render: (condition) => {
             const isRisk = Boolean(condition);
@@ -54,6 +56,9 @@ export const getStudentDashboardColumns = ({
         title: "Terakhir Mengisi",
         dataIndex: "lastSubmissionDate",
         key: "lastSubmissionDate",
+        sorter: (a, b) =>
+            new Date(a.lastSubmissionDate || 0).getTime() -
+            new Date(b.lastSubmissionDate || 0).getTime(),
         render: (date) => {
             if (!date) return <span className="text-gray-400 italic">Belum mengisi</span>;
             return (

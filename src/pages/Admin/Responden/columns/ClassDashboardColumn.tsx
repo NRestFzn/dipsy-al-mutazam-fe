@@ -13,6 +13,8 @@ export const getClassDashboardColumns = ({
     {
         title: "Nama Kelas",
         key: "className",
+        sorter: (a, b) =>
+            String(a.className || "").localeCompare(String(b.className || "")),
         render: (_, record) => {
             const rawName = record.className ?? record.rtName ?? "";
             const displayName = String(rawName).startsWith("Kelas") || String(rawName).includes("-")
@@ -25,6 +27,7 @@ export const getClassDashboardColumns = ({
         title: "Total Siswa",
         dataIndex: "userCount",
         key: "userCount",
+        sorter: (a, b) => (a.userCount || 0) - (b.userCount || 0),
         align: "center",
         render: (count, record) => count ?? record.studentCount ?? 0,
     },
@@ -32,6 +35,7 @@ export const getClassDashboardColumns = ({
         title: "Siswa Mengisi",
         dataIndex: "submitCount",
         key: "submitCount",
+        sorter: (a, b) => (a.submitCount || 0) - (b.submitCount || 0),
         align: "center",
         render: (count) => (
             <span className="font-semibold text-gray-700">{count}</span>
@@ -41,6 +45,9 @@ export const getClassDashboardColumns = ({
         title: "Indikasi Butuh Perhatian",
         dataIndex: "unStableMentalPercentage",
         key: "unStableMentalPercentage",
+        sorter: (a, b) =>
+            (a.unStableMentalPercentage || 0) -
+            (b.unStableMentalPercentage || 0),
         align: "center",
         render: (percentage: number) => {
             let color = "success";

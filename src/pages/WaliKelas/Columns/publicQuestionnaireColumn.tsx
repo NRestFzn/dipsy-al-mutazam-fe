@@ -24,12 +24,17 @@ export const getWaliKelasHistoryColumn = ({
         title: "Judul Kuesioner",
         dataIndex: "title",
         key: "title",
+        sorter: (a, b) => a.title.localeCompare(b.title),
         render: (text) => <span className="font-semibold text-gray-800">{text}</span>,
     },
     {
         title: "Kategori",
         dataIndex: ["category", "name"],
         key: "category",
+        sorter: (a, b) =>
+            String(a.category?.name || "").localeCompare(
+                String(b.category?.name || "")
+            ),
         render: (category) => (
             category ? (
                 <Tag color="cyan" className="rounded-full px-3 font-medium">
@@ -44,6 +49,9 @@ export const getWaliKelasHistoryColumn = ({
         title: "Tanggal Rilis",
         dataIndex: "createdAt",
         key: "createdAt",
+        sorter: (a, b) =>
+            new Date(a.createdAt || 0).getTime() -
+            new Date(b.createdAt || 0).getTime(),
         render: (date) => (
             <span className="text-gray-600 text-sm">
                 {dayjs(date).format("DD MMM YYYY, HH:mm")}
