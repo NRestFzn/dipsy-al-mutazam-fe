@@ -143,6 +143,10 @@ const router = createBrowserRouter([
             element: <Loadable Component={Pages.KelolaGuru} />,
           },
           {
+            path: "tahun-ajaran",
+            element: <Loadable Component={Pages.TahunAjaran} />,
+          },
+          {
             path: "master-data",
             children: [
               { index: true, element: <Navigate to="category" replace /> },

@@ -133,6 +133,22 @@ export interface GraduateStudentsPayload {
   graduationYear: string;
 }
 
+export interface AcademicYearItem {
+  id: string;
+  name: string;
+  isActive: boolean;
+  startDate?: string | null;
+  endDate?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface AcademicYearPayload {
+  name?: string;
+  startDate?: string | null;
+  endDate?: string | null;
+}
+
 export interface TaughtStudentItem {
   id: string;
   fullname: string;
