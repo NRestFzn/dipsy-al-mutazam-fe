@@ -112,6 +112,7 @@ export default function TahunAjaran() {
       title: "Tahun Ajaran",
       dataIndex: "name",
       key: "name",
+      sorter: (a, b) => a.name.localeCompare(b.name),
       render: (value: string) => (
         <span className="font-semibold text-slate-900">{value}</span>
       ),
@@ -122,6 +123,7 @@ export default function TahunAjaran() {
       key: "isActive",
       width: 130,
       align: "center",
+      sorter: (a, b) => Number(b.isActive) - Number(a.isActive),
       render: (value: boolean) =>
         value ? (
           <Tag color="emerald" className="!rounded-md font-semibold">

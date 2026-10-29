@@ -162,6 +162,7 @@ export default function MyStudents() {
       title: "Nama Siswa",
       dataIndex: "fullname",
       key: "fullname",
+      sorter: (a, b) => a.fullname.localeCompare(b.fullname),
       render: (value: string) => <span className="font-semibold text-slate-800">{value}</span>,
     },
     {
@@ -169,6 +170,7 @@ export default function MyStudents() {
       dataIndex: "nisn",
       key: "nisn",
       width: 160,
+      sorter: (a, b) => (a.nisn || "").localeCompare(b.nisn || ""),
       render: (value?: string | null) => (
         <span className="font-mono text-xs text-slate-600">{value || "-"}</span>
       ),
@@ -179,6 +181,7 @@ export default function MyStudents() {
       key: "status",
       width: 110,
       align: "center",
+      sorter: (a, b) => (a.status || "").localeCompare(b.status || ""),
       render: (value?: string | null) => statusTag(value),
     },
     {
