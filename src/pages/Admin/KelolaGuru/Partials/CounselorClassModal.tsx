@@ -26,9 +26,9 @@ import type { TeacherItem } from "../../../../types/Teacher/teacherTypes";
 import type { ClassItem, GradeItem } from "../../../../types/Academic/academicTypes";
 import {
   getAcademicYearOptions,
-  getCurrentAcademicYear,
   isValidAcademicYear,
 } from "../../../../utils/academicYear";
+import { useCurrentAcademicYear } from "../../../../hooks/Admin/useCurrentAcademicYear";
 
 interface CounselorClassModalProps {
   open: boolean;
@@ -53,8 +53,9 @@ export default function CounselorClassModal({
 }: CounselorClassModalProps) {
   const queryClient = useQueryClient();
 
+  const { academicYear: serverAcademicYear } = useCurrentAcademicYear();
   const [academicYear, setAcademicYear] = useState<string>(
-    initialAcademicYear || getCurrentAcademicYear()
+    initialAcademicYear || serverAcademicYear
   );
   const [selectedClassIds, setSelectedClassIds] = useState<string[]>([]);
   const [classSearch, setClassSearch] = useState<string>("");
@@ -62,10 +63,10 @@ export default function CounselorClassModal({
   // Sync initial academic year when modal opens or initialAcademicYear changes
   useEffect(() => {
     if (open) {
-      setAcademicYear(initialAcademicYear || getCurrentAcademicYear());
+      setAcademicYear(initialAcademicYear || serverAcademicYear);
       setClassSearch("");
     }
-  }, [open, initialAcademicYear]);
+  }, [open, initialAcademicYear, serverAcademicYear]);
 
   // Fetch classes and grades
   const { data: classesData, isLoading: isClassesLoading } = useQuery({
@@ -347,7 +348,7 @@ export default function CounselorClassModal({
                 <Button
                   size="small"
                   type="text"
-                  onClick={() => setAcademicYear(getCurrentAcademicYear())}
+                  onClick={() => setAcademicYear(serverAcademicYear)}
                   icon={<RotateCcw size={14} />}
                 />
               </Tooltip>

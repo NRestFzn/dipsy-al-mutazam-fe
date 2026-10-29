@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Button,
@@ -29,10 +29,8 @@ import type {
   TeacherItem,
   UpdateTeacherPayload,
 } from "../../../types/Teacher/teacherTypes";
-import {
-  getAcademicYearOptions,
-  getCurrentAcademicYear,
-} from "../../../utils/academicYear";
+import { getAcademicYearOptions } from "../../../utils/academicYear";
+import { useCurrentAcademicYear } from "../../../hooks/Admin/useCurrentAcademicYear";
 import CounselorClassModal from "./Partials/CounselorClassModal";
 
 export default function KelolaGuru() {
@@ -40,9 +38,14 @@ export default function KelolaGuru() {
   const [search, setSearch] = useState("");
   const [debouncedSearch] = useDebounce(search, 400);
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10 });
+  const { academicYear: serverAcademicYear } = useCurrentAcademicYear();
   const [selectedAcademicYear, setSelectedAcademicYear] = useState<string>(
-    getCurrentAcademicYear()
+    serverAcademicYear
   );
+
+  useEffect(() => {
+    setSelectedAcademicYear(serverAcademicYear);
+  }, [serverAcademicYear]);
 
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<TeacherItem | null>(null);

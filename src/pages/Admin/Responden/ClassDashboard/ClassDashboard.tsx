@@ -8,7 +8,7 @@ import MentalHealthChart from "../../../../components/MentalHealthChart";
 import { Breadcrumb, Button, DatePicker, Empty, Popover, Spin, Table, Tag } from "antd";
 import dayjs from "dayjs";
 import { getClassDashboardColumns } from "../columns/ClassDashboardColumn";
-import { getCurrentAcademicYear } from "../../../../utils/academicYear";
+import { useCurrentAcademicYear } from "../../../../hooks/Admin/useCurrentAcademicYear";
 
 const { RangePicker } = DatePicker;
 
@@ -26,8 +26,9 @@ export default function ClassDashboard() {
 
     const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
 
+    const { academicYear: serverAcademicYear } = useCurrentAcademicYear();
     const urlAcademicYear = searchParams.get("academicYear");
-    const academicYear = urlAcademicYear || getCurrentAcademicYear();
+    const academicYear = urlAcademicYear || serverAcademicYear;
 
     const [loading, setLoading] = useState({
         loading: true,
