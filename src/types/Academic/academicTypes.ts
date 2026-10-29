@@ -17,6 +17,7 @@ export interface ClassItem {
   grade?: GradeItem;
   homeroomTeacherId?: string | null;
   homeroomTeacher?: { id: string; fullname: string } | null;
+  academicYear?: string | null;
   studentCount?: number;
   createdAt?: string;
   updatedAt?: string;
@@ -53,12 +54,14 @@ export interface CreateClassPayload {
   name: string;
   gradeId: string;
   homeroomTeacherId?: string | null;
+  academicYear?: string | null;
 }
 
 export interface UpdateClassPayload {
   name: string;
   gradeId: string;
   homeroomTeacherId?: string | null;
+  academicYear?: string | null;
 }
 
 export interface CreateStudentAdminPayload {
@@ -96,6 +99,7 @@ export interface GetGradesParams {
 export interface GetClassesParams {
   name?: string;
   gradeId?: string;
+  academicYear?: string;
   page?: number;
   pageSize?: number;
   order?: string;

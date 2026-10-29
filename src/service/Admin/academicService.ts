@@ -39,6 +39,7 @@ const mapClass = (item: any): ClassItem => ({
     ? { id: String(item.homeroomTeacher.id), fullname: item.homeroomTeacher.fullname }
     : undefined,
   studentCount: item.studentCount ?? 0,
+  academicYear: item.academicYear ?? null,
   grade: item.grade ? mapGrade(item.grade) : undefined,
   createdAt: item.createdAt,
   updatedAt: item.updatedAt,
@@ -87,6 +88,7 @@ export const academicService = {
       params: {
         name: params?.name,
         GradeId: params?.gradeId,
+        academicYear: params?.academicYear,
         page: params?.page,
         pageSize: params?.pageSize,
         order: params?.order,
@@ -104,6 +106,7 @@ export const academicService = {
       name: payload.name,
       GradeId: payload.gradeId,
       homeroomTeacherId: payload.homeroomTeacherId ?? null,
+      academicYear: payload.academicYear ?? undefined,
     });
 
     return response.data;
@@ -114,6 +117,7 @@ export const academicService = {
       name: payload.name,
       GradeId: payload.gradeId,
       homeroomTeacherId: payload.homeroomTeacherId ?? null,
+      academicYear: payload.academicYear ?? undefined,
     });
 
     return response.data;

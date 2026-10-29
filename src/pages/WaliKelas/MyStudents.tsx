@@ -43,13 +43,18 @@ interface HistoryRow extends RosterRow {
 
 export default function MyStudents() {
   const navigate = useNavigate();
-  const { classId: myClassId, className: myClassName } = useMyClassroom();
+  const { classes: myClasses, classId: defaultClassId } = useMyClassroom();
   const { useStudentsAdmin, useTaughtHistory } = useAcademic();
 
+  const [selectedClassId, setSelectedClassId] = useState<string>("");
   const [currentSearch, setCurrentSearch] = useState("");
   const [historySearch, setHistorySearch] = useState("");
   const [historyGrade, setHistoryGrade] = useState<string | null>(null);
   const [historyClass, setHistoryClass] = useState<string | null>(null);
+
+  const myClassId = selectedClassId || defaultClassId;
+  const myClassName =
+    myClasses.find((item) => item.id === myClassId)?.name || "Kelas Binaan";
 
   const { data: studentsRes, isLoading: loadingStudents } = useStudentsAdmin({
     classroomId: myClassId || undefined,
@@ -228,9 +233,21 @@ export default function MyStudents() {
                 <div className="space-y-3 pt-2">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                     <div className="flex items-center gap-2 text-sm text-slate-600">
-                      <span className="font-semibold text-slate-800">
-                        {myClassName || "Belum ada kelas"}
-                      </span>
+                      {myClasses.length > 1 ? (
+                        <Select
+                          value={myClassId || undefined}
+                          onChange={(value) => setSelectedClassId(value)}
+                          options={myClasses.map((item) => ({
+                            label: item.name,
+                            value: item.id,
+                          }))}
+                          className="w-40 !rounded-lg"
+                        />
+                      ) : (
+                        <span className="font-semibold text-slate-800">
+                          {myClassName || "Belum ada kelas"}
+                        </span>
+                      )}
                       {myClassId && (
                         <span className="text-xs text-slate-400">
                           ({filteredCurrentStudents.length} siswa)
