@@ -23,7 +23,6 @@ import {
 import { useDebounce } from "use-debounce";
 import type { ColumnsType } from "antd/es/table";
 import { teacherService } from "../../../service/Admin/teacherService";
-import { academicService } from "../../../service/Admin/academicService";
 import type {
   CreateTeacherPayload,
   TeacherItem,
@@ -32,6 +31,7 @@ import type {
 import { getAcademicYearOptions } from "../../../utils/academicYear";
 import { useCurrentAcademicYear } from "../../../hooks/Admin/useCurrentAcademicYear";
 import CounselorClassModal from "./Partials/CounselorClassModal";
+import HomeroomClassModal from "./Partials/HomeroomClassModal";
 
 export default function KelolaGuru() {
   const queryClient = useQueryClient();
@@ -59,7 +59,7 @@ export default function KelolaGuru() {
   );
 
   const [form] = Form.useForm();
-  const [assignForm] = Form.useForm();
+
 
   const { data, isLoading } = useQuery({
     queryKey: ["teachers", debouncedSearch, pagination, selectedAcademicYear],
@@ -70,11 +70,6 @@ export default function KelolaGuru() {
         pageSize: pagination.pageSize,
         academicYear: selectedAcademicYear,
       }),
-  });
-
-  const { data: classesData } = useQuery({
-    queryKey: ["academic", "classes", "all"],
-    queryFn: () => academicService.getClasses({ pageSize: 100 }),
   });
 
   const refresh = () => {
@@ -111,35 +106,6 @@ export default function KelolaGuru() {
     },
   });
 
-  const assignMutation = useMutation({
-    mutationFn: async ({
-      classId,
-      teacherId,
-    }: {
-      classId: string;
-      teacherId: string;
-    }) => {
-      const cls = classesData?.data?.find((item) => item.id === classId);
-      if (!cls) throw new Error("Kelas tidak ditemukan");
-
-      return academicService.updateClass(cls.id, {
-        name: cls.name,
-        gradeId: cls.gradeId || "",
-        homeroomTeacherId: teacherId,
-      });
-    },
-    onSuccess: () => {
-      message.success("Penugasan wali kelas diperbarui");
-      setAssignOpen(false);
-      setAssigning(null);
-      refresh();
-    },
-    onError: (error: unknown) => {
-      const msg = error instanceof Error ? error.message : "Gagal menugaskan kelas";
-      message.error(msg);
-    },
-  });
-
   const openCreate = () => {
     setEditing(null);
     form.resetFields();
@@ -160,10 +126,6 @@ export default function KelolaGuru() {
 
   const openAssign = (record: TeacherItem) => {
     setAssigning(record);
-    assignForm.resetFields();
-    assignForm.setFieldsValue({
-      classId: record.homeroomClasses?.[0]?.id ?? undefined,
-    });
     setAssignOpen(true);
   };
 
@@ -515,49 +477,17 @@ export default function KelolaGuru() {
         </Form>
       </Modal>
 
-      {/* Modal Penugasan Wali Kelas */}
-      <Modal
-        title={`Tugaskan Wali Kelas — ${assigning?.fullname ?? ""}`}
+      {/* Modal Penugasan Wali Kelas per Tahun Ajaran */}
+      <HomeroomClassModal
         open={assignOpen}
-        onCancel={() => {
+        teacher={assigning}
+        initialAcademicYear={selectedAcademicYear}
+        onClose={() => {
           setAssignOpen(false);
           setAssigning(null);
         }}
-        onOk={() => assignForm.submit()}
-        confirmLoading={assignMutation.isPending}
-        okText="Simpan"
-        cancelText="Batal"
-      >
-        <Form
-          form={assignForm}
-          layout="vertical"
-          className="pt-2"
-          onFinish={(values) =>
-            assigning &&
-            assignMutation.mutate({
-              classId: values.classId,
-              teacherId: assigning.id,
-            })
-          }
-        >
-          <Form.Item
-            label="Kelas"
-            name="classId"
-            rules={[{ required: true, message: "Pilih kelas" }]}
-            extra="Pilih kelas yang diampu guru ini. Satu kelas hanya punya satu wali kelas."
-          >
-            <Select
-              placeholder="Pilih kelas"
-              options={(classesData?.data ?? []).map((item) => ({
-                value: item.id,
-                label: item.grade?.name
-                  ? `${item.name} (${item.grade.name})`
-                  : item.name,
-              }))}
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
+        onSuccess={refresh}
+      />
 
       {/* Modal Penugasan Kelas BK per Tahun Ajaran */}
       <CounselorClassModal
