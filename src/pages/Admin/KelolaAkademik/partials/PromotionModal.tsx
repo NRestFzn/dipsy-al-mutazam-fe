@@ -298,6 +298,7 @@ export default function PromotionModal({
     {
       title: "Nama & NISN",
       key: "student",
+      sorter: (a, b) => a.fullname.localeCompare(b.fullname),
       width: 220,
       render: (_, record) => (
         <div>

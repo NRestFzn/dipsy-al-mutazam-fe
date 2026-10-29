@@ -27,6 +27,7 @@ export interface GetTeachersParams {
   academicYear?: string;
   page?: number;
   pageSize?: number;
+  order?: string;
 }
 
 export interface CreateTeacherPayload {

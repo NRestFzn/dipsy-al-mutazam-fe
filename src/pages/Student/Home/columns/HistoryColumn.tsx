@@ -23,6 +23,10 @@ export const getHistoryColumn = ({ onSee, pagination }: HistoryColumnsProps): Co
         title: "Judul Kuisioner",
         dataIndex: ["questionnaire", "title"],
         key: "title",
+        sorter: (a, b) =>
+            (a.questionnaire?.title || "").localeCompare(
+                b.questionnaire?.title || ""
+            ),
         render: (text) => (
             <span className="font-medium text-gray-700">{text}</span>
         ),
@@ -70,6 +74,8 @@ export const getHistoryColumn = ({ onSee, pagination }: HistoryColumnsProps): Co
         title: "Tanggal Pengerjaan",
         dataIndex: "createdAt",
         key: "createdAt",
+        sorter: (a, b) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
         render: (date) => (
             <div className="flex flex-col">
                 <span className="text-gray-700">
