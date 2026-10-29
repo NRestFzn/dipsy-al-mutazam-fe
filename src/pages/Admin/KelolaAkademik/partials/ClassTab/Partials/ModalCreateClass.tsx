@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { Modal, Form, Input, Select, message } from "antd";
 import { useQuery } from "@tanstack/react-query";
 import { useAcademic } from "../../../../../../hooks/Admin/useAcademic";
 import { teacherService } from "../../../../../../service/Admin/teacherService";
+import { useCurrentAcademicYear } from "../../../../../../hooks/Admin/useCurrentAcademicYear";
+import { getAcademicYearOptions } from "../../../../../../utils/academicYear";
 import type { GradeItem } from "../../../../../../types/Academic/academicTypes";
 
 interface ModalCreateClassProps {
@@ -9,6 +12,7 @@ interface ModalCreateClassProps {
   onClose: () => void;
   grades: GradeItem[];
   defaultGradeId?: string | null;
+  defaultAcademicYear?: string | null;
 }
 
 export default function ModalCreateClass({
@@ -16,9 +20,12 @@ export default function ModalCreateClass({
   onClose,
   grades,
   defaultGradeId,
+  defaultAcademicYear,
 }: ModalCreateClassProps) {
   const [form] = Form.useForm();
   const { createClassMutation } = useAcademic();
+  const { academicYear: serverAcademicYear } = useCurrentAcademicYear();
+  const activeAcademicYear = defaultAcademicYear || serverAcademicYear;
 
   const { data: teachersRes } = useQuery({
     queryKey: ["teachers", "options"],
@@ -29,10 +36,19 @@ export default function ModalCreateClass({
     value: teacher.id,
   }));
 
+  useEffect(() => {
+    if (!open) return;
+    form.setFieldsValue({
+      academicYear: activeAcademicYear,
+      gradeId: defaultGradeId || undefined,
+    });
+  }, [open, activeAcademicYear, defaultGradeId, form]);
+
   const handleFinish = async (values: {
     name: string;
     gradeId: string;
     homeroomTeacherId?: string | null;
+    academicYear?: string;
   }) => {
     try {
       await createClassMutation.mutateAsync(values);
@@ -66,7 +82,10 @@ export default function ModalCreateClass({
         form={form}
         layout="vertical"
         onFinish={handleFinish}
-        initialValues={{ gradeId: defaultGradeId || undefined }}
+        initialValues={{
+          gradeId: defaultGradeId || undefined,
+          academicYear: activeAcademicYear,
+        }}
         className="pt-3 space-y-3"
       >
         <Form.Item
@@ -86,6 +105,10 @@ export default function ModalCreateClass({
           rules={[{ required: true, message: "Nama kelas wajib diisi" }]}
         >
           <Input placeholder="Contoh: X MIPA 1, VII-A" />
+        </Form.Item>
+
+        <Form.Item label="Tahun Ajaran" name="academicYear">
+          <Select options={getAcademicYearOptions(serverAcademicYear)} />
         </Form.Item>
 
         <Form.Item

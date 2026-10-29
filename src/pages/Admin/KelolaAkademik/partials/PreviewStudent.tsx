@@ -8,7 +8,9 @@ import {
   Skeleton,
   Result,
   Grid,
+  Table,
 } from "antd";
+import type { ColumnsType } from "antd/es/table";
 import {
   ArrowLeft,
   GraduationCap,
@@ -31,7 +33,7 @@ export default function PreviewStudent() {
 
   const backPath = window.location.pathname.startsWith("/admin/siswa-saya")
     ? "/admin/siswa-saya"
-    : "/admin-medis/kelola-akademik";
+    : "/admin-tu/kelola-akademik";
 
   const screens = useBreakpoint();
   const descriptionLayout = screens.md ? "horizontal" : "vertical";
@@ -218,6 +220,61 @@ function AcademicHistorySection({ studentId }: { studentId: string | null }) {
   const { data: historyRes, isLoading } = useStudentAcademicHistory(studentId);
   const histories = historyRes?.data || [];
 
+  const historyColumns: ColumnsType<AcademicHistoryItem> = [
+    {
+      title: "Tahun Ajaran",
+      dataIndex: "academicYear",
+      key: "academicYear",
+      sorter: (a, b) => a.academicYear.localeCompare(b.academicYear),
+      defaultSortOrder: "descend",
+      render: (value: string) => (
+        <span className="font-semibold font-mono text-slate-800">{value}</span>
+      ),
+    },
+    {
+      title: "Tingkat",
+      key: "grade",
+      sorter: (a, b) =>
+        (a.grade?.name || "").localeCompare(b.grade?.name || ""),
+      render: (_, record) => (
+        <span className="text-slate-700">{record.grade?.name || "-"}</span>
+      ),
+    },
+    {
+      title: "Kelas",
+      key: "class",
+      sorter: (a, b) =>
+        (a.class?.name || "").localeCompare(b.class?.name || ""),
+      render: (_, record) => (
+        <Tag color="cyan" className="!rounded-md font-medium text-xs">
+          {record.class?.name || "-"}
+        </Tag>
+      ),
+    },
+    {
+      title: "Wali Kelas",
+      key: "teacher",
+      sorter: (a, b) =>
+        (a.homeroomTeacher?.fullname || "").localeCompare(
+          b.homeroomTeacher?.fullname || ""
+        ),
+      render: (_, record) => (
+        <span className="text-slate-700">
+          {record.homeroomTeacher?.fullname || "-"}
+        </span>
+      ),
+    },
+    {
+      title: "Catatan",
+      key: "notes",
+      render: (_, record) => (
+        <span className="text-slate-500 italic text-xs">
+          {record.notes || "-"}
+        </span>
+      ),
+    },
+  ];
+
   return (
     <Card
       className="!rounded-xl border-slate-200 shadow-sm overflow-hidden !mt-6"
@@ -237,42 +294,14 @@ function AcademicHistorySection({ studentId }: { studentId: string | null }) {
           Belum ada riwayat kelas yang tercatat untuk siswa ini.
         </div>
       ) : (
-        <div className="overflow-x-auto">
-          <table className="w-full text-left border-collapse text-xs sm:text-sm">
-            <thead>
-              <tr className="border-b border-slate-200 text-slate-500 font-semibold bg-slate-50/70">
-                <th className="py-2.5 px-3">Tahun Ajaran</th>
-                <th className="py-2.5 px-3">Tingkat</th>
-                <th className="py-2.5 px-3">Kelas</th>
-                <th className="py-2.5 px-3">Wali Kelas</th>
-                <th className="py-2.5 px-3">Catatan</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100">
-              {histories.map((h: AcademicHistoryItem, idx: number) => (
-                <tr key={h.id || idx} className="hover:bg-slate-50/50">
-                  <td className="py-2.5 px-3 font-semibold font-mono text-slate-800">
-                    {h.academicYear}
-                  </td>
-                  <td className="py-2.5 px-3 text-slate-700">
-                    {h.grade?.name || "-"}
-                  </td>
-                  <td className="py-2.5 px-3">
-                    <Tag color="cyan" className="!rounded-md font-medium text-xs">
-                      {h.class?.name || "-"}
-                    </Tag>
-                  </td>
-                  <td className="py-2.5 px-3 text-slate-700">
-                    {h.homeroomTeacher?.fullname || "-"}
-                  </td>
-                  <td className="py-2.5 px-3 text-slate-500 italic text-xs">
-                    {h.notes || "-"}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        <Table<AcademicHistoryItem>
+          rowKey="id"
+          dataSource={histories}
+          columns={historyColumns}
+          pagination={false}
+          size="middle"
+          scroll={{ x: 640 }}
+        />
       )}
     </Card>
   );

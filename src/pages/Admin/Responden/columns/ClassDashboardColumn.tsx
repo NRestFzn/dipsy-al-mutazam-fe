@@ -1,4 +1,4 @@
-import { Button, Tag } from "antd";
+import { Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { ChevronRight } from "lucide-react";
 import type { ClassData } from "../../../../types/adminMedisService";
@@ -11,8 +11,17 @@ export const getClassDashboardColumns = ({
     onSeeDetail,
 }: ClassDashboardColumnProps): ColumnsType<ClassData> => [
     {
+        title: "No",
+        key: "index",
+        width: 60,
+        align: "center",
+        render: (_, __, index) => index + 1,
+    },
+    {
         title: "Nama Kelas",
         key: "className",
+        sorter: (a, b) =>
+            String(a.className || "").localeCompare(String(b.className || "")),
         render: (_, record) => {
             const rawName = record.className ?? record.rtName ?? "";
             const displayName = String(rawName).startsWith("Kelas") || String(rawName).includes("-")
@@ -25,6 +34,7 @@ export const getClassDashboardColumns = ({
         title: "Total Siswa",
         dataIndex: "userCount",
         key: "userCount",
+        sorter: (a, b) => (a.userCount || 0) - (b.userCount || 0),
         align: "center",
         render: (count, record) => count ?? record.studentCount ?? 0,
     },
@@ -32,6 +42,7 @@ export const getClassDashboardColumns = ({
         title: "Siswa Mengisi",
         dataIndex: "submitCount",
         key: "submitCount",
+        sorter: (a, b) => (a.submitCount || 0) - (b.submitCount || 0),
         align: "center",
         render: (count) => (
             <span className="font-semibold text-gray-700">{count}</span>
@@ -41,26 +52,22 @@ export const getClassDashboardColumns = ({
         title: "Indikasi Butuh Perhatian",
         dataIndex: "unStableMentalPercentage",
         key: "unStableMentalPercentage",
+        sorter: (a, b) =>
+            (a.unStableMentalPercentage || 0) -
+            (b.unStableMentalPercentage || 0),
         align: "center",
         render: (percentage: number) => {
-            let color = "success";
-            let label = "Rendah";
+            const value = percentage || 0;
 
-            if (percentage >= 50) {
-                color = "error";
-                label = "Tinggi";
-            } else if (percentage >= 25) {
-                color = "warning";
-                label = "Sedang";
-            }
+            const colorClass =
+                value >= 50
+                    ? "text-red-600"
+                    : value >= 25
+                    ? "text-amber-600"
+                    : "text-emerald-600";
 
             return (
-                <div className="flex flex-col items-center gap-1">
-                    <span className="font-semibold text-gray-800">{percentage || 0}%</span>
-                    <Tag color={color} className="m-0 min-w-[65px] text-center font-medium rounded-full">
-                        {label}
-                    </Tag>
-                </div>
+                <span className={`font-semibold ${colorClass}`}>{value}%</span>
             );
         },
     },

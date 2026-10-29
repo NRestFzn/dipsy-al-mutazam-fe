@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams, useLocation, useSearchParams } from "react-router";
 import {
     Breadcrumb,
     Button,
@@ -24,6 +24,9 @@ const { RangePicker } = DatePicker;
 
 export default function Submissions() {
     const navigate = useNavigate();
+    const location = useLocation();
+    const [searchParams] = useSearchParams();
+    const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
 
     const params = useParams<{
         questionnaireId: string;
@@ -46,6 +49,8 @@ export default function Submissions() {
     const rawU = params.userId || "";
     const userId = rawU.includes("=") ? rawU.split("=")[1] : rawU;
 
+    const academicYear = searchParams.get("academicYear") || undefined;
+
     const [loading, setLoading] = useState({
         init: true,
         table: false,
@@ -56,26 +61,6 @@ export default function Submissions() {
 
     const [dateRange, setDateRange] = useState<[string, string] | null>(null);
     const [openFilter, setOpenFilter] = useState(false);
-
-    useEffect(() => {
-        if (questionnaireId && userId) {
-            fetchInitialData();
-        }
-    }, [questionnaireId, userId]);
-
-    const fetchInitialData = async () => {
-        setLoading((prev) => ({ ...prev, init: true }));
-        try {
-            await Promise.allSettled([
-                fetchContextName(),
-                fetchUserSummary(),
-            ]);
-        } catch (error) {
-            console.error(error);
-        } finally {
-            setLoading((prev) => ({ ...prev, init: false }));
-        }
-    };
 
     const fetchContextName = async () => {
         try {
@@ -97,13 +82,34 @@ export default function Submissions() {
                 classId,
                 userId,
                 startDate,
-                endDate
+                endDate,
+                academicYear
             );
             setUserData(res);
         } catch (error) {
             console.error(error);
         }
     };
+
+    const fetchInitialData = async () => {
+        setLoading((prev) => ({ ...prev, init: true }));
+        try {
+            await Promise.allSettled([
+                fetchContextName(),
+                fetchUserSummary(),
+            ]);
+        } catch (error) {
+            console.error(error);
+        } finally {
+            setLoading((prev) => ({ ...prev, init: false }));
+        }
+    };
+
+    useEffect(() => {
+        if (questionnaireId && userId) {
+            fetchInitialData();
+        }
+    }, [questionnaireId, userId, academicYear]);
 
     const handleDateChange = (_: any, dateStrings: [string, string]) => {
         if (dateStrings && dateStrings[0] && dateStrings[1]) {
@@ -129,7 +135,10 @@ export default function Submissions() {
                 questionnaireId,
                 gradeId,
                 classId,
-                userId
+                userId,
+                undefined,
+                undefined,
+                academicYear
             );
             setUserData(res);
         } catch (error) {
@@ -162,8 +171,8 @@ export default function Submissions() {
     );
 
     const columns = getSubmissionsColumns({
-        onViewDetail: (submissionId) => {
-            navigate(`/admin-medis/responden/result/${submissionId}`);
+        onViewDetail: (submissionId: string) => {
+            navigate(`${basePath}/responden/result/${submissionId}`);
         },
     });
 
@@ -185,12 +194,16 @@ export default function Submissions() {
         );
     }
 
+    const backUrl = `${basePath}/responden/${questionnaireId}/${gradeId}/${classId}${academicYear ? `?academicYear=${encodeURIComponent(academicYear)}` : ""}`;
+    const gradeUrl = `${basePath}/responden/${questionnaireId}/${gradeId}${academicYear ? `?academicYear=${encodeURIComponent(academicYear)}` : ""}`;
+    const questionnaireUrl = `${basePath}/responden/${questionnaireId}${academicYear ? `?academicYear=${encodeURIComponent(academicYear)}` : ""}`;
+
     return (
         <div className="flex flex-col w-full h-full p-6 space-y-6">
             <div>
                 <Button
                     type="default"
-                    onClick={() => navigate(-1)}
+                    onClick={() => navigate(backUrl)}
                     className="flex items-center shadow-sm border-gray-200 hover:bg-gray-100"
                 >
                     <ArrowLeft size={16} className="mr-2" />
@@ -204,7 +217,7 @@ export default function Submissions() {
                     totalSubmit={userData.summarize.submitCount || 0}
                     submissionsData={userData.submissions as any[]}
                     title={`Riwayat Skrining: ${userData.fullname}`}
-                    subtitle={`Perkembangan skor skrining instrumen ${questionnaireName}`}
+                    subtitle={`Perkembangan skor skrining instrumen ${questionnaireName}${academicYear ? ` (Tahun Ajaran ${academicYear})` : ""}`}
                 />
             </Spin>
 
@@ -214,15 +227,29 @@ export default function Submissions() {
                         items={[
                             {
                                 title: (
-                                    <Link to="/admin-medis/responden" className="flex items-center gap-1 text-gray-500 hover:text-green-600">
+                                    <Link to={`${basePath}/responden`} className="flex items-center gap-1 text-gray-500 hover:text-green-600">
                                         <Home size={14} /> Beranda Responden
                                     </Link>
                                 ),
                             },
                             {
                                 title: (
-                                    <Link to={`/admin-medis/responden/${questionnaireId}`} className="text-gray-500 hover:text-green-600">
+                                    <Link to={questionnaireUrl} className="text-gray-500 hover:text-green-600">
                                         {questionnaireName}
+                                    </Link>
+                                ),
+                            },
+                            {
+                                title: (
+                                    <Link to={gradeUrl} className="text-gray-500 hover:text-green-600">
+                                        Tingkat
+                                    </Link>
+                                ),
+                            },
+                            {
+                                title: (
+                                    <Link to={backUrl} className="text-gray-500 hover:text-green-600">
+                                        Kelas
                                     </Link>
                                 ),
                             },
@@ -232,7 +259,13 @@ export default function Submissions() {
                         ]}
                     />
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex flex-wrap items-center gap-2">
+                        {academicYear && (
+                            <Tag color="blue" className="!rounded-md !px-2.5 !py-1 !text-xs font-semibold">
+                                Tahun Ajaran: {academicYear}
+                            </Tag>
+                        )}
+
                         {dateRange && (
                             <Tag closable onClose={clearFilter} color="green">
                                 {dateRange[0]} - {dateRange[1]}
@@ -259,13 +292,13 @@ export default function Submissions() {
                         <span>Daftar Pengisian Kuesioner</span>
                     </div>
                     <span className="text-xs text-gray-500 font-medium">
-                        Total: {userData.submissions?.length || 0} Kali Pengisian
+                        Total: {userData.submissions.length} Pengisian
                     </span>
                 </div>
 
                 <Table
                     columns={columns}
-                    dataSource={userData.submissions as SubmissionRow[]}
+                    dataSource={userData.submissions as unknown as SubmissionRow[]}
                     rowKey="submissionId"
                     loading={loading.table}
                     pagination={{
@@ -274,14 +307,6 @@ export default function Submissions() {
                     }}
                     scroll={{ x: 800 }}
                     rowClassName="hover:bg-gray-50 transition-colors"
-                    locale={{
-                        emptyText: (
-                            <Empty
-                                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                description="Siswa belum memiliki riwayat pengisian kuesioner ini"
-                            />
-                        ),
-                    }}
                 />
             </div>
         </div>

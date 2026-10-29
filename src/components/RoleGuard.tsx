@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { Spin } from "antd";
 import { Loader2 } from "lucide-react";
 import type { ReactNode } from "react";
+import { isGuruBkRole, isSiswaRole, isTuRole, isWaliKelasRole, ROLE_ID } from "../constants";
 
 interface RoleGuardProps {
   children: ReactNode;
@@ -35,9 +36,20 @@ export const RoleGuard = ({ children, allowedRoleIds, loginPath = "/masuk" }: Ro
     return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
-  const currentRoleId = String(activeRole.id);
+  const currentRoleId = String(activeRole.id || "").toLowerCase();
+  const currentRoleName = String(activeRole.name || "").toLowerCase();
 
-  if (!allowedRoleIds.includes(currentRoleId)) {
+  const isAllowed = allowedRoleIds.some((allowed) => {
+    const norm = String(allowed).toLowerCase();
+    if (norm === currentRoleId || norm === currentRoleName) return true;
+    if ((norm === ROLE_ID.TU.toLowerCase() || norm === "tu") && isTuRole(activeRole)) return true;
+    if ((norm === ROLE_ID.GURU_BK.toLowerCase() || norm === "gurubk") && isGuruBkRole(activeRole)) return true;
+    if ((norm === ROLE_ID.WALI_KELAS.toLowerCase() || norm === "walikelas") && isWaliKelasRole(activeRole)) return true;
+    if ((norm === ROLE_ID.SISWA.toLowerCase() || norm === "siswa") && isSiswaRole(activeRole)) return true;
+    return false;
+  });
+
+  if (!isAllowed) {
     return <Navigate to="/unauthorized" replace />;
   }
 

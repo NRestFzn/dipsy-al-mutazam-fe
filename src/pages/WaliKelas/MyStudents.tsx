@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useNavigate } from "react-router";
-import { Button, Empty, Skeleton, Table, Tabs, Tag } from "antd";
-import { GraduationCap, Users } from "lucide-react";
+import { Button, Empty, Input, Select, Skeleton, Table, Tabs, Tag } from "antd";
+import { GraduationCap, Search, Users } from "lucide-react";
 import type { ColumnsType } from "antd/es/table";
 import { useAcademic } from "../../hooks/Admin/useAcademic";
 import { useMyClassroom } from "../../hooks/Admin/useMyClassroom";
@@ -17,6 +17,16 @@ const statusTag = (status?: string | null) => {
   return <Tag color="emerald" className="!rounded-md text-[11px] font-semibold">Aktif</Tag>;
 };
 
+const matchesQuery = (row: RosterRow, query: string) => {
+  const keyword = query.trim().toLowerCase();
+  if (!keyword) return true;
+
+  return (
+    row.fullname.toLowerCase().includes(keyword) ||
+    (row.nisn ?? "").toLowerCase().includes(keyword)
+  );
+};
+
 interface RosterRow {
   key: string;
   studentId: string;
@@ -25,60 +35,134 @@ interface RosterRow {
   status?: string | null;
 }
 
+interface HistoryRow extends RosterRow {
+  academicYear: string;
+  className: string;
+  gradeName: string;
+}
+
 export default function MyStudents() {
   const navigate = useNavigate();
-  const { classId: myClassId, className: myClassName } = useMyClassroom();
+  const { classes: myClasses, classId: defaultClassId } = useMyClassroom();
   const { useStudentsAdmin, useTaughtHistory } = useAcademic();
 
+  const [selectedClassId, setSelectedClassId] = useState<string>("");
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10 });
+  const [currentSearch, setCurrentSearch] = useState("");
+  const [historySearch, setHistorySearch] = useState("");
+  const [historyGrade, setHistoryGrade] = useState<string | null>(null);
+  const [historyClass, setHistoryClass] = useState<string | null>(null);
+
+  const myClassId = selectedClassId || defaultClassId;
+  const myClassName =
+    myClasses.find((item) => item.id === myClassId)?.name || "Kelas Binaan";
 
   const { data: studentsRes, isLoading: loadingStudents } = useStudentsAdmin({
     classroomId: myClassId || undefined,
     status: "semua",
-    page: pagination.page,
-    pageSize: pagination.pageSize,
+    pageSize: 100,
   });
 
   const { data: taughtRes, isLoading: loadingTaught } = useTaughtHistory();
 
-  const currentStudents: RosterRow[] = (studentsRes?.data || []).map((item: StudentAdminItem) => ({
-    key: item.id,
-    studentId: item.id,
-    fullname: item.fullname,
-    nisn: item.nisn,
-    status: item.studentStatus,
-  }));
+  const currentStudents: RosterRow[] = useMemo(
+    () =>
+      (studentsRes?.data || []).map((item: StudentAdminItem) => ({
+        key: item.id,
+        studentId: item.id,
+        fullname: item.fullname,
+        nisn: item.nisn,
+        status: item.studentStatus,
+      })),
+    [studentsRes?.data]
+  );
 
-  const taughtRows = (taughtRes?.data || []) as TaughtHistoryItem[];
+  const filteredCurrentStudents = useMemo(
+    () => currentStudents.filter((item) => matchesQuery(item, currentSearch)),
+    [currentStudents, currentSearch]
+  );
 
-  const taughtGroups = taughtRows.reduce<Record<string, { academicYear: string; className: string; rows: RosterRow[] }>>(
-    (groups, item) => {
-      const academicYear = item.academicYear || "-";
-      const className = item.class?.name || "-";
-      const key = `${academicYear}-${className}`;
-
-      if (!groups[key]) {
-        groups[key] = { academicYear, className, rows: [] };
-      }
-
-      groups[key].rows.push({
+  const historyRows: HistoryRow[] = useMemo(
+    () =>
+      ((taughtRes?.data || []) as TaughtHistoryItem[]).map((item) => ({
         key: item.id,
         studentId: item.student?.id || "",
         fullname: item.student?.fullname || "-",
         nisn: item.student?.userDetail?.nisn,
         status: item.student?.userDetail?.studentStatus,
-      });
-
-      return groups;
-    },
-    {}
+        academicYear: item.academicYear || "-",
+        className: item.class?.name || "-",
+        gradeName: item.grade?.name || "-",
+      })),
+    [taughtRes?.data]
   );
 
+  const gradeOptions = useMemo(
+    () =>
+      Array.from(new Set(historyRows.map((item) => item.gradeName)))
+        .filter((name) => name && name !== "-")
+        .map((name) => ({ label: name, value: name })),
+    [historyRows]
+  );
+
+  const classOptions = useMemo(
+    () =>
+      Array.from(new Set(historyRows.map((item) => item.className)))
+        .filter((name) => name && name !== "-")
+        .map((name) => ({ label: name, value: name })),
+    [historyRows]
+  );
+
+  const filteredHistoryRows = useMemo(
+    () =>
+      historyRows.filter(
+        (item) =>
+          matchesQuery(item, historySearch) &&
+          (!historyGrade || item.gradeName === historyGrade) &&
+          (!historyClass || item.className === historyClass)
+      ),
+    [historyRows, historySearch, historyGrade, historyClass]
+  );
+
+  const taughtGroups = useMemo(() => {
+    const groups: Record<
+      string,
+      { academicYear: string; className: string; rows: HistoryRow[] }
+    > = {};
+
+    filteredHistoryRows.forEach((item) => {
+      const key = `${item.academicYear}-${item.className}`;
+
+      if (!groups[key]) {
+        groups[key] = {
+          academicYear: item.academicYear,
+          className: item.className,
+          rows: [],
+        };
+      }
+
+      groups[key].rows.push(item);
+    });
+
+    return Object.values(groups).sort((a, b) =>
+      `${b.academicYear}-${b.className}`.localeCompare(`${a.academicYear}-${a.className}`)
+    );
+  }, [filteredHistoryRows]);
+
   const columns: ColumnsType<RosterRow> = [
+    {
+      title: "No",
+      key: "index",
+      width: 60,
+      align: "center",
+      render: (_, __, index) =>
+        (pagination.page - 1) * pagination.pageSize + index + 1,
+    },
     {
       title: "Nama Siswa",
       dataIndex: "fullname",
       key: "fullname",
+      sorter: (a, b) => a.fullname.localeCompare(b.fullname),
       render: (value: string) => <span className="font-semibold text-slate-800">{value}</span>,
     },
     {
@@ -86,6 +170,7 @@ export default function MyStudents() {
       dataIndex: "nisn",
       key: "nisn",
       width: 160,
+      sorter: (a, b) => (a.nisn || "").localeCompare(b.nisn || ""),
       render: (value?: string | null) => (
         <span className="font-mono text-xs text-slate-600">{value || "-"}</span>
       ),
@@ -96,6 +181,7 @@ export default function MyStudents() {
       key: "status",
       width: 110,
       align: "center",
+      sorter: (a, b) => (a.status || "").localeCompare(b.status || ""),
       render: (value?: string | null) => statusTag(value),
     },
     {
@@ -104,12 +190,32 @@ export default function MyStudents() {
       width: 90,
       align: "center",
       render: (_, record) => (
-        <Button type="link" size="small" onClick={() => navigate(`/admin/siswa-saya/preview-siswa/${record.studentId}`)}>
+        <Button
+          type="link"
+          size="small"
+          onClick={() => navigate(`/admin/siswa-saya/preview-siswa/${record.studentId}`)}
+        >
           Lihat
         </Button>
       ),
     },
   ];
+
+  const searchInput = (
+    value: string,
+    onChange: (value: string) => void,
+    placeholder: string,
+    className: string
+  ) => (
+    <Input
+      placeholder={placeholder}
+      prefix={<Search className="text-slate-400" size={16} />}
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      allowClear
+      className={className}
+    />
+  );
 
   return (
     <div className="p-4 sm:p-6 space-y-6 font-sans">
@@ -137,9 +243,38 @@ export default function MyStudents() {
               ),
               children: (
                 <div className="space-y-3 pt-2">
-                  <div className="flex items-center gap-2 text-sm text-slate-600">
-                    <span className="font-semibold text-slate-800">{myClassName || "Belum ada kelas"}</span>
-                    {myClassId && <span className="text-xs text-slate-400">({currentStudents.length} siswa)</span>}
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 text-sm text-slate-600">
+                      {myClasses.length > 1 ? (
+                        <Select
+                          value={myClassId || undefined}
+                          onChange={(value) => setSelectedClassId(value)}
+                          options={myClasses.map((item) => ({
+                            label: item.name,
+                            value: item.id,
+                          }))}
+                          className="w-40 !rounded-lg"
+                        />
+                      ) : (
+                        <span className="font-semibold text-slate-800">
+                          {myClassName || "Belum ada kelas"}
+                        </span>
+                      )}
+                      {myClassId && (
+                        <span className="text-xs text-slate-400">
+                          ({filteredCurrentStudents.length} siswa)
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="w-full sm:w-72">
+                      {searchInput(
+                        currentSearch,
+                        setCurrentSearch,
+                        "Cari nama atau NISN...",
+                        "!rounded-lg"
+                      )}
+                    </div>
                   </div>
 
                   {loadingStudents ? (
@@ -149,15 +284,21 @@ export default function MyStudents() {
                   ) : (
                     <Table<RosterRow>
                       columns={columns}
-                      dataSource={currentStudents}
+                      dataSource={filteredCurrentStudents}
                       loading={loadingStudents}
                       pagination={{
                         current: pagination.page,
                         pageSize: pagination.pageSize,
-                        total: studentsRes?.meta?.pagination?.total ?? currentStudents.length,
-                        onChange: (page, pageSize) => setPagination({ page, pageSize }),
+                        total: filteredCurrentStudents.length,
+                        onChange: (page, pageSize) =>
+                          setPagination({ page, pageSize }),
+                        className: "!px-4 !mb-4",
                       }}
-                      locale={{ emptyText: "Belum ada siswa di kelas ini." }}
+                      locale={{
+                        emptyText: currentSearch
+                          ? "Tidak ada siswa yang cocok dengan pencarian."
+                          : "Belum ada siswa di kelas ini.",
+                      }}
                     />
                   )}
                 </div>
@@ -173,20 +314,64 @@ export default function MyStudents() {
               ),
               children: (
                 <div className="space-y-5 pt-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    {searchInput(
+                      historySearch,
+                      setHistorySearch,
+                      "Cari nama atau NISN...",
+                      "!rounded-lg"
+                    )}
+
+                    <Select
+                      placeholder="Semua Tingkat"
+                      value={historyGrade}
+                      onChange={(value) => setHistoryGrade(value ?? null)}
+                      allowClear
+                      options={gradeOptions}
+                      className="w-full !rounded-lg"
+                    />
+
+                    <Select
+                      placeholder="Semua Kelas"
+                      value={historyClass}
+                      onChange={(value) => setHistoryClass(value ?? null)}
+                      allowClear
+                      options={classOptions}
+                      className="w-full !rounded-lg"
+                    />
+                  </div>
+
                   {loadingTaught ? (
                     <Skeleton active paragraph={{ rows: 4 }} />
-                  ) : Object.keys(taughtGroups).length === 0 ? (
-                    <Empty description="Belum ada riwayat kelas yang pernah Anda ampu" />
+                  ) : taughtGroups.length === 0 ? (
+                    <Empty
+                      description={
+                        historySearch || historyGrade || historyClass
+                          ? "Tidak ada riwayat yang cocok dengan filter."
+                          : "Belum ada riwayat kelas yang pernah Anda ampu"
+                      }
+                    />
                   ) : (
-                    Object.values(taughtGroups).map((group) => (
+                    taughtGroups.map((group) => (
                       <div key={`${group.academicYear}-${group.className}`} className="space-y-2">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-slate-800">{group.academicYear}</span>
-                          <Tag color="cyan" className="!rounded-md font-medium">{group.className}</Tag>
+                          <Tag color="cyan" className="!rounded-md font-medium">
+                            {group.className}
+                          </Tag>
                           <span className="text-xs text-slate-400">{group.rows.length} siswa</span>
                         </div>
+
                         <Table<RosterRow>
-                          columns={columns}
+                          columns={columns.map((column) =>
+                            column.key === "index"
+                              ? {
+                                  ...column,
+                                  render: (_: unknown, __: RosterRow, index: number) =>
+                                    index + 1,
+                                }
+                              : column
+                          )}
                           dataSource={group.rows}
                           pagination={false}
                           size="small"

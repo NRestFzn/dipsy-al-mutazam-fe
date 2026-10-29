@@ -8,7 +8,8 @@ import {
     Database,
     Tags,
     UserCog,
-    Users
+    Users,
+    CalendarDays
 } from "lucide-react";
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -34,6 +35,7 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
     const navigate = useNavigate();
     const pathname = location.pathname;
 
+    const isAdminTU = pathname.startsWith("/admin-tu");
     const isAdminMedis = pathname.startsWith("/admin-medis");
 
     const [openKeys, setOpenKeys] = useState<string[]>([]);
@@ -43,23 +45,59 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
         getItem('Siswa Saya', '/admin/siswa-saya', <Users size={20} />),
     ];
 
-    const itemsAdminMedis: MenuItem[] = [
-        getItem('Responden', '/admin-medis/responden', <FileHeartIcon size={20} />),
-        getItem('Kelola Akademik', '/admin-medis/kelola-akademik', <GraduationCap size={20} />),
-        getItem('Kuisioner', '/admin-medis/kuisioner', <File size={20} />),
-        getItem('Kelola Guru', '/admin-medis/kelola-guru', <UserCog size={20} />),
-        getItem('Master Data', 'sub-master-data', <Database size={20} />, [
-            getItem('Kategori', '/admin-medis/master-data/category', <Tags size={18} />),
+    const itemsAdminTU: MenuItem[] = [
+        getItem('Kelola Akademik', '/admin-tu/kelola-akademik', <GraduationCap size={20} />),
+        getItem('Kelola Guru', '/admin-tu/kelola-guru', <UserCog size={20} />),
+        getItem('Tahun Ajaran', '/admin-tu/tahun-ajaran', <CalendarDays size={20} />),
+        getItem('Master Data', 'sub-master-data-tu', <Database size={20} />, [
+            getItem('Kategori', '/admin-tu/master-data/category', <Tags size={18} />),
         ]),
+        getItem('Kuisioner', '/admin-tu/kuisioner', <File size={20} />),
+        getItem('Responden', '/admin-tu/responden', <FileHeartIcon size={20} />),
     ];
 
-    const items = isAdminMedis ? itemsAdminMedis : itemsAdminDesa;
+    const itemsAdminMedis: MenuItem[] = [
+        getItem('Responden', '/admin-medis/responden', <FileHeartIcon size={20} />),
+    ];
+
+    const items = isAdminTU ? itemsAdminTU : isAdminMedis ? itemsAdminMedis : itemsAdminDesa;
 
     useEffect(() => {
         if (pathname.includes('/master-data')) {
-            setOpenKeys(['sub-master-data']);
+            setOpenKeys(['sub-master-data-tu', 'sub-master-data']);
         }
     }, [pathname]);
+
+    const getSelectedKey = () => {
+        if (pathname === "/admin-tu" || pathname.startsWith("/admin-tu/kelola-akademik")) {
+            return "/admin-tu/kelola-akademik";
+        }
+        if (pathname.startsWith("/admin-tu/kelola-guru")) {
+            return "/admin-tu/kelola-guru";
+        }
+        if (pathname.startsWith("/admin-tu/tahun-ajaran")) {
+            return "/admin-tu/tahun-ajaran";
+        }
+        if (pathname.startsWith("/admin-tu/master-data")) {
+            return "/admin-tu/master-data/category";
+        }
+        if (pathname.startsWith("/admin-tu/kuisioner")) {
+            return "/admin-tu/kuisioner";
+        }
+        if (pathname.startsWith("/admin-tu/responden")) {
+            return "/admin-tu/responden";
+        }
+        if (pathname.startsWith("/admin-medis/responden")) {
+            return "/admin-medis/responden";
+        }
+        if (pathname.startsWith("/admin/siswa-saya")) {
+            return "/admin/siswa-saya";
+        }
+        if (pathname.startsWith("/admin/responden")) {
+            return "/admin/responden";
+        }
+        return pathname;
+    };
 
     const onClick: MenuProps['onClick'] = (e) => {
         navigate(e.key);
@@ -86,10 +124,10 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
         >
             <Menu
                 mode="inline"
-                selectedKeys={[pathname]}
+                selectedKeys={[getSelectedKey()]}
 
                 openKeys={openKeys}
-                onOpenChange={onOpenChange as any}
+                onOpenChange={onOpenChange}
 
                 inlineCollapsed={responsiveSidebar}
 

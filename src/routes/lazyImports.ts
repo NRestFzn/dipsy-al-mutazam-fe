@@ -77,6 +77,7 @@ export const AdminMedisProfile = lazy(
   () => import("../pages/Admin/AdminMedis/ProfileAdmin/ProfileAdmin")
 );
 export const MyStudents = lazy(() => import("../pages/WaliKelas/MyStudents"));
+export const TahunAjaran = lazy(() => import("../pages/Admin/TahunAjaran/TahunAjaran"));
 export const KelolaGuru = lazy(() => import("../pages/Admin/KelolaGuru/KelolaGuru"));
 export const AdminMedisCategory = lazy(
   () => import("../pages/Admin/AdminMedis/MasterData/Category/CategoryPage")

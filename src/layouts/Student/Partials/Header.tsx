@@ -1,7 +1,7 @@
 import { Avatar, Dropdown, Tag, type MenuProps } from "antd";
 import { ChevronDown, LogOut, User } from "lucide-react";
 import type { Role, UserMeResponse } from "../../../types/AuthTypes/authTypes";
-import { ROLE_ID } from "../../../constants";
+import { isGuruBkRole, isTuRole, isWaliKelasRole } from "../../../constants";
 import { useNavigate } from "react-router";
 
 interface HeaderProps {
@@ -21,8 +21,9 @@ export const HomeHeader = ({
   const navigate = useNavigate();
 
   const getRoleLabel = () => {
-    if (activeRole?.id === ROLE_ID.GURU_BK) return "Guru BK";
-    if (activeRole?.id === ROLE_ID.WALI_KELAS) return "Wali Kelas";
+    if (isTuRole(activeRole)) return "Tata Usaha";
+    if (isGuruBkRole(activeRole)) return "Guru BK";
+    if (isWaliKelasRole(activeRole)) return "Wali Kelas";
     return "Siswa";
   };
 

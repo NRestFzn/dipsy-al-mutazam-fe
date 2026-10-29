@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Table, Button, Select, Input } from "antd";
 import { Plus, Search, GraduationCap } from "lucide-react";
 import { useDebounce } from "use-debounce";
@@ -10,6 +10,8 @@ import ModalCreateClass from "./Partials/ModalCreateClass";
 import ModalEditClass from "./Partials/ModalEditClass";
 import ModalDeleteClass from "./Partials/ModalDeleteClass";
 import PromotionModal from "../PromotionModal";
+import { useCurrentAcademicYear } from "../../../../../hooks/Admin/useCurrentAcademicYear";
+import { getAcademicYearOptions } from "../../../../../utils/academicYear";
 
 export default function ClassTab() {
   const [searchTerm, setSearchTerm] = useState("");
@@ -23,6 +25,13 @@ export default function ClassTab() {
   const [isPromotionOpen, setIsPromotionOpen] = useState(false);
   const [promoteClass, setPromoteClass] = useState<ClassItem | null>(null);
 
+  const { academicYear: serverAcademicYear } = useCurrentAcademicYear();
+  const [selectedYear, setSelectedYear] = useState<string>(serverAcademicYear);
+
+  useEffect(() => {
+    setSelectedYear(serverAcademicYear);
+  }, [serverAcademicYear]);
+
   const [pagination, setPagination] = useState({ page: 1, pageSize: 10 });
   const [filters, setFilters] = useState({ order: '[["name", "asc"]]' });
 
@@ -35,6 +44,7 @@ export default function ClassTab() {
     page: pagination.page,
     pageSize: pagination.pageSize,
     gradeId: selectedGradeFilter || undefined,
+    academicYear: selectedYear,
     order: filters.order,
     name: debouncedSearch || undefined,
   });
@@ -57,8 +67,11 @@ export default function ClassTab() {
   const handleTableChange = (
     _: any,
     __: any,
-    sorter: SorterResult<ClassItem> | SorterResult<ClassItem>[]
+    sorter: SorterResult<ClassItem> | SorterResult<ClassItem>[],
+    extra?: { action?: string }
   ) => {
+    if (extra?.action && extra.action !== "sort") return;
+
     if (!Array.isArray(sorter)) {
       const { field, order } = sorter;
       if (order) {
@@ -97,6 +110,16 @@ export default function ClassTab() {
             allowClear
             options={gradesList.map((g) => ({ label: g.name, value: g.id }))}
             className="w-full sm:w-48 !rounded-lg"
+          />
+
+          <Select
+            value={selectedYear}
+            onChange={(value) => {
+              setSelectedYear(value);
+              setPagination((prev) => ({ ...prev, page: 1 }));
+            }}
+            options={getAcademicYearOptions(serverAcademicYear)}
+            className="w-full sm:w-40 !rounded-lg"
           />
 
           <Input
@@ -160,6 +183,7 @@ export default function ClassTab() {
         onClose={() => setIsCreateOpen(false)}
         grades={gradesList}
         defaultGradeId={selectedGradeFilter}
+        defaultAcademicYear={selectedYear}
       />
 
       <ModalEditClass

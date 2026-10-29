@@ -113,29 +113,17 @@ const router = createBrowserRouter([
       },
 
       {
-        path: "/admin-medis",
+        path: "/admin-tu",
         element: (
-          <RoleGuard allowedRoleIds={[ROLE_ID.GURU_BK]}>
+          <RoleGuard allowedRoleIds={[ROLE_ID.TU, "tu"]} loginPath="/masuk-admin">
             <AdminMediLayout />
           </RoleGuard>
         ),
         children: [
-          { index: true, element: <Navigate to="responden" replace /> },
+          { index: true, element: <Navigate to="kelola-akademik" replace /> },
           {
             path: "profile",
             element: <Loadable Component={Pages.AdminMedisProfile} />,
-          },
-          {
-            path: "kuisioner",
-            element: <Loadable Component={Pages.KuisionerDashboard} />,
-          },
-          {
-            path: "kuisioner/:questionnaireId/preview",
-            element: <Loadable Component={Pages.KuisionerPreview} />,
-          },
-          {
-            path: "kelola-guru",
-            element: <Loadable Component={Pages.KelolaGuru} />,
           },
           {
             path: "kelola-akademik",
@@ -151,13 +139,104 @@ const router = createBrowserRouter([
             ],
           },
           {
+            path: "kelola-guru",
+            element: <Loadable Component={Pages.KelolaGuru} />,
+          },
+          {
+            path: "tahun-ajaran",
+            element: <Loadable Component={Pages.TahunAjaran} />,
+          },
+          {
             path: "master-data",
             children: [
+              { index: true, element: <Navigate to="category" replace /> },
               {
                 path: "category",
                 element: <Loadable Component={Pages.AdminMedisCategory} />,
               },
             ],
+          },
+          {
+            path: "kuisioner",
+            element: <Loadable Component={Pages.KuisionerDashboard} />,
+          },
+          {
+            path: "kuisioner/:questionnaireId/preview",
+            element: <Loadable Component={Pages.KuisionerPreview} />,
+          },
+          {
+            path: "responden",
+            children: [
+              {
+                index: true,
+                element: <Loadable Component={Pages.Responden} />,
+              },
+              {
+                path: ":questionnaireId",
+                element: <Loadable Component={Pages.GradeDashboard} />,
+              },
+              {
+                path: ":questionnaireId/:rwId",
+                element: <Loadable Component={Pages.ClassDashboard} />,
+              },
+              {
+                path: ":questionnaireId/:rwId/:rtId",
+                element: <Loadable Component={Pages.StudentDashboard} />,
+              },
+              {
+                path: "submissions/:questionnaireId/:rwId/:rtId/:userId",
+                element: <Loadable Component={Pages.Submissions} />,
+              },
+              {
+                path: "result/:submissionId",
+                element: <Loadable Component={Pages.MedisResult} />,
+              },
+            ],
+          },
+        ],
+      },
+
+      {
+        path: "/admin-medis",
+        element: (
+          <RoleGuard allowedRoleIds={[ROLE_ID.GURU_BK]} loginPath="/masuk-admin">
+            <AdminMediLayout />
+          </RoleGuard>
+        ),
+        children: [
+          { index: true, element: <Navigate to="responden" replace /> },
+          {
+            path: "profile",
+            element: <Loadable Component={Pages.AdminMedisProfile} />,
+          },
+          // Redirects for moved routes
+          {
+            path: "kelola-akademik",
+            element: <Navigate to="/admin-tu/kelola-akademik" replace />,
+          },
+          {
+            path: "kelola-akademik/*",
+            element: <Navigate to="/admin-tu/kelola-akademik" replace />,
+          },
+          {
+            path: "kelola-guru",
+            element: <Navigate to="/admin-tu/kelola-guru" replace />,
+          },
+          {
+            path: "kuisioner",
+            element: <Navigate to="/admin-tu/kuisioner" replace />,
+          },
+          {
+            path: "kuisioner/*",
+            element: <Navigate to="/admin-tu/kuisioner" replace />,
+          },
+          {
+            path: "master-data",
+            element: <Navigate to="/admin-tu/master-data/category" replace />,
+          },
+          {
+            path: "master-data/*",
+            element: <Navigate to="/admin-tu/master-data/category" replace />,
           },
           {
             path: "responden",

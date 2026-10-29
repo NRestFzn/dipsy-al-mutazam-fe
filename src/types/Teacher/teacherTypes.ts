@@ -16,6 +16,7 @@ export interface TeacherItem {
   profilePicture?: string | null;
   roles: TeacherRole[];
   homeroomClasses: TeacherClass[];
+  counselorClasses?: TeacherClass[];
   createdAt?: string;
   updatedAt?: string;
 }
@@ -23,8 +24,10 @@ export interface TeacherItem {
 export interface GetTeachersParams {
   search?: string;
   roleName?: string;
+  academicYear?: string;
   page?: number;
   pageSize?: number;
+  order?: string;
 }
 
 export interface CreateTeacherPayload {

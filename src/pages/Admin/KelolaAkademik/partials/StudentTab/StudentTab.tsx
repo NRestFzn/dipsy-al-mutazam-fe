@@ -57,7 +57,7 @@ export default function StudentTab() {
   });
 
   const handleDetail = (record: StudentAdminItem) => {
-    navigate(`/admin-medis/kelola-akademik/preview-siswa/${record.id}`);
+    navigate(`/admin-tu/kelola-akademik/preview-siswa/${record.id}`);
   };
 
   const handleEdit = (record: StudentAdminItem) => {
@@ -86,8 +86,11 @@ export default function StudentTab() {
   const handleTableChange = (
     _: any,
     __: any,
-    sorter: SorterResult<StudentAdminItem> | SorterResult<StudentAdminItem>[]
+    sorter: SorterResult<StudentAdminItem> | SorterResult<StudentAdminItem>[],
+    extra?: { action?: string }
   ) => {
+    if (extra?.action && extra.action !== "sort") return;
+
     if (!Array.isArray(sorter)) {
       const { field, order } = sorter;
       if (order) {
