@@ -21,7 +21,7 @@ import {
     getStudentDashboardColumns,
     type StudentDashboardRow,
 } from "../columns/StudentDashboardColumn";
-import { getCurrentAcademicYear } from "../../../../utils/academicYear";
+import { useCurrentAcademicYear } from "../../../../hooks/Admin/useCurrentAcademicYear";
 
 const { RangePicker } = DatePicker;
 
@@ -49,8 +49,9 @@ export default function StudentDashboard() {
 
     const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
 
+    const { academicYear: serverAcademicYear } = useCurrentAcademicYear();
     const urlAcademicYear = searchParams.get("academicYear");
-    const academicYear = urlAcademicYear || getCurrentAcademicYear();
+    const academicYear = urlAcademicYear || serverAcademicYear;
 
     const [loading, setLoading] = useState({
         loading: true,

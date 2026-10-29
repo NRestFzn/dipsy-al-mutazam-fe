@@ -9,7 +9,8 @@ import MentalHealthChart from "../../../../components/MentalHealthChart";
 import { Breadcrumb, Button, DatePicker, Empty, Popover, Select, Spin, Table, Tag } from "antd";
 import dayjs from "dayjs";
 import { getGradeDashboardColumn } from "../columns/GradeDashboardColumn";
-import { getAcademicYearOptions, getCurrentAcademicYear } from "../../../../utils/academicYear";
+import { getAcademicYearOptions } from "../../../../utils/academicYear";
+import { useCurrentAcademicYear } from "../../../../hooks/Admin/useCurrentAcademicYear";
 
 const { RangePicker } = DatePicker;
 
@@ -25,10 +26,15 @@ export default function GradeDashboard() {
     const basePath = location.pathname.startsWith("/admin-tu") ? "/admin-tu" : "/admin-medis";
     const isBK = basePath === "/admin-medis";
 
+    const { academicYear: serverAcademicYear } = useCurrentAcademicYear();
     const urlAcademicYear = searchParams.get("academicYear");
     const [academicYear, setAcademicYear] = useState<string>(
-        urlAcademicYear || getCurrentAcademicYear()
+        urlAcademicYear || serverAcademicYear
     );
+
+    useEffect(() => {
+        if (!urlAcademicYear) setAcademicYear(serverAcademicYear);
+    }, [serverAcademicYear, urlAcademicYear]);
     const [assignedYears, setAssignedYears] = useState<string[]>([]);
 
     const [loading, setLoading] = useState({
@@ -124,7 +130,7 @@ export default function GradeDashboard() {
         if (questionnaireId) {
             fetchInitialData();
         }
-    }, [questionnaireId]);
+    }, [questionnaireId, academicYear]);
 
     const handleAcademicYearChange = async (newYear: string) => {
         setAcademicYear(newYear);
@@ -134,15 +140,6 @@ export default function GradeDashboard() {
             return next;
         });
 
-        setLoading((prev) => ({ ...prev, loadingTable: true }));
-        try {
-            await Promise.all([
-                fetchQuestionnaireSummary(newYear),
-                fetchSummarizeAll(newYear),
-            ]);
-        } finally {
-            setLoading((prev) => ({ ...prev, loadingTable: false }));
-        }
     };
 
     const handleDateChange = (_: any, dateStrings: [string, string]) => {
