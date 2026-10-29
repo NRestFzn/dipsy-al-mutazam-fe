@@ -8,7 +8,8 @@ import {
     Database,
     Tags,
     UserCog,
-    Users
+    Users,
+    CalendarDays
 } from "lucide-react";
 
 type MenuItem = Required<MenuProps>['items'][number];
@@ -47,6 +48,7 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
     const itemsAdminTU: MenuItem[] = [
         getItem('Kelola Akademik', '/admin-tu/kelola-akademik', <GraduationCap size={20} />),
         getItem('Kelola Guru', '/admin-tu/kelola-guru', <UserCog size={20} />),
+        getItem('Tahun Ajaran', '/admin-tu/tahun-ajaran', <CalendarDays size={20} />),
         getItem('Master Data', 'sub-master-data-tu', <Database size={20} />, [
             getItem('Kategori', '/admin-tu/master-data/category', <Tags size={18} />),
         ]),
@@ -72,6 +74,9 @@ export default function AdminSideBar({ responsiveSidebar }: { responsiveSidebar:
         }
         if (pathname.startsWith("/admin-tu/kelola-guru")) {
             return "/admin-tu/kelola-guru";
+        }
+        if (pathname.startsWith("/admin-tu/tahun-ajaran")) {
+            return "/admin-tu/tahun-ajaran";
         }
         if (pathname.startsWith("/admin-tu/master-data")) {
             return "/admin-tu/master-data/category";
