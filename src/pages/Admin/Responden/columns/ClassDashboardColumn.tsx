@@ -1,4 +1,4 @@
-import { Button, Tag } from "antd";
+import { Button } from "antd";
 import type { ColumnsType } from "antd/es/table";
 import { ChevronRight } from "lucide-react";
 import type { ClassData } from "../../../../types/adminMedisService";
@@ -10,6 +10,13 @@ interface ClassDashboardColumnProps {
 export const getClassDashboardColumns = ({
     onSeeDetail,
 }: ClassDashboardColumnProps): ColumnsType<ClassData> => [
+    {
+        title: "No",
+        key: "index",
+        width: 60,
+        align: "center",
+        render: (_, __, index) => index + 1,
+    },
     {
         title: "Nama Kelas",
         key: "className",
@@ -50,24 +57,17 @@ export const getClassDashboardColumns = ({
             (b.unStableMentalPercentage || 0),
         align: "center",
         render: (percentage: number) => {
-            let color = "success";
-            let label = "Rendah";
+            const value = percentage || 0;
 
-            if (percentage >= 50) {
-                color = "error";
-                label = "Tinggi";
-            } else if (percentage >= 25) {
-                color = "warning";
-                label = "Sedang";
-            }
+            const colorClass =
+                value >= 50
+                    ? "text-red-600"
+                    : value >= 25
+                    ? "text-amber-600"
+                    : "text-emerald-600";
 
             return (
-                <div className="flex flex-col items-center gap-1">
-                    <span className="font-semibold text-gray-800">{percentage || 0}%</span>
-                    <Tag color={color} className="m-0 min-w-[65px] text-center font-medium rounded-full">
-                        {label}
-                    </Tag>
-                </div>
+                <span className={`font-semibold ${colorClass}`}>{value}%</span>
             );
         },
     },

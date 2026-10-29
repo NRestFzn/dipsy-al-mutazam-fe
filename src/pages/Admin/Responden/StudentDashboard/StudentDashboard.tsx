@@ -22,6 +22,7 @@ import {
     type StudentDashboardRow,
 } from "../columns/StudentDashboardColumn";
 import { useCurrentAcademicYear } from "../../../../hooks/Admin/useCurrentAcademicYear";
+import { academicService } from "../../../../service/Admin/academicService";
 
 const { RangePicker } = DatePicker;
 
@@ -75,26 +76,19 @@ export default function StudentDashboard() {
             const qRes = await adminDesaService.getMedisQuestionnaireById(questionnaireId);
             const qTitle = qRes?.data?.title || "Kuesioner";
 
-            const [gradeSummary, classSummaryRes] = await Promise.all([
-                adminMedisService.getQuestionnaireSummary(questionnaireId, academicYear),
-                adminMedisService.summaryGrade(questionnaireId, gradeId, undefined, undefined, academicYear),
+            const [gradesRes, classesRes] = await Promise.all([
+                academicService.getGrades({ pageSize: 50 }),
+                academicService.getClasses({ pageSize: 100 }),
             ]);
 
-            const foundGrade = gradeSummary.perRw.find((r) => r.rwId === gradeId || r.id === gradeId);
-            const gradeName = foundGrade
-                ? String(foundGrade.rwName || foundGrade.name).startsWith("Tingkat")
-                    ? String(foundGrade.rwName || foundGrade.name)
-                    : `Tingkat ${foundGrade.rwName || foundGrade.name}`
-                : `Tingkat ${gradeId}`;
+            const foundGrade = (gradesRes?.data || []).find((item) => item.id === gradeId);
+            const foundClass = (classesRes?.data || []).find((item) => item.id === classId);
 
-            const foundClass = classSummaryRes.perRt?.find((rt) => rt.rtId === classId || (rt as any).classId === classId);
-            const className = foundClass
-                ? String(foundClass.rtName || (foundClass as any).className).startsWith("Kelas")
-                    ? String(foundClass.rtName || (foundClass as any).className)
-                    : `Kelas ${foundClass.rtName || (foundClass as any).className}`
-                : `Kelas ${classId}`;
-
-            setNames({ questionnaire: qTitle, grade: gradeName, classroom: className });
+            setNames({
+                questionnaire: qTitle,
+                grade: foundGrade ? `Tingkat ${foundGrade.name}` : `Tingkat ${gradeId}`,
+                classroom: foundClass ? `Kelas ${foundClass.name}` : `Kelas ${classId}`,
+            });
         } catch (err) {
             console.warn("Gagal mengambil nama konteks", err);
         }
@@ -235,15 +229,46 @@ export default function StudentDashboard() {
 
     return (
         <div className="flex flex-col w-full h-full p-6 space-y-6">
-            <div>
-                <Button
-                    type="default"
-                    onClick={() => navigate(parentGradeUrl)}
-                    className="flex items-center shadow-sm border-gray-200 hover:bg-gray-100"
-                >
-                    <ArrowLeft size={16} className="mr-2" />
-                    Kembali ke Rekap Kelas
-                </Button>
+            <div className="space-y-3">
+                <div>
+                    <Button
+                        type="default"
+                        onClick={() => navigate(parentGradeUrl)}
+                        className="flex items-center shadow-sm border-gray-200 hover:bg-gray-100"
+                    >
+                        <ArrowLeft size={16} className="mr-2" />
+                        Kembali ke Rekap Kelas
+                    </Button>
+                </div>
+
+                <Breadcrumb
+                    items={[
+                        {
+                            title: (
+                                <Link to={`${basePath}/responden`} className="!inline-flex items-center gap-1 whitespace-nowrap text-gray-500 hover:text-green-600">
+                                    <Home size={14} /> Beranda Responden
+                                </Link>
+                            ),
+                        },
+                        {
+                            title: (
+                                <Link to={parentQuestionnaireUrl} className="text-gray-500 hover:text-green-600">
+                                    {names.questionnaire}
+                                </Link>
+                            ),
+                        },
+                        {
+                            title: (
+                                <Link to={parentGradeUrl} className="text-gray-500 hover:text-green-600">
+                                    {names.grade}
+                                </Link>
+                            ),
+                        },
+                        {
+                            title: <span className="font-semibold text-gray-800">{names.classroom}</span>,
+                        },
+                    ]}
+                />
             </div>
 
             {!hasNoAssignment && summaryData && (
@@ -260,36 +285,7 @@ export default function StudentDashboard() {
             )}
 
             <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 flex flex-col gap-y-5">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <Breadcrumb
-                        items={[
-                            {
-                                title: (
-                                    <Link to={`${basePath}/responden`} className="flex items-center gap-1 text-gray-500 hover:text-green-600">
-                                        <Home size={14} /> Beranda Responden
-                                    </Link>
-                                ),
-                            },
-                            {
-                                title: (
-                                    <Link to={parentQuestionnaireUrl} className="text-gray-500 hover:text-green-600">
-                                        {names.questionnaire}
-                                    </Link>
-                                ),
-                            },
-                            {
-                                title: (
-                                    <Link to={parentGradeUrl} className="text-gray-500 hover:text-green-600">
-                                        {names.grade}
-                                    </Link>
-                                ),
-                            },
-                            {
-                                title: <span className="font-semibold text-gray-800">{names.classroom}</span>,
-                            },
-                        ]}
-                    />
-
+                <div className="flex flex-col md:flex-row justify-end items-start md:items-center gap-4">
                     <div className="flex flex-wrap items-center gap-2">
                         <Tag color="blue" className="!rounded-md !px-2.5 !py-1 !text-xs font-semibold">
                             Tahun Ajaran: {academicYear}
