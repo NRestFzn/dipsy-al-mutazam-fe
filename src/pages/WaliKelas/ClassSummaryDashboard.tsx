@@ -39,9 +39,12 @@ export default function ClassSummaryDashboard() {
     }>();
 
     const questionnaireId = params.questionnaireId;
-    const { classId: myClassId, className: myClassName } = useMyClassroom();
+    const { classes: myClasses, classId: myClassId, className: myClassName } = useMyClassroom();
+    const [selectedClassId, setSelectedClassId] = useState<string>("");
     const gradeId = params.gradeId || params.rwId || user?.userDetail?.GradeId || "";
-    const classId = params.classId || params.rtId || myClassId;
+    const classId = params.classId || params.rtId || selectedClassId || myClassId;
+    const activeClassName =
+        myClasses.find((item) => item.id === classId)?.name || myClassName;
 
     const [dateRange, setDateRange] = useState<[string, string] | null>(null);
     const [academicYear, setAcademicYear] = useState<string | null>(null);
@@ -52,8 +55,8 @@ export default function ClassSummaryDashboard() {
     });
 
     useEffect(() => {
-        setMetaInfo((prev) => ({ ...prev, className: myClassName }));
-    }, [myClassName]);
+        setMetaInfo((prev) => ({ ...prev, className: activeClassName }));
+    }, [activeClassName]);
 
     const {
         data: response,
@@ -186,6 +189,21 @@ export default function ClassSummaryDashboard() {
                     <ArrowLeft size={16} className="mr-2" />
                     Kembali
                 </Button>
+
+                {myClasses.length > 1 && (
+                    <div className="mb-4 flex items-center gap-2">
+                        <span className="text-sm text-gray-600">Kelas:</span>
+                        <Select
+                            value={classId || undefined}
+                            onChange={(value) => setSelectedClassId(value)}
+                            options={myClasses.map((item) => ({
+                                label: item.name,
+                                value: item.id,
+                            }))}
+                            className="w-40"
+                        />
+                    </div>
+                )}
 
                 {summaryData && (
                     <div className="mb-6">
