@@ -67,8 +67,11 @@ export default function ClassTab() {
   const handleTableChange = (
     _: any,
     __: any,
-    sorter: SorterResult<ClassItem> | SorterResult<ClassItem>[]
+    sorter: SorterResult<ClassItem> | SorterResult<ClassItem>[],
+    extra?: { action?: string }
   ) => {
+    if (extra?.action && extra.action !== "sort") return;
+
     if (!Array.isArray(sorter)) {
       const { field, order } = sorter;
       if (order) {

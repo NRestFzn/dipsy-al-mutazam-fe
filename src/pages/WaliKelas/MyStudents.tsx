@@ -47,6 +47,7 @@ export default function MyStudents() {
   const { useStudentsAdmin, useTaughtHistory } = useAcademic();
 
   const [selectedClassId, setSelectedClassId] = useState<string>("");
+  const [pagination, setPagination] = useState({ page: 1, pageSize: 10 });
   const [currentSearch, setCurrentSearch] = useState("");
   const [historySearch, setHistorySearch] = useState("");
   const [historyGrade, setHistoryGrade] = useState<string | null>(null);
@@ -149,6 +150,14 @@ export default function MyStudents() {
   }, [filteredHistoryRows]);
 
   const columns: ColumnsType<RosterRow> = [
+    {
+      title: "No",
+      key: "index",
+      width: 60,
+      align: "center",
+      render: (_, __, index) =>
+        (pagination.page - 1) * pagination.pageSize + index + 1,
+    },
     {
       title: "Nama Siswa",
       dataIndex: "fullname",
@@ -274,7 +283,14 @@ export default function MyStudents() {
                       columns={columns}
                       dataSource={filteredCurrentStudents}
                       loading={loadingStudents}
-                      pagination={{ pageSize: 10, showSizeChanger: false }}
+                      pagination={{
+                        current: pagination.page,
+                        pageSize: pagination.pageSize,
+                        total: filteredCurrentStudents.length,
+                        onChange: (page, pageSize) =>
+                          setPagination({ page, pageSize }),
+                        className: "!px-4 !mb-4",
+                      }}
                       locale={{
                         emptyText: currentSearch
                           ? "Tidak ada siswa yang cocok dengan pencarian."
@@ -344,7 +360,15 @@ export default function MyStudents() {
                         </div>
 
                         <Table<RosterRow>
-                          columns={columns}
+                          columns={columns.map((column) =>
+                            column.key === "index"
+                              ? {
+                                  ...column,
+                                  render: (_: unknown, __: RosterRow, index: number) =>
+                                    index + 1,
+                                }
+                              : column
+                          )}
                           dataSource={group.rows}
                           pagination={false}
                           size="small"

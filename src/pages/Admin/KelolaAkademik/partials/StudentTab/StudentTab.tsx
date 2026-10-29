@@ -86,8 +86,11 @@ export default function StudentTab() {
   const handleTableChange = (
     _: any,
     __: any,
-    sorter: SorterResult<StudentAdminItem> | SorterResult<StudentAdminItem>[]
+    sorter: SorterResult<StudentAdminItem> | SorterResult<StudentAdminItem>[],
+    extra?: { action?: string }
   ) => {
+    if (extra?.action && extra.action !== "sort") return;
+
     if (!Array.isArray(sorter)) {
       const { field, order } = sorter;
       if (order) {
